@@ -65,7 +65,7 @@ if submitted:
     eligible_path = "reuseable_code/internal_code/eligible_4_digit_codes.json"
     try:
         with open(eligible_path, "r") as f:
-            eligible_codes = json.load(f).get("eligible_codes", [])
+            eligible_codes = json.load(f)
     except FileNotFoundError:
         st.error("❌ Eligibility rules file not found.")
         st.stop()
