@@ -1,0 +1,50 @@
+{
+  "airline_name": "Air Cambodia",
+  "iata_code": "K6",
+  "plating_carrier": "188",
+  "official_website": "http://www.cambodiaangkorair.com",
+  "policies": {
+    "involuntary_refund": "\u2022 Involuntary Refunds (Article 11.2):- If your flight is canceled, rescheduled, or you miss a connection due to carrier fault:\n    - Full refund if no part of the ticket was used\n    - Partial refund = fare paid minus applicable fare for used segments",
+    "involuntary_reissue": "Involuntary reissue requests must follow the procedure below:\n\u2022 Email the full PNR history showing the schedule change (SKD CHNG)\n\u2022 Include the requested itinerary and RBD availability\n\u2022 Requests are batched and submitted once daily to Air Cambodia HQ\n\nPrimary Emails:\n\u2022 happy@aircambodia.net\n\u2022 lucky@aircambodia.net\n\nAlways CC:\n\u2022 somaly@angkor-air.com\n\u2022 mardy@angkor-air.com\n\u2022 cchannit@angkor-air.com\n\u2022 sseakmey@angkor-air.com\n\nDeprecated Emails:\n\u2022 helpdesk_online@cambodiaangkorair.com\n\u2022 helpdesk_online_2@cambodiaangkorair.com",
+    "voluntary_refund": "\u2022 Voluntary Refunds (Article 11.3):- Full refund minus service fees if unused\n  - Partial refund minus service fees based on used travel portion",
+    "medical_refund": "None of our agents, employees, or representatives has authority to alter, modify, or waive any provision of these Terms and Conditions of Carriage.",
+    "name_change": "Name changes are allowed only before ticketing, for up to 20% of the group.\n\u2022 After ticketing: No name changes allowed\n\u2022 Excess requests are treated as cancellations",
+    "group_booking": "Applicable to branch office in Thailand and all GSAs except India.\n\n\u2022 Deposit Deadlines:\n  - 30% initial deposit \u2265 3 months prior\n  - Names: \u2265 14 days prior\n  - Final payment: \u2265 7 days prior\n\n\u2022 Seat Management:\n  - Reduce: split PNR, up to 20% refundable\n  - Increase: allowed before deposit via new PNR\n  - Refund: whole group only, conditions apply",
+    "infant_policy": "Infants under 14 days, premature or medically unfit infants not accepted.\n\u2022 1 adult = 1 infant. Additional infant charged as child fare w/ cabin crew.\n\u2022 Cabin crew request: \u2265 3 days (domestic), \u2265 5 days (international)\n\u2022 Escort combinations apply to INF/CHD groupings.\n\u2022 Max infant load per flight: 10% of aircraft capacity",
+    "baggage_policy": "\u2022 Carry-on: 7 kg\n\u2022 Checked: 23 kg (32 kg for BKK routes)\n\u2022 Valuables must not be checked\n\u2022 Ticket and baggage must be correctly tagged and verified by K6",
+    "seat_request_policy": "Carrier does not guarantee specific seating.\n\u2022 Purchased seats may be reassigned\n\u2022 Seats assigned in class of service purchased",
+    "short_term_cancellation_policy": "For flights to or from the United States, Cambodia Angkor Air complies with the U.S. Department of Transportation 24-hour rule:\n• A full refund is available if the ticket is canceled within 24 hours of booking, provided the flight is at least 7 days away at the time of booking.\n• After this 24-hour window, cancellation policies and any applicable fees will depend on the specific fare rules of the ticket.\n• Refund requests must be submitted via the online helpdesk or a Cambodia Angkor Air branch office."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["INVOL REF"],
+    "involuntary_reissue_code": ["INVOL CHANGE"],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "primary_emails": [
+      "happy@aircambodia.net",
+      "lucky@aircambodia.net"
+    ],
+    "cc_emails": [
+      "somaly@angkor-air.com",
+      "mardy@angkor-air.com",
+      "cchannit@angkor-air.com",
+      "sseakmey@angkor-air.com"
+    ],
+    "deprecated_emails": [
+      "helpdesk_online@cambodiaangkorair.com",
+      "helpdesk_online_2@cambodiaangkorair.com"
+    ]
+  },
+  "policy_deadlines": {
+    "group_booking": {
+      "group_deposit_deadline_before_departure": 90,
+      "group_names_deadline_before_departure": 14,
+      "group_final_payment_deadline_before_departure": 7
+    }
+  }
+}

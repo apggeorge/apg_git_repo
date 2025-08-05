@@ -1,0 +1,45 @@
+{
+  "airline_name": "Arajet",
+  "iata_code": "DM",
+  "plating_carrier": "653",
+  "official_website": "https://www.arajet.com/",
+  "policies": {
+    "involuntary_refund": ", delays >2 hours, or denied boarding: Full refund, voucher, or rebooking offered.\n\u2022 If taxes were not paid to authorities, they may be refunded; otherwise, the customer must claim them directly.\n\u2022 All refunds are processed to original form of payment, except cash which may be refunded as an Arajet voucher.\n\u2022 Fare is non-refundable outside the above exceptions.\n\u2022 Refunds processed within 30 days of request.",
+    "involuntary_reissue": "Flight date/time changes are allowed:\n\u2022 Must be made at least 24 hours prior to departure.\n\u2022 Subject to applicable service fee and fare difference.\n\u2022 Route changes are not permitted.\n\u2022 Existing services (like seats) will transfer when possible.\n\u2022 If not available, an alternative or refund of that service may be offered.",
+    "voluntary_refund": "Refunds are only permitted under specific conditions:\n\u2022 Within 24 hours of booking and at least 7 days prior to departure: Full refund of the fare (excluding service fees already rendered).",
+    "medical_refund": "No formal waiver code system. Changes outside published conditions require manual review.\n\u2022 Involuntary changes (cancellation, delay, etc.): Waiver not required\u2014eligible for refund or rebooking.\n\u2022 Voluntary changes follow bundle fare rules with applicable fees and fare difference.",
+    "name_change": "Name changes allowed under these rules:\n\u2022 One free name change per 20 pax in group bookings.\n\u2022 Must be requested at least 24 hours before departure.\n\u2022 If the correction is 3 characters or less and requested before check-in, no fee applies.\n\u2022 Changes of 4+ characters or complete name changes incur a fee and fare difference.",
+    "group_booking": "\u2022 Group bookings: Minimum 21 pax.\n\u2022 Series: 4 groups minimum of 16 pax each (12 pax minimum to maintain group status).\n\u2022 Passenger names due 10 days before departure (20 days for Canada/Saint Martin).\n\u2022 Not bookable within 7 days of departure.\n\u2022 One free name change per 20 pax.\n\u2022 Infants: 5% of adult fare plus tax.\n\u2022 Full payment schedule applies.\n\u2022 Additional services/baggage not included unless confirmed.",
+    "infant_policy": "\u2022 Infants: 8 days to under 2 years old.\n\u2022 May travel on adult's lap for 5% of fare + tax.\n\u2022 Infants are not eligible for baggage or additional services.\n\u2022 Adults traveling with an infant receive one extra personal item and may check one stroller or car seat free of charge.\n\u2022 Infants must be booked; documentation required to confirm age.",
+    "baggage_policy": "\u2022 One personal item included: max 6kg, 40x25x20cm.\n\u2022 Carry-on baggage: one piece up to 12kg, 56x46x25cm (must be pre-purchased or included in bundle).\n\u2022 Checked baggage: up to 3 pieces, max 32kg and 366cm linear each. Fees apply unless included in bundle.\n\u2022 Fragile or valuable items (electronics, musical instruments) should not be checked; limited liability applies.\n\u2022 Musical instruments and sports equipment accepted with fees, size/weight restrictions, and release of liability.\n\u2022 Compensation for lost/damaged baggage: up to 1131 SDRs (Montreal Convention).",
+    "seat_request_policy": "\u2022 Advanced seat selection available for a fee depending on bundle or service.\n\u2022 Some seats (exit rows, bulkhead) have eligibility restrictions (age, ability to assist in evacuation, etc.).\n\u2022 Customers with medical or special needs may receive designated seats without additional cost.\n\u2022 If moved for operational/safety reasons, seat fees may be refunded as a voucher.\n\u2022 Emergency exit seats cannot be assigned to passengers under 16, pregnant women, or those traveling with infants or pets.",
+    "short_term_cancellation_policy": "Arajet offers a 24-hour risk-free cancellation policy:\n\u2022 Must be requested within 24 hours of booking AND at least 7 days prior to departure.\n\u2022 After this window, bookings are subject to the standard refund and change policies outlined in the bundle fare conditions.\n\u2022 No same-day void beyond that window."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": ["Expedia", "Priceline", "Hopper", "Fareportal", "Travix", "Atlas Travel", "Consolid Global (Volans)", "Despegar"]
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": [],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "sales_support_phone": "1-305-404-9382",
+    "sales_support_email": "sales@arajet.com",
+    "spanish_sales_email": "ventas@arajet.com",
+    "whatsapp_checkin": "+1-809-282-7000",
+    "gds_support_email": "gds.support@arajet.com",
+    "groups_support_email": "groups@arajet.com"
+  },
+  "policy_deadlines": {
+    "involuntary_reissue": {
+      "involuntary_reissue_deadline_before_departure": 24
+    },
+    "group_booking": {
+      "group_names_deadline_before_departure": 10,
+      "group_names_deadline_before_departure_canada_saint_martin": 20,
+      "group_booking_cutoff_before_departure_days": 7
+    }
+  }
+}

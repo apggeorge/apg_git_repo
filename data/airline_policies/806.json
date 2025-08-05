@@ -1,0 +1,41 @@
+{
+  "airline_name": "Jeju Air",
+  "iata_code": "7C",
+  "plating_carrier": "806",
+  "official_website": "https://www.jejuair.net/en/main/base/index.do",
+  "policies": {
+    "involuntary_refund": ":\n\u2022 If flight is canceled or delayed due to Jeju Air\u2019s fault, full refund is allowed.\n\u2022 If partially used: refund = total fare \u2013 fare used.\n\u2022 If canceled due to force majeure: refund of unused portion only.\n\nRefund Submission:\n\u2022 Application must be made before 30 days from ticket expiration.\n\u2022 Refunds only issued to the named passenger or authorized party with documentation.\n\u2022 Refund currency follows that of original payment or local currency by regulation.\n\u2022 Refund for lost tickets possible with indemnity agreement and verification.",
+    "involuntary_reissue": "\u2022 Date changes permitted under Irregular Ops AUTH FW25A0000T0007.\n\u2022 One-time date change allowed within \u00b12 days of original segment.\n\u2022 Must maintain same class/type; fare difference may apply.\n\u2022 No rebooking allowed for route changes.\n\u2022 Reissue not allowed post no-show.\n\u2022 All reissues must remain in same RBD and fare type.",
+    "voluntary_refund": "Voluntary Refund:\n\u2022 Refunds available per fare conditions, subject to cancellation penalty (XP tax).\n\u2022 Refund amount calculated as fare paid minus used segment and penalty.\n\u2022 Refund request must be made within ticket validity (typically 1 year).",
+    "medical_refund": "\u2022 AUTH FW25A0000T0007 governs UNTK handling.\n\u2022 Rebooking must be within \u00b12 days of affected segment.\n\u2022 Full refund allowed for one-time exception if flight canceled or disrupted.\n\u2022 Rerouting not permitted; must remain on same origin/destination pair.\n\u2022 Name corrections under defined categories exempt from fee with AUTH FW25A0000T0003.",
+    "name_change": "\u2022 Only allowed for same passenger (by pronunciation).\n\u2022 Fee: KRW 20,000 / USD 20 / EUR 20\n\u2022 Required OSI: OSI 7C NM CHG ORIGN'NAME' X NEW'NAME'\n\u2022 Free (AUTH FW25A0000T0003) for:\n  \u2192 Title corrections\n  \u2192 Middle name additions (non-Korean passengers)\n  \u2192 Rearranged name order\n  \u2192 Infants under 24 months\n\u2022 With documentation (approval required):\n  \u2192 Legal name change, passport typo correction, marriage/divorce surname update\n\u2022 Not allowed:\n  \u2192 Change of person\n  \u2192 Pronunciation-altering changes\n\u2022 Contact: hsjung3@jejuair.net",
+    "group_booking": "\u2022 Name change rules mirror FIT policy\n\u2022 Group reissues and refunds must be requested through sales office or offline\n\u2022 Infant fares, baggage, and seat restrictions apply for group block bookings\n\u2022 Group-held infants (lap-held) do not receive individual seats or meals\n\u2022 Infant seats only permitted if extra seat purchased and advance request made",
+    "infant_policy": "\u2022 Infants: <24 months\n\u2022 One lap infant per adult allowed free of charge (no seat allocated)\n\u2022 Second infant must purchase seat and use certified infant safety seat\n\u2022 Checked baggage: 10kg allowance for lap infant\n\u2022 Infant gear (stroller, cradle, car seat): 1 piece free\n\u2022 Infant safety seat must be FAA-approved and forward-facing only\n\u2022 Contact customer service 48h prior to departure if using own seat",
+    "baggage_policy": "\u2022 Carry-on: 1 bag + 1 personal item\n  \u2192 Max 10kg, \u2264115cm (sum of dimensions)\n\u2022 Checked baggage:\n  \u2192 International: 15kg free (10kg for infants)\n  \u2192 Guam/Saipan: 23kg free (excludes FLY fare)\n  \u2192 Domestic: up to 15kg (fare-dependent)\n\u2022 Overweight/oversize fees apply\n\u2022 Infant gear (1 item: stroller/car seat/cradle) free as checked or carry-on\n\u2022 Sports equipment and special items: separate charges apply",
+    "seat_request_policy": "\u2022 Infant safety seats must be FAA-approved, forward-facing, and \u2264 43x38x70cm\n\u2022 Infant seat only allowed with purchased extra seat\n\u2022 Limited to one infant per ABC/DEF side; BIZ LITE: 2 infants on AC or DF\n\u2022 Personal items allowed: 1 umbrella, infant food, assistive device\n\u2022 Standard carry-on: 10kg max, 115cm total dimensions\n\u2022 Seat selection not guaranteed; may change for operational or safety reasons",
+    "short_term_cancellation_policy": "\u2022 AUTH FW25A0000T0001: voids permitted same day of issuance\n\u2022 Full refund permitted within 24h of booking, regardless of fare class\n\u2022 For USA-bound itineraries: refund allowed if flight departs 7+ days later\n\u2022 Refund processed to original payment method\n\u2022 Refund excludes Jeju Air add-on services (e.g., meals, seats, bags)\n\u2022 Add-on services non-refundable even within 24h window\n\u2022 Cancelation outside 24h subject to standard refund policy"
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["INVOL REF"],
+    "involuntary_reissue_code": ["INVOL CHANGE"],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "name_correction_email": "hsjung3@jejuair.net"
+  },
+  "policy_deadlines": {
+    "involuntary_refund": {
+      "involuntary_refund_deadline_days_after_ticket_expiry": 30
+    },
+    "involuntary_reissue": {
+      "eligible_rebooking_range_deadline": {
+        "before_original_departure": 2,
+        "after_original_departure": 2
+      }
+    }
+  }
+}

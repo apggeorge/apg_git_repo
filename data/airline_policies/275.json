@@ -1,0 +1,38 @@
+{
+  "airline_name": "APG Airlines",
+  "iata_code": "GP",
+  "plating_carrier": "275",
+  "official_website": "https://www.apgiet.com/",
+  "policies": {
+    "involuntary_refund": "Your request is eligible under APG Airlines\u2019 refund policy for involuntary disruptions.\n\n\u2705 A full refund is allowed if:\n\u2022 The flight is canceled\n\u2022 The schedule is changed by 3 or more hours\n\nHow to submit:\n\u2022 BSPLink: Attach PNR history with UN/SC status\n\u2022 ARC/APG Connect: Request waiver via Helpdesk\n\nNote: GP has no direct access to PNRs. You must include full PNR history in any waiver request.",
+    "involuntary_reissue": "Rebooking is allowed under APG Airlines\u2019 involuntary reissue policy if:\n\u2022 Same route, same RBD, same carrier, and within \u00b13 days\n\n\u2705 Enter the following text in the ENDO BOX:\n  \u2192 SKCHG\n\nIf the same RBD is unavailable:\n\u2022 Collect ADC\n\u2022 Submit a waiver with full PNR history\n\nSchedule Change Handling Matrix:\n| Scenario                        | Reissue Option                             | Waiver Needed |\n|--------------------------------|--------------------------------------------|---------------|\n| Same RBD accepted              | Revalidate/reissue with SKCHG in ENDO      | \u274c No         |\n| Different RBD required         | Send full PNR history, collect ADC         | \u2705 Yes        |\n| No alternate offered           | Refund or rebook within allowed parameters | \u2705 Yes        |\n| Other airline operating        | GP cannot reissue \u2192 contact Helpdesk       | \u2705 Yes",
+    "voluntary_refund": "\u2022 Must be processed via GDS or APG Connect\n\u2022 Fare rules of the operating carrier apply\n\u2022 Penalties collected via CP tax code\n\u2022 If multiple carriers involved, apply the most restrictive rule",
+    "medical_refund": "All waiver requests must include full PNR history, as GP does not have direct access to bookings.\n\u2022 Submit via BSPLink, ARC, or APG Connect Helpdesk.\n\u2022 Waiver required when:\n  \u2192 Rebooking involves different RBD\n  \u2192 No alternates available\n  \u2192 Flight operated by another carrier\n\u2022 Use ENDO BOX indicators:\n  \u2192 SKCHG (for involuntary reissues)\n  \u2192 ONEFREECHANGE (for voluntary 1-time penalty waiver)",
+    "name_change": "Name corrections are permitted for the same passenger only (not transferable).\n\nSteps:\n1. Create a new booking with correct name (same RBD or higher)\n2. Issue a new ticket on GP-275\n3. Notify APG with the new ticket number\n4. APG will provide a waiver for refund of the original ticket\n\n\u2022 A $25 penalty applies to all name corrections.",
+    "group_booking": "A group is defined as 10 or more passengers traveling together.\n\u2022 Group quote requests are processed within 48 hours.\n\u2022 APG provides group quotes only for airlines it has a direct partnership with.\n\u2022 Quotes and ticketing are subject to availability and the policies of the operating carrier.\n\u2022 For all group requests, submit through official APG Connect channels or contact the Helpdesk",
+    "infant_policy": "All infant and child travel rules follow the operating carrier\u2019s policy.\n\u2022 Ensure the proper SSR codes are included in the booking\n\u2022 If baggage allowance for infants is required, confirm directly with the operating carrier prior to departure",
+    "baggage_policy": "Baggage policies, including weight limits, delayed baggage, or compensation, are dictated by the operating carrier.\n\u2022 APG does not handle baggage claims directly\n\u2022 Denied boarding and baggage delay insurance available via Blue Ribbon Bags:\n  \u2192 \u20ac125 (ticket difference)\n  \u2192 \u20ac75 (hotel)\n  \u2192 \u20ac50 (transfers)\n  \u2192 $1,000/bag after 96h delay (up to 2 bags)",
+    "seat_request_policy": "Seat assignments, mobility assistance, and special meal requests are handled directly by the **operating carrier**.\n\u2022 APG does not process special service requests for interline segments.\n\u2022 All ancillary service inquiries must be directed to the airline operating the segment in question.",
+    "short_term_cancellation_policy": "Voiding is allowed on the day of issuance only. After that, standard refund or reissue policies apply according to fare rules and waiver eligibility.\n\u2022 If voiding fails, request support via Helpdesk including full ticket and PNR details."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": [],
+    "involuntary_reissue_code": ["SKCHG"],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "helpdesk_email": "helpdeskiet@apg-ga.com"
+  },
+  "policy_deadlines": {
+    "involuntary_reissue": {
+      "eligible_rebooking_range_deadline": {
+        "before_original_departure": 3,
+        "after_original_departure": 3
+    }
+    }
+  }
+}

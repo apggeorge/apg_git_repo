@@ -1,0 +1,61 @@
+{
+  "airline_name": "Philippine Airlines",
+  "iata_code": "PR",
+  "plating_carrier": "079",
+  "official_website": "https://www.philippineairlines.com/us/en/home.html",
+  "policies": {
+    "involuntary_refund": "allowed when:\n  \u2022 PAL cancels a flight\n  \u2022 Schedule changes \u22652 hours\n  \u2022 PR \u2194 PR or PR \u2194 OAL connection breaks MCT by <2 hrs\n\u2022 Full refund of unused sectors or full ticket if no segments used\n\u2022 Endorsement Box: INVOL DUE PR____/(flight date) (XLD or SC)\n\u2022 24-hour full refund allowed if booking was made \u22657 days before departure\n\u2022 Voluntary refunds allowed per fare rules, with applicable penalties\n\u2022 Refund must be requested within ticket validity + 30 days",
+    "involuntary_reissue": "\u2022 Reissue allowed under IRROPS if:\n  \u2022 Rebook earlier (within 3 days)\n  \u2022 Or rebook later (within 60 days)\n  \u2022 Must remain in same booking class (BCC); if not available \u2192 confirm with PR\n\u2022 Agents must follow endorsement box format\n\u2022 All EMDs associated with reissued tickets must also be reissued",
+    "voluntary_refund": "▪ Voluntary refunds are allowed as per applicable fare rules.\n▪ Refund amount includes unused base fare and applicable unused taxes and fees, excluding non-refundable surcharges or service fees.\n▪ Refund must be requested within ticket validity + 30 days.\n▪ If passenger is not affected by schedule change, cancellation, or other IRROPs, penalties and refund restrictions apply per fare rules.\n▪ Tickets partially used or expired are non-refundable unless required by local law.\n▪ Refund of airport taxes is permitted on fully unused or expired tickets, if not previously claimed.\n▪ Duplicate bookings: Refunds allowed if proof of full payment is provided and request is made within 24 hours.\n▪ Refunds will be processed to the original form of payment (OFP), except cash may be refunded as a PAL voucher.\n▪ For third-party bookings, refund may require coordination with issuing agent.\n▪ All refund requests are subject to PAL’s Tariffs, Conditions of Carriage, and local laws and regulations.",
+    "medical_refund": "\u2022 No waiver needed if IRROPS meets auto-approved triggers (\u22652h delay, canceled flight, broken PR\u2013OAL MCT)\n\u2022 Any reissue outside of policy requires waiver from PR Rep\n\u2022 Without waiver, ADM will be issued",
+    "name_change": "\u2705 Reissues allowed for:\n\u2022 Free if name order (surname/given) is transposed\n\u2022 $25 fee for:\n  \u2022 1\u20133 letter corrections\n  \u2022 Add/remove 'Maria' or 'Ma.'\n  \u2022 Title corrections (MR/MS)\n  \u2022 Duplicate name cleanup\n\ud83d\udeab Must go through PR Direct:\n\u2022 Maiden/married name change\n\u2022 Adding second surname\n\u2022 A.K.A. inclusions\n\u2022 DOB and passport must match after correction\n\u2022 Used tickets: legal reasons only\n\u2022 All EMDs must be reissued",
+    "group_booking": "\u2022 Minimum 10 passengers\n\u2022 $100 non-refundable deposit per person\n\u2022 Names and TSA docs due 30 days before departure\n\u2022 10% group size reduction allowed\n\u2022 Tickets issued 60 days before travel\n\u2022 No name changes after issuance (only corrections with $25 fee)\n\u2022 Round-trip required for group rate eligibility",
+    "infant_policy": "\u2022 Infants must be at least 16 days old\n\u2022 Infant must sit on adult lap or occupy paid seat if using car seat\n\u2022 Infant fare may not include full baggage allowance\n\u2022 Infants allowed in group bookings (at standard infant rate)",
+    "baggage_policy": "\u2022 Free baggage allowance defined by route and ticket class\n\u2022 Excess baggage subject to weight, dimension, and availability restrictions\n\u2022 Do not include valuables, passports, electronics, or business documents in checked bags\n\u2022 Special declaration of value accepted for checked bags (fee applies)\n\u2022 Delay/loss/damage claims must follow formal PAL process; unchecked baggage claims not honored without fault by PAL",
+    "seat_request_policy": "\u2022 Advance seat selection possible via PAL reservation system\n\u2022 Special service and seat requests: via PAL or GDS-supported SSR codes\n\u2022 Service animal seating, PRM assistance, and paid seat upgrades governed by ticket class and availability\n\u2022 Group seats finalized 30 days before departure",
+    "short_term_cancellation_policy": "\u2022 Voids allowed same day of issuance\n\u2022 After same day, apply refund per fare rule with endorsement: INVOL or SC as needed\n\u2022 If void fails in GDS, agent must request support with full PNR + ticket info"
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["INVOL DUE PR____/(flight date) (XLD or SC)"],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "general_support_email": "1800flypal_ca@philippineairlines.com",
+    "general_support_phone": "+1 800 435-9725",
+    "apg_support_email": "philippineairlines@apg-ga.us",
+    "apg_support_phone": "+1 833-703-6367",
+    "group_desk_email": "groupdesk@pal.com.ph",
+    "gsa_internal_email": "GSA_palsupport@philippineairlines.com",
+    "sales_support": {
+      "toronto": "torontosales@pal.com.ph",
+      "vancouver": "vancouversales@pal.com.ph",
+      "lax": "losangelessales@pal.com.ph",
+      "jfk": "prnycsales@pal.com.ph",
+      "sfo": "palfsosales@pal.com.ph",
+      "hnl": "honolulusales@pal.com.ph"
+    }
+  },
+  "policy_deadlines": {
+    "involuntary_refund": {
+      "involuntary_refund_deadline_after_ticket_expiry": 30
+  },
+  "involuntary_reissue": {
+    "eligible_rebooking_range_deadline": {
+      "before_original_departure": 3,
+      "after_original_departure": 60
+    }
+  },
+  "voluntary_refund": {
+    "voluntary_refund_deadline_after_ticket_expiry": 30
+  },
+  "group_booking": {
+    "group_names_deadline_before_departure": 30,
+    "group_ticket_deadline_before_departure": 60
+    }
+  }
+}

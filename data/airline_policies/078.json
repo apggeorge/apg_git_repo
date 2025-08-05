@@ -1,0 +1,38 @@
+{
+  "airline_name": "Cyprus Airways",
+  "iata_code": "CY",
+  "plating_carrier": "078",
+  "official_website": "https://www.cyprusairways.com/en-GB",
+  "policies": {
+    "involuntary_refund": "Involuntaryrefunds allowed in cases of cancellation or changes to Terms of Carriage.\n\u2022 Refunds processed to original form of payment.\n\u2022 No refund for schedule changes under 1 hour.\n\u2022 Refund for no-show: only airport taxes refundable.\n\u2022 Refund for duplicate bookings must be requested within 24h with proof of full payment.\n\u2022 Group cancellations under time limits: only airport taxes refundable.\n\u2022 Group cancellations beyond 30\u201345 days from departure: fare and airport taxes refundable; YR, ancillaries, and fees non-refundable.",
+    "involuntary_reissue": "\u2022 All exchanges and adjustments must be handled manually.\n\u2022 GDS-based exchanges not permitted.\n\u2022 Minor schedule changes (<1h) do not entitle passenger to free rebooking.\n\u2022 Rebooking due to major changes/cancellations is allowed per Carrier Regulations.\n\u2022 Group bookings: Date change before ticketing is free; after ticketing allowed with EUR 50 fee + fare difference.\n\u2022 Name changes after ticketing for groups permitted at EUR 50 per passenger.",
+    "voluntary_refund": "Refunds are not processed through GDS.\n\u2022 All refund requests must be handled manually by Cyprus Airways.\n\u2022 Refunds due to carrier fault or flight cancellation are permitted.\n\u2022 Taxes may be refundable if not remitted to authorities; reasonable service charge may apply.\n\u2022 Refund only made to original payer; proof of payment required.\n\u2022 Ticket surrender may be required.\n\u2022 Refunds are made in original currency unless Carrier Regulations specify otherwise.\n\u2022 Credit card fees are non-refundable.\n\u2022 Voluntary refunds for ancillary services (baggage, seats, pets) are not permitted.",
+    "medical_refund": "\u2022 No publicly available waiver code system.\n\u2022 Involuntary changes may qualify for waiver of refund or reissue fees.\n\u2022 Prepaid ancillary services (AVIH/PETC) may be refunded only for involuntary changes.\n\u2022 Contact escalation support for special handling.\n\u2022 Carrier discretion applies to all manual processing of refunds or schedule disruption compensation.",
+    "name_change": "\u2022 Name changes are not allowed on individual tickets.\n\u2022 Once issued, a ticket cannot be transferred to another person.\n\u2022 Manual support required for error resolution via arc.support@apg-ga.us.\n\u2022 Group bookings: Name changes before ticketing are allowed; after ticketing allowed with EUR 50 fee per name.",
+    "group_booking": "\u2022 Minimum group size: 10 adult passengers.\n\u2022 Child fare: Not applicable. Infant fares apply.\n\u2022 Group can be one-way or round-trip.\n\u2022 Fare must be quoted and approved by Sales Department.\n\u2022 Fare rules differ from public fare rules.\n\u2022 Contact: groups@cyprusairways.com\n\u2022 Flight date change:\n  \u2192 Before ticketing: Free, subject to availability\n  \u2192 After ticketing: EUR 50 fee + fare difference\n\u2022 Name changes:\n  \u2192 Before ticketing: Free\n  \u2192 After ticketing: EUR 50 fee per name\n\u2022 Deposit: Not required\n\u2022 Full payment deadlines:\n  \u2192 High season: 30 days before departure\n  \u2192 Low season: 21 days before departure\n\u2022 Release periods:\n  \u2192 High season: 1st release 45 days, 2nd release +10% up to 30 days\n  \u2192 Low season: 1st release 30 days, 2nd release +10% up to 21 days\n\u2022 Cancellation:\n  \u2192 Under time limit: only airport taxes refundable\n  \u2192 Over 30/45 days before departure: fare and taxes refundable (YR excluded)\n\u2022 No-show: only airport taxes refundable\n\u2022 Ticketing deadline: 5 working days before departure\n\u2022 Included baggage:\n  \u2192 Cabin: 1x10kg (55x40x20 cm) + personal item (35x20x20 cm)\n  \u2192 Checked: 1x23kg (max 203 cm)\n\u2022 Sports equipment: EUR 50 per sector",
+    "infant_policy": "\u2022 Infants not accepted for travel within first 7 days of birth.\n\u2022 New mothers not expected to travel within 7 days postpartum unless accompanied by a medically qualified person.\n\u2022 Tel Aviv: EUR 24 per sector; Other destinations: EUR 20 per sector.\n\u2022 One infant per adult.\n\u2022 Infants not allowed in emergency exit rows.\n\u2022 Infant fare applies in group bookings.\n\u2022 Passengers with disabilities or limited mobility will receive adapted services upon notification.",
+    "baggage_policy": "\u2022 One standard hand baggage item permitted per passenger (10kg; 55x40x20cm) plus 1 personal item (35x20x20cm).\n\u2022 Checked baggage: 1x23kg (max 203cm) included in group fares.\n\u2022 Sports equipment: EUR 50 per sector.\n\u2022 Dangerous items (weapons, lithium batteries, ammunition, etc.) prohibited under ICAO/IATA rules.\n\u2022 Valuable items (electronics, documents, jewelry, medicine) should not be checked.\n\u2022 Checked baggage must be tagged and securely packed.\n\u2022 Firearms allowed as checked baggage only if unloaded and approved in advance.\n\u2022 Guide dogs allowed free in cabin with proper documentation; emotional support animals not permitted.\n\u2022 Max 3 in-cabin pets per flight; must be in a locked crate under 10kg including container, stored under seat.\n\u2022 AVIH (animals in hold): container must meet IATA standards. Up to 2 animals (each <14kg) or 3 young animals (<6mo) allowed per crate.",
+    "seat_request_policy": "\u2022 Prepaid seat selection processed via EMD is non-refundable on a voluntary basis.\n\u2022 Involuntary refunds allowed if flight is cancelled or seat not provided.\n\u2022 Seats must comply with aircraft storage restrictions.\n\u2022 Oversized carry-ons detected at gate must be paid for and checked.\n\u2022 Seat disputes or reassignments are not eligible for compensation unless in breach of contract of carriage.",
+    "short_term_cancellation_policy": "\u2022 Refund requests for duplicate bookings must be submitted with proof of full payment within 24h.\n\u2022 All void requests processed manually via internal escalation contact.\n\u2022 No automatic void or same-day cancellation system offered through GDS.\n\u2022 Voluntary cancellations are subject to manual refund policy and fare conditions."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": [],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "arc_support_email": "arc.support@apg-ga.us",
+    "arc_agency_email": "cyprusair.arc@apg-ga.us",
+    "group_support_email": "groups@cyprusairways.com"
+  },
+  "policy_deadlines": {
+    "group_booking": {
+      "group_cancellation_before_departure_date_days": 30
+    }
+  }
+}
+  

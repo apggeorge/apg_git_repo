@@ -1,0 +1,32 @@
+{
+  "airline_name": "Air Vanuatu",
+  "iata_code": "NF",
+  "plating_carrier": "218",
+  "official_website": "https://www.airvanuatu.com/",
+  "policies": {
+    "involuntary_refund": "Involuntaryrefunds must be confirmed directly with air vanuatu.\n\n\u2022 all refund requests are subject to fare rules.\n\u2022 refunds may only be issued to the person who paid, and only to the original form of payment.\n\u2022 refunds due to cancellation by the airline (",
+    "involuntary_reissue": "Voluntary reissues must comply with applicable fare rules, including fare difference and change fees.\n\u2022 Involuntary reissues (e.g. due to schedule change) may be eligible; coordinate with Air Vanuatu Sales Support.\n\u2022 Reissue requests for changes to routing, class, or date must be validated in advance.\n\u2022 Do not assume automatic eligibility without written approval.\n\u2022 Unused coupon sequences must be preserved; reissued tickets must follow original fare construction rules.",
+    "voluntary_refund": "Refunds for voluntary cancellations are subject to applicable fare rules.\n• If no portion of the ticket has been used: passenger is entitled to a refund equal to the fare paid (including applicable taxes, government charges, and airport costs), less any service charges or cancellation fees.\n• If a portion of the ticket has been used: refund equals the difference between the fare paid and the applicable fare for the used portion of travel (including applicable taxes and charges), less any service charges or cancellation fees.\n• All voluntary refunds must be processed to the original form of payment and are issued only to the original purchaser.\n• Refund eligibility may vary depending on fare type (e.g., promotional or restricted fares may be non-refundable).",
+    "medical_refund": "Waiver requests\u2014whether voluntary or involuntary\u2014must be directed to internal support or ARC.\n\u2022 No overrides to fare rules are allowed without written permission.\n\u2022 All authorization codes and approval documentation must be retained.\n\u2022 For restructuring-related exceptions, coordinate via: Creditors.AirVanuatu@au.ey.com.",
+    "name_change": "Name changes are allowed for a fee per passenger.\n\u2022 Changes must be processed via Air Vanuatu website, call center, or authorized agents only.\n\u2022 Bookings made via agents must be modified by that same agent.\n\u2022 Tickets are non-transferable and cannot be used by another person even if the name is changed informally.",
+    "group_booking": "Group booking policies are not explicitly detailed.\n\u2022 For unaccompanied minors or children traveling with different surnames, additional documentation (e.g., signed consent and birth certificate) may be required.\n\u2022 Contact Sales Support for structured group terms and conditions.",
+    "infant_policy": "Infants (under 2 years old) must travel on the adult\u2019s lap and pay 10% of the adult fare.\n\u2022 No bassinets are available on international flights.\n\u2022 Each infant must be accompanied by an adult.\n\u2022 Infants are not eligible for a seat unless one is purchased separately.\n\u2022 Baggage allowance: 10kg + 1 collapsible stroller or car seat at no charge.",
+    "baggage_policy": "\u2022 Adult/Child Domestic: 10kg checked baggage, 5kg carry-on.\n\u2022 Infant: 10kg checked (international); 0kg on domestic routes.\n\u2022 Children receive the same allowance as adults.\n\u2022 1 stroller or car seat per infant/child carried at no cost.\n\u2022 Dangerous goods and valuable items (e.g. laptops, jewelry, passports) must not be checked.\n\u2022 Oversized or excess baggage may be refused or carried separately at passenger expense.",
+    "seat_request_policy": "Seat selection is not guaranteed and subject to change due to operational needs.\n\u2022 Emergency exit row seats are only available to passengers over age 15 who are able-bodied and understand English.\n\u2022 Cabin crew and operations may reassign seats for safety.\n\u2022 Infants do not receive individual seats and must travel on adult laps unless a seat is purchased.",
+    "short_term_cancellation_policy": "Air Vanuatu does not explicitly define a same-day void window in public materials.\n\u2022 Refund requests must be formally submitted and processed through applicable fare rules.\n\u2022 No refund or credit is issued for failure to show up unless eligible under the ticket's fare rules or schedule disruption policies."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": [],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "arc_contact": "airvanuatu.arc@apg-ga.us",
+    "internal_refund_support": "gkaluat@airvanuatu.vu",
+    "liquidation_claims": "Creditors.AirVanuatu@au.ey.com"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "airline_name": "FlyDubai",
+  "iata_code": "FZ",
+  "plating_carrier": "141",
+  "official_website": "https://www.flydubai.com/en-us/",
+  "policies": {
+    "involuntary_refund": ":\n\u2022 Check disruption policy via FQN in GDS.\n\u2022 No waiver code required if 'UN' status applies.\n\u2022 Refunds are normally issued in the form of a Voucher unless otherwise required by law.\n\u2022 Vouchers are non-transferable, valid only for the named passenger, and redeemable via website, mobile app, or call center.\n\u2022 Refunds exclude credit card charges and optional extras unless refunded involuntarily.\n\u2022 If you miss your flight without prior notice, the fare is non-refundable unless laws dictate otherwise.\n\u2022 Refunds due to cancellations or delays >3h may be offered as a full voucher or free rebooking.\n\u2022 For group bookings, contact groupreservations@flydubai.com for refund terms.\n\u2022 Refunds must be requested by original payer with proper identification; third-party refund requests require notarized authorization.",
+    "involuntary_reissue": "\u2022 All reissue requests must be handled manually.\n\u2022 Use GDS FQN to verify fare change/refund eligibility.\n\u2022 Involuntary reissues from FZ-141 HQ must be initiated by the agent and CC'ed to Head Office.\n\u2022 Schedule changes >3h may be eligible for free rebooking.\n\u2022 Passenger may cancel flight for a voucher refund if significant time/airport change occurs.\n\u2022 Date/sector changes must occur more than 4 hours before departure.\n\u2022 Once checked in, voluntary changes or cancellations are not allowed.",
+    "voluntary_refund": "Flydubai’s voluntary refund policy is governed by the fare rules associated with the ticket. Some fares may be partially refundable while others are strictly non-refundable. Refunds, when permitted, are generally issued in the form of a Voucher, unless applicable law requires reimbursement to the original form of payment. All refund requests must be submitted within the ticket’s validity period, and any deductions (e.g., service fees, used segments) will apply according to the fare conditions.\n\nTickets purchased through GDS must be refunded via the same GDS, and refunds on tickets with Flydubai-issued waivers must include the remark 'Approved by FZ'. Government-imposed taxes (e.g., YQ/YR) are typically non-refundable. Tickets issued by travel agents must be refunded by the issuing agent.\n\nIn situations involving force majeure (e.g., unexpected security surcharges, major global events, or operational emergencies), Flydubai reserves the right to apply post-ticketing surcharges. If a passenger chooses not to travel due to these added costs, they may cancel their booking and receive a refund in the form of a Voucher. Refunds to the original form of payment are only provided if legally required.",
+    "medical_refund": "\u2022 No general waiver code system in place.\n\u2022 Involuntary refunds allowed without waiver if flight has 'UN' status.\n\u2022 Manual review of escalations submitted with justification.\n\u2022 Exceptional circumstance surcharges may apply; passengers may cancel for a voucher in such cases.\n\u2022 No fee waivers for no-shows or last-minute cancellations unless required by law.",
+    "name_change": "\u2022 Name changes are not permitted.\n\u2022 Name corrections not publicly published\u2014must be submitted with justification.\n\u2022 Escalations for name issues must go through manual approval with documentation.\n\u2022 Booking confirmations are non-transferable.",
+    "group_booking": "\u2022 Group booking: 10+ passengers.\n\u2022 Max group size: 50 passengers.\n\u2022 Must be booked via groupreservations@flydubai.com.\n\u2022 School group conditions:\n  \u2192 1 escort (18+) per 10 minors (8+ years only).\n  \u2192 No exit row seating for children/escorts.\n  \u2192 Escorts must sit in aisle seats.\n  \u2192 Escorts responsible during disruptions/diversions.\n\u2022 All communication and payment through primary contract holder.\n\u2022 Group bookings are subject to custom conditions and not eligible for online management tools.",
+    "infant_policy": "\u2022 Infants <7 days old are not permitted.\n\u2022 Infants (7 days\u20132 years): Must share adult\u2019s seat or sit in approved car-type seat (extra seat must be purchased).\n\u2022 2 infants per adult allowed (1 on lap, 1 in car-type seat).\n\u2022 Infant must not be seated in emergency row.\n\u2022 Infant seat must be approved for aviation use.\n\u2022 No unaccompanied minor service provided; children <12 must travel with someone \u226516.",
+    "baggage_policy": "\u2022 Cabin: 1 bag free; size/weight limits apply.\n\u2022 Checked baggage must be pre-purchased or paid at airport (strictly limited by weight/space).\n\u2022 Max 3 checked bags; 32kg each, 165cm combined dimensions.\n\u2022 Special items (musical instruments, sports gear) subject to prior approval and fees.\n\u2022 Prohibited in checked baggage: valuables, electronics, medications, documents.\n\u2022 Prohibited in hand baggage: weapons, sharp objects, large liquids (>100ml unless exempt).\n\u2022 Firearms: require 4 business days advance approval and full documentation.\n\u2022 Mobility aids for disabled passengers allowed (max 2, must notify airline in advance).",
+    "seat_request_policy": "\u2022 Prepaid seat selection not guaranteed.\n\u2022 Airline may change seat for operational, safety, or legal reasons.\n\u2022 If reassigned, prepaid seat fees will be refunded.\n\u2022 Oversized hand baggage may require last-minute fee and check-in at gate.\n\u2022 Exit row seating unavailable to children, escorts, or mobility-limited passengers.",
+    "short_term_cancellation_policy": "\u2022 Free cancellation permitted within 24 hours of booking *if* departure is at least 7 days away.\n\u2022 Cancellations within 24 hours of booking but within 7 days of departure may incur fees; refund may be issued as voucher.\n\u2022 Duplicate bookings may be eligible for manual voucher refund within 24 hours if submitted with proof of full payment.\n\u2022 Voluntary voids follow fare rules and are processed manually.\n\u2022 No refund or voucher is provided if the passenger fails to notify airline prior to departure or check-in."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": [],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "refund_support_email": "fzGDS@flydubai.com",
+    "chargeback_support_email": "Chargebacks@flydubai.com",
+    "adm_dispute_email": "julie.mohan@flydubai.com"
+  },
+  "policy_deadlines": {
+  "involuntary_reissue": {
+    "involuntary_reissue_deadline_before_departure": 4
+    }
+  }
+}

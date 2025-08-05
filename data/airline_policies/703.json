@@ -1,0 +1,38 @@
+{
+  "airline_name": "Neos Air",
+  "iata_code": "NO",
+  "plating_carrier": "703",
+  "official_website": "https://www.neosair.it/",
+  "policies": {
+    "involuntary_refund": "Involuntary Refund:\n\u2022 If change is \u22653 hours and passenger declines \u2192 full refund allowed.\n\u2022 Cancel all segments in the PNR first.\n\u2022 Use ENDO BOX format: INV REF NO [Flight#/Date-CXL].",
+    "involuntary_reissue": "Involuntary Reissue (Schedule Change):\n\u2022 If pax accepts new flight \u2192 reissue with ENDO BOX: INVOL SKCHG.\n\u2022 If pax rejects \u2192 rebook closest available flight in same RBD.\n\u2022 If same class unavailable \u2192 contact neosair@apg-ga.us.\n\u2022 No waiver required.\n\nVoluntary changes follow fare rules. Penalties and fare differences may apply based on fare basis.",
+    "voluntary_refund": ":\n\u2022 Follow fare rules per GDS entry. Refunds subject to cancellation penalties and service fees.\n\u2022 24-hour cancellation policy applies for tickets booked at least 7 days before departure.\n\u2022 Refunds on lost tickets require identity verification and processing conditions.\n\u2022 Refunds refused after 30 days from ticket validity expiration.",
+    "medical_refund": "\u2022 No standard waiver codes published.\n\u2022 Use ENDO BOX to indicate authorization for involuntary cases (e.g., INV REF NO703).\n\u2022 For void exceptions or name corrections, internal waiver email must be sent to Neos HQ with CC to APG Inside Sales. \n\u2022 Waiver tracking required via internal Excel log.",
+    "name_change": "If RBD is same and correction \u22643 characters:\n\u2022 Refund incorrect ticket.\n\u2022 Reissue with corrected name and same RBD.\n\u2022 Use waiver code in ENDO.\n\u2022 Report to Simona.LoVecchio@neosair.it and CC distribution@neosair.it + APG Inside Sales.\n\nIf correction >3 characters or RBD not available:\n\u2022 Email tickets@neosair.it with:\n  \u2022 Passport\n  \u2022 Neos PNR\n  \u2022 Incorrect & corrected names\n\u2022 HQ will review and take over from this point forward.",
+    "group_booking": "\u2022 Group booking policies not publicly disclosed.\n\u2022 All B2B group requests must go through official Neos or APG channels.\n\u2022 Name corrections in group bookings follow same 3-character rule with waiver route.\n\u2022 Infants allowed after 1 week of age; standard group infant discount rules apply.",
+    "infant_policy": "\u2022 Infants must be at least 7 days old to fly.\n\u2022 Seated on adult\u2019s lap unless child fare seat purchased with approved car seat.\n\u2022 Infant baggage allowance and additional services subject to route and fare type.\n\u2022 Standard discount (~90%) applied for lap infants.\n\u2022 Infants turning 2 during trip must be rebooked as child with appropriate fare throughout.",
+    "baggage_policy": "\u2022 Baggage rules defined per route and fare basis.\n\u2022 Free baggage allowance printed on ticket or itinerary receipt.\n\u2022 Carry-on: Must fit under seat or overhead bin (size and weight limits apply).\n\u2022 Checked baggage over allowance incurs excess charges.\n\u2022 Musical instruments, sports gear, and high-value items may require special declaration and fees.\n\u2022 Compensation capped at 1,519 SDR for damage or loss (per Montreal Convention).",
+    "seat_request_policy": "\u2022 Seat selection policies not explicitly stated in Conditions.\n\u2022 Standard rules imply:\n  \u2022 Advance selection may be available based on fare.\n  \u2022 Special seats (e.g., exit rows) subject to eligibility (age, physical ability, etc.).\n  \u2022 Passengers moved for operational reasons may request refund of paid seats.\n\u2022 Specific requests should be made during booking or check-in window.",
+    "short_term_cancellation_policy": "If GDS void fails within 24 hours:\n\u2022 Ensure all conditions met:\n  \u2022 USA-issued ticket\n  \u2022 Amadeus or Sabre\n  \u2022 Within 24h window\n\u2022 Agent should:\n  \u2022 Cancel all segments\n  \u2022 Refund with waiver code in ENDO (e.g., NO703204)\n  \u2022 Open IR in Amadeus\n  \u2022 Email case to: distribution@neosair.it\n  \u2022 CC: filippo.casali@neosair.it\n\u2022 Use subject: 'Unable to void within 24 hours \u2013 Neos PNR\u2026'\n\u2022 Log all exceptions in waiver Excel.\n\u2022 Fri\u2013Sun exceptions: Monday voids may apply."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": ["Expedia, Etraveli Group, Gotogate, eDreams, MyTrip.com, All ARC branches"]
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["INV REF NO FLT#/DATE-CXL", "INV REF NO [Flight#/Date-CXL]"],
+    "involuntary_reissue_code": ["INVOL SKCHG"],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "b2b_support_email": "neosair@apg-ga.us",
+    "group_support_email": "distribution@neosair.it",
+    "void_escalation_email": "filippo.casali@neosair.it",
+    "name_correction_reporting": "Simona.LoVecchio@neosair.it"
+  },
+  "policy_deadlines": {
+    "voluntary_refund": {
+      "voluntary_refund_deadline_days_after_ticket_expiry": 30
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "airline_name": "T\u2019way Air",
+  "iata_code": "TW",
+  "plating_carrier": "722",
+  "official_website": "https://www.twayair.com/app/main?regionCode=SG&langCode=en-US",
+  "policies": {
+    "involuntary_refund": "Passengers are entitled to a full refund in the following involuntary cases:\n• Flight cancellation\n• Inability to provide confirmed seat\n• Delay of flight\n• Omission of scheduled stop\n• Denial of boarding or inability to access\n\nRefund rules:\n• If no portion of the ticket has been used: the full fare paid (including taxes and charges) will be refunded.\n• If travel is interrupted after departure: the unused portion of the fare will be refunded based on the valid fare and charges at the time of suspension. If an alternative transport is provided, refund may not apply.\n• Refunds due to illness or death of the passenger or immediate family may be exempt from refund fees, if proper documentation is submitted.\n• Refund requests must be made within the validity period of the ticket and no later than 60 days after expiration.\n• Refunds must follow procedures via the website, reservation center, or airport branch; if booked through an agency, refunds must follow the agency’s rules.",
+    "involuntary_reissue": "\u2705 Date changes allowed.\n\u2022 \u274c Route changes not allowed.\n\u2022 \u2705 Free change on same day as issuance.\n\u2022 Change to lower fare class \u2192 refund and rebook.\n\u2022 Multi-fare-class tickets: fee applies per segment.\n\u2022 Change fees vary by fare/route/timing and must be entered under MF tax code.",
+    "voluntary_refund": "\u2705 24-hour full refund policy: valid if ticket was purchased at least 7 days before departure.\n\u2022 Must request refund within 60 days after ticket expiration.\n\u2022 \u274c No refund if outbound was no-show.\n\u2022 Refunds must follow fare rules.\n\u2022 Refund of inbound-only usage: outbound charged 100%.",
+    "medical_refund": "\u2705 Involuntary reissues or refunds allowed under IROP or REACCOM events.\n\u2022 AUTH codes:\n  \u2192 AL24ALLDC101 (REACCOM - Change)\n  \u2192 AL24ALLRF101 (REACCOM - Refund)\n  \u2192 AL24ALLDC102 (IROP/Natural Disaster - Change)\n  \u2192 AL24ALLRF102 (IROP/Natural Disaster - Refund)\n\u2022 Valid within \u00b13 days (or \u00b17 days for non-daily flights).\n\u2022 No ADC collected if rebooking same class.\n\u2022 Reverse-use allowed if outbound canceled.",
+    "name_change": "\u2705 Name corrections allowed (must sound the same).\n\u2022 Unlimited character edits.\n\u2022 Fee: KRW 10,000 or equivalent.\n\u2022 Must submit to twbsp@twayair.com with documentation within 7 days of correction.\n\u2022 Infant ticket must also be reissued if tied to adult.",
+    "group_booking": "\u2022 Group size: 10\u201330 passengers.\n\u2022 Routes: Domestic and international.\n\u2022 Booking period:\n  \u2192 Domestic: \u22657 days before departure.\n  \u2192 International: \u226510 days before departure.\n\u2022 Max 2 applications per ID/day.\n\u2022 Booking may be restricted during peak season.",
+    "infant_policy": "\u2022 Infants must be \u226514 days old to travel (\u22652 days with medical waiver).\n\u2022 One lap infant per adult allowed free.\n\u2022 Additional infants or seat-required infants pay child fare.\n\u2022 Stroller and infant seats permitted in cabin if within size limits.",
+    "baggage_policy": "\u2705 Free baggage allowance varies:\n\u2022 Event/Smart Fare: 15kg\n\u2022 Normal Fare: 20kg\n\u2022 Business Fare: 30kg\n\u2022 Carry-on: 1 item \u226410kg for all but Business (which allows 2)\n\u2022 Checked baggage max: 23kg/piece, 158cm linear\n\u2022 Excess baggage and sports equipment incur additional fees.\n\u2022 Refund on baggage fees allowed if canceled \u226530 minutes before departure.",
+    "seat_request_policy": "\u2022 Seat selection varies by fare class.\n\u2022 Random assignment for lowest fares.\n\u2022 Upgrades (Extra space, front row, etc.) can be purchased.\n\u2022 Infants under 2 years must be seated with guardian.\n\u2022 Emergency exit row seating restricted by safety regulations.",
+    "short_term_cancellation_policy": "\u2705 Tickets may be voided within 24 hours of booking if flight is \u22657 days away.\n\u2022 After 24 hours, fare rules and refund charges apply."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["AL25ALLRF101"],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "arc_email": "twayair.arc@apg-ga.us",
+    "name_correction_email": "twbsp@twayair.com"
+  },
+  "policy_deadlines": {
+    "involuntary_refund": {
+      "involuntary_refund_deadline_after_ticket_expiry": 60
+    },
+    "voluntary_refund": {
+      "voluntary_refund_deadline_after_ticket_expiry": 60
+    },
+    "medical_refund": {
+      "medical_reissue_eligibility_daily_flights": 3,
+      "medical_reissue_eligibility_non_daily_flights": 7
+    },
+    "group_booking": {
+      "group_booking_deadline_before_departure": {
+        "domestic": 7,
+        "international": 10
+      }
+    }
+  }
+}

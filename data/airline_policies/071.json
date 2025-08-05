@@ -1,0 +1,44 @@
+{
+  "airline_name": "ASKY",
+  "iata_code": "KP",
+  "plating_carrier": "071",
+  "official_website": "https://www.flyasky.com/tg/en/",
+  "policies": {
+    "involuntary_refund": "If flight is canceled or itinerary is affected by 3+ hours, a refund is permitted. Agents must process the refund before departure.",
+    "involuntary_reissue": "Agents may reissue on the same flight, or next available flight same day on same carrier/class/route. If none available, pax can choose flight within ±3 days. Must be done before departure.",
+    "voluntary_refund": "Proceed according to the fare rules listed on the ticket.",
+    "medical_refund": "Refunds or reissues that fall outside of involuntary policies require written authorization. Submit to CRC Helpdesk with supporting documents.",
+    "name_change": "Minor name corrections permitted via SSR message and copy of passport:\n- LAST NAME: 1-letter correction (SR KP LAST NAME CORRECTION TO ...)\n- FIRST NAME: 2-letter correction (SR KP FIRST NAME CORRECTION TO ...)\n- Other corrections require escalation.\nEscalation emails: crcxdesk@flyasky.com, CC akemeh@flyasky.com, asiro@flyasky.com, lity@flyasky.com",
+    "group_booking": "Groups of 10+ passengers. Confirmations handled by CRC/Group Desk. Penalties:\n- Date change ≥72h: XOF 30,000\n- Date change <72h: XOF 60,000\n- Refund ≥72h: 50% base + YR tax\n- Refund <72h or no-show: Non-refundable",
+    "infant_policy": "Infants must be accompanied by a guardian. Infant + carrier are not part of free baggage and are subject to surcharge. Carrier may limit total infants per flight. Advance request required.",
+    "baggage_policy": "Allowance varies by route/class. Valuables must not be in checked bags. Excess baggage is subject to surcharge. Lost/delayed bags not claimed in 3 months may be discarded. Liability limited to 1,131 SDR per passenger unless declared.",
+    "seat_request_policy": "Seats are not guaranteed. Operational changes may reassign seats. Special meals require 48h notice. Passengers with reduced mobility should notify carrier in advance.",
+    "short_term_cancellation_policy": "24h refund allowed if ticket purchased ≥24h before departure. Saver fares canceled ≥14 days prior get 50% credit. Otherwise, ticket is non-refundable. Refunds processed to original payment method within 7 business days."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["INV REF KP flt#/date-cxl.", "INV REF KP FLT#/DATE-CXL"],
+    "involuntary_reissue_code": ["INVOL CHANGE"],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "general_support": "helpdesk@flyasky.com",
+    "group_escalation_email": "crcxdesk@flyasky.com",
+    "cc_contacts": [
+      "akemeh@flyasky.com",
+      "asiro@flyasky.com",
+      "lity@flyasky.com"
+    ]
+  },
+  "policy_deadlines": {
+    "involuntary_reissue": {
+      "eligible_rebooking_range_days": {
+        "before_original_departure": 3,
+        "after_original_departure": 3
+    }
+    }
+  }
+}

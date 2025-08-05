@@ -1,0 +1,47 @@
+{
+  "airline_name": "Hong Kong Airlines",
+  "iata_code": "HX",
+  "plating_carrier": "851",
+  "official_website": "https://www.hongkongairlines.com/en_HK/hx/homepage",
+  "policies": {
+    "involuntary_refund": "\u2022 Eligible if HX cancels flight, causes missed connection, or fails to stop at destination.\n\u2022 100% refund if unused; otherwise, refund based on unused portion.\n\u2022 Must be requested within 60 days of disrupted flight.\n\u2022 Refund not applicable if processed at airport.\n\nRefund on Lost Tickets:\n\u2022 Available 3 months after expiry with proof of loss, indemnity form, and admin fee.",
+    "involuntary_reissue": "\u2022 Rebooking due to flight irregularities must be processed within 10 days of the affected flight.\n\u2022 New flight must depart within 2 days before or 7 days after original date.\n\u2022 Change must be to first available HX-operated flight.\n\u2022 One-time waiver applies only; further changes subject to fare rules.\n\u2022 Fare/tax difference collected if new routing is more expensive.\n\u2022 Group tickets must be handled via local support; not eligible for FIT waivers.",
+    "voluntary_refund": "Voluntary Refunds:\n\u2022 Must follow fare rules; refund amount may be reduced by cancellation or service fees.\n\u2022 Unused portion: refunded as difference between fare paid and used portion.\n\u2022 Request must be made through original issuing office.\n\u2022 Refunds only issued to original payer upon proof of purchase.\n\u2022 No refund for expired tickets unless required by law.\n\u2022 Fare rules vary by region and are strictly enforced.",
+    "medical_refund": "\u2022 Applies to FIT (individual) tickets only.\n\u2022 Delay >3 hours, flight cancellation, interline misconnection, or HX minimum connection time updates qualify.\n\u2022 One-time reissue or reroute permitted per policy window.\n\u2022 Refund waiver applies even on non-refundable tickets if submitted within 60 days of the affected flight.\n\u2022 No waiver if passenger is a no-show.\n\u2022 Rerouting limited to same regional zone (China/Japan).",
+    "name_change": "Individual Bookings (FIT):\n\u2022 One-time free change allowed for:\n  \u2192 Title/gender correction\n  \u2192 Middle name correction\n  \u2192 Inverted name order\n  \u2192 \u22643-character spelling fix\n  \u2192 Legal changes (marriage, divorce, etc.) with documentation\n\u2022 All other changes: HKD 400 or equivalent applies\n\nGroup Bookings:\n\u2022 Same free-change rules apply\n\u2022 Additional changes:\n  \u2192 HKD 500 (normal season)\n  \u2192 HKD 800 (peak season)\n\nTour Leader:\n\u2022 Fee waived with medical certificate and staff ID\n\u2022 Otherwise subject to same HKD 500\u2013800 fee\n\nOSI Required Post-Change:\n\u2022 Add OSI: 'OSI HX NAME CHANGE FM [OLD] TO [NEW] X NAME CHANGE FEE [WAIVED OR COLLECTED]'\n\u2022 If change done at airport: annotate PNR and notify CSC.",
+    "group_booking": "\u2022 Group tickets must be handled via local support channels.\n\u2022 Name changes and reissues follow group fee matrix:\n  \u2192 HKD 500 (standard)\n  \u2192 HKD 800 (peak season)\n\u2022 Tour leader name changes waived for medical emergencies (proof required)\n\u2022 Group rebooking support handled offline\n\u2022 No B2C support offered by APG USA\u2014must contact local station",
+    "infant_policy": "\u2022 Infants under 7 days old are not permitted.\n\u2022 One infant per adult allowed.\n\u2022 Infant ticket fare and baggage allowance vary by region.\n\u2022 Service animals permitted per disability rules.\n\u2022 Cradles, child seats, or bassinets available on request based on aircraft and seat availability.",
+    "baggage_policy": "\u2022 Carry-on: must fit under seat or in overhead bin; size and weight limits apply.\n\u2022 Checked: 32kg max per piece; fees apply for excess or overweight baggage.\n\u2022 Fare families determine free checked bag allowance.\n\u2022 No valuables or fragile items in checked baggage.\n\u2022 Firearms, weapons, and hazardous materials not allowed unless approved in advance.\n\u2022 Service animals allowed in cabin free of charge under conditions.\n\u2022 Lost baggage must be reported within 21 days; damaged baggage within 7 days.\n\u2022 Musical instruments or oversized items must be approved in advance.",
+    "seat_request_policy": "\u2022 Seat assignment is not guaranteed even if preselected.\n\u2022 Carrier may reassign for operational, safety, or legal reasons.\n\u2022 Special meals, Wi-Fi, and inflight services not guaranteed and may vary by fare family.\n\u2022 Refund for seat fees available only if involuntarily changed.\n\u2022 Advance seat selection restricted by fare tier and availability.",
+    "short_term_cancellation_policy": "\u2022 Voluntary cancellations are subject to fare rules.\n\u2022 Refunds permitted only to original form of payment.\n\u2022 No refund if travel documents are missing or visa denied.\n\u2022 No refund if used as proof of outbound travel without departure\n\u2022 Airport refunds are not allowed.\n\u2022 Refund of airport taxes only if cancellation is beyond validity or required by law."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["RM-170604-PT"],
+    "involuntary_reissue_code": ["RM-170604-PT"],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "b2c_support_email": "call.center@hkairlines.com",
+    "b2c_support_phone_hk": "+852 3916 3666",
+    "b2c_support_phone_cn": "95071500"
+  },
+  "policy_deadlines": {
+    "involuntary_refund": {
+      "involuntary_refund_days_after_flight": 60
+    },
+    "involuntary_reissue": {
+      "involuntary_reissue_days_after_disruption": 10,
+      "eligible_rebooking_range_days": {
+        "before_original_departure": 2,
+        "after_original_departure": 7
+      }
+    },
+    "medical_refund": {
+      "medical_refund_days_after_disruption": 60
+    }
+  }
+}

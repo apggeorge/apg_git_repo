@@ -1,0 +1,47 @@
+{
+  "airline_name": "Sky Airline",
+  "iata_code": "H2",
+  "plating_carrier": "401",
+  "official_website": "https://www.skyairline.com/en/unitedstates/sky-airline/",
+  "policies": {
+    "involuntary_refund": "Passengers are eligible for an involuntary refund in the following cases:\n• Flight is advanced by 15 minutes or more\n• Flight is delayed by 30 minutes or more\n• Flight or route is cancelled\n\nPassenger options:\n1. Change of date or flight without penalty or fare difference, within ticket validity.\n2. Full refund to the original form of payment.\n\nProcessing Requirements:\n• If more than 72 hours before departure: agency may process directly in GDS.\n• If less than 72 hours before departure: SKY handles rebooking automatically; agents must not take action until revalidation is complete.\n• If an ancillary EMD-A is attached: SKY will re-associate it if <72h; agents may do so >72h.\n• Reissue must be manual/historical, with penalty removed from mask.\n• Mandatory endorsement code: \"W04\" must be entered in both reissue and refund forms.\n• Failure to comply (e.g., class misuse or missing endorsement) may trigger ADM issuance.\n\nTo request a full refund via ARC/BSP (RI):\n• Use reason code \"W04\" in the refund reason field.\n• Credit Note must be included for local tax compliance.",
+    "involuntary_reissue": "\u2705 Voluntary Changes:\n\u2022 All fares allow date, time, and route change per fare conditions.\n\u2022 Change fee + fare difference applies for Basic, Light, Standard, Max.\n\u2022 Max Flex: No penalty\u2014only fare difference charged.\n\n\u2705 Airport Standby:\n\u2022 Earlier Flight: Free change up to 2h before original flight\u2014subject to availability.\n\u2022 Later Flight: Free change up to 2h after original flight\u2014subject to availability.\n\n\u2705 Involuntary Reissue:\n\u2022 Allowed for IRROPS within same route.\n\u2022 Change must occur within 60 days (or earlier, if requested).",
+    "voluntary_refund": "\u2705 24-Hour Policy:\n\u2022 Full refund or cancellation allowed within 24 hours of booking if flight is \u22657 days from departure.\n\n\u2705 Involuntary Refunds:\n\u2022 If flight is canceled, delayed significantly, or re-routed without consent.\n\u2022 If arrival delay exceeds 4+ hours to final destination (for U.S. flights).\n\u2022 Refund includes base fare, taxes, and unused ancillaries.\n\n\u274c Most fares (Basic, Light, Standard, Max) are non-refundable unless involuntary.\n\u2705 Max Flex Fare is fully refundable.\n\n\u2708\ufe0f Reimbursable fees:\n\u2022 100% of boarding/airport taxes if flight unused.\n\u2022 Passenger must apply within fare conditions or as governed by local law.",
+    "medical_refund": "\u2705 Waivers allowed in cases of:\n\u2022 Flight cancellation or delay (IRROPS)\n\u2022 Medical emergencies with documentation\n\u2022 Death of passenger or close family member (with proof)\n\n\u274c Waivers not allowed for voluntary changes outside fare rules.\n\u2709\ufe0f U.S. support requests must go through Sky\u2019s U.S. office per DOT compliance.",
+    "name_change": "\u2705 One name change allowed:\n\u2022 Up to 24h before departure\n\u2022 Change fee varies by fare\n\u2022 Original flight details remain unchanged\n\u2022 All products/services transfer to new name\n\u2022 Must be processed via 'Manage Your Flight' portal\n\n\ud83c\udd93 Name typo correction: Free if reported within 24h of booking.\n\u274c Change does not allow passenger transfer across reservations.",
+    "group_booking": "\u2022 Groups: 10+ passengers\n\u2022 Deposit and deadlines apply\n\u2022 Name list and TSA info required 30 days before travel\n\u2022 10% reduction allowed without penalty\n\u2022 No name changes allowed after issuance\u2014only corrections per policy\n\u2022 All group travel must be roundtrip together.",
+    "infant_policy": "\u2022 Infants must be \u22657 days old (\u22652 days with medical waiver)\n\u2022 One lap infant per adult\n\u2022 Two strollers allowed free of charge\n\u2022 Infant fare may vary by route\n\u2022 Separate seat purchase allowed for car seat\n\u2022 Child restraint device must meet aircraft safety standards.",
+    "baggage_policy": "\ud83e\uddf3 Cabin:\n\u2022 Handbag: 25x35x45 cm, max 10kg\n\u2022 Carry-on: 25x35x55 cm, max 10kg (if fare includes it)\n\n\ud83e\uddf3 Hold:\n\u2022 Max dimensions: 158cm linear, max 23kg\n\u2022 Overweight: subject to route-based surcharge\n\n\ud83c\udfb8 Special Items:\n\u2022 Musical instruments: max 23kg, up to 230cm (300cm for surfboards/TVs)\n\u2022 Sports gear: bicycle, surfboard, ski, etc. allowed with packing requirements\n\u2022 Strollers free (2 pieces)\n\n\ud83d\udc36 Pets:\n\u2022 PETC: dogs/cats \u226512 weeks, \u226410kg incl. carrier, 4 max per flight\n\u2022 AVIH: dogs/cats/birds up to 45kg (Chile/Peru), 32kg elsewhere\n\u2022 Restricted breeds must travel in cabin (with waiver letter)\n\u2022 Dangerous breeds: AVIH only, max 6 months age, sealed container\n\u2022 U.S. flights: Only service animals allowed in cabin",
+    "seat_request_policy": "\u2022 Five categories: First Row, Fast Exit, Up Front, Extra-Space, Standard\n\u2022 Standard seats assigned randomly unless paid\n\u2022 No emergency exit seats for: minors, PRMs, pregnant pax, PETC, non-Spanish/English speakers\n\u2022 All seat fees non-refundable if changed at airport.\n\u2022 Seat selection transferred automatically during valid reissues.",
+    "short_term_cancellation_policy": "\u2705 Voiding allowed:\n\u2022 Within 24 hours of purchase if flight is \u22657 days out\n\u2022 Free of charge\n\u2022 After 24h window \u2192 refund/reissue rules apply\n\u2022 Must be canceled through original channel of purchase."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": [],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "us_support": "usa@skyairline.com",
+    "refund_team": "devoluciones@skyairline.com",
+    "pets_team": "mascotas@skyairline.com",
+    "group_travel": "grupos@skyairline.com"
+  },
+  "policy_deadlines": {
+    "involuntary_reissue": {
+      "eligible_rebooking_range_deadline": {
+        "after_original_departure": 60
+      }
+    },
+    "group_booking": {
+      "group_names_deadline_before_departure": 30
+    },
+    "name_change": {
+      "name_change_deadline_before_departure": 24,
+      "name_typo_correction_deadline_after_booking": 24
+    }
+  }
+}
