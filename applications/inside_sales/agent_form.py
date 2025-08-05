@@ -62,7 +62,7 @@ if submitted:
         st.stop()
 
     # 1b. Eligibility check
-    eligible_path = os.path.join("..", "..", "reuseable_code", "internal_code", "eligible_4_digit_codes.json")
+    eligible_path = "reuseable_code/internal_code/eligible_4_digit_codes.json"
     try:
         with open(eligible_path, "r") as f:
             eligible_codes = json.load(f).get("eligible_codes", [])
