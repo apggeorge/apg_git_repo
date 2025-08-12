@@ -270,10 +270,6 @@ if support_type == "Refunds / Reissues":
         st.subheader("📌 Service Case #")
         st.code(service_case_id)
 
-        st.subheader("⚠️ Disclaimer & Exclusions")
-        st.markdown("Please review fare rules to avoid any ADM")
-        st.markdown(f"**Agency Eligibility Exclusions:** `{', '.join(excluded) if excluded else 'None on file'}`")
-
         # --- Policy (wrapped, no overspill) ---
         st.subheader("📋 Airline Policy")
         policy_text = (data.get("policies", {}) or {}).get(
@@ -291,9 +287,9 @@ if support_type == "Refunds / Reissues":
         else:
             st.markdown(" No applicable waiver code found ")
 
-        st.subheader("⏰ Policy Deadlines")
-        deadline_data = (data.get("policy_deadlines", {}) or {}).get(service_request_type, {})
-        render_deadlines(deadline_data)
+        st.subheader("⚠️ Disclaimer & Exclusions")
+        st.markdown("Please review fare rules to avoid any ADM")
+        st.markdown(f"**Agency Eligibility Exclusions:** `{', '.join(excluded) if excluded else 'None on file'}`")
 
         submitted_at = datetime.now().strftime("%m%d-%I%M%p")
         log_entry = {
@@ -407,7 +403,7 @@ elif support_type == "Airline Policies":
             st.error("❌ Could not resolve the selected request type.")
             st.stop()
 
-        st.subheader("📋 Policy")
+        st.subheader("📋 Airline Policy")
         ptext = (pdata.get("policies", {}) or {}).get(key, "No policy available for this request type.")
         st.markdown("<div class='wrap-policy'>", unsafe_allow_html=True)
         st.markdown(f"<pre>{_html_escape(ptext)}</pre>", unsafe_allow_html=True)
