@@ -278,7 +278,7 @@ if support_type == "Refunds / Reissues":
             except Exception:
                 st.warning("⚠️ Unable to process the uploaded file. Proceeding without waiver detection.")
 
-        st.subheader("📌 Service Case #")
+        st.subheader("📌 Service Case ID")
         st.code(service_case_id)
 
         # --- Policy (wrapped, no overspill) ---
