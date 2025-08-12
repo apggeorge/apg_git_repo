@@ -248,8 +248,8 @@ if support_type == "Refunds / Reissues":
         st.subheader("📌 Service Case #")
         st.code(service_case_id)
         st.subheader("⚠️ Disclaimer & Exclusions")
-        st.markdown("Please review fare rules, or you could be debited.")
-        st.markdown(f"**Excluded Agencies:** `{', '.join(excluded) if excluded else 'None on file'}`")
+        st.markdown("Please review fare rules to avoid any ADM")
+        st.markdown(f"**Agency Eligibility Exclusions:** `{', '.join(excluded) if excluded else 'None on file'}`")
         # Enable wrapping in st.code boxes
         st.markdown("""
             <style>
@@ -271,12 +271,12 @@ if support_type == "Refunds / Reissues":
         st.code(policy_text)
         st.markdown("</div>", unsafe_allow_html=True)
 
-        st.subheader("🔖 Applicable Endorsement Codes")
+        st.subheader("🔖 Applicable Waiver Codes")
         endo_codes = (data.get("endorsement_codes", {}) or {}).get(f"{service_request_type}_code", [])
         if waiver_present:
             st.markdown(f"`{', '.join(endo_codes) if endo_codes else '—'}`")
         else:
-            st.markdown(" No valid waiver code detected in uploaded PNR ")
+            st.markdown(" No applicable waiver code found ")
         st.subheader("⏰ Policy Deadlines")
         deadline_data = (data.get("policy_deadlines", {}) or {}).get(service_request_type, {})
         render_deadlines(deadline_data)
