@@ -5,6 +5,13 @@ from datetime import datetime, timezone
 from PIL import Image
 import pytesseract
 
+# ---- Page config ----
+st.set_page_config(page_title="APG Agency Support Requests", layout="centered")
+st.markdown(
+    "<h1 style='text-align: center;'>🧭 APG Agency Support Request</h1>",
+    unsafe_allow_html=True
+)
+
 # ---- Storage configuration (APG_STORAGE_DIR) ----
 BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", os.path.expanduser("~/apg_hub/storage"))
 SUBMISSIONS_DIR = os.path.join(BASE_STORAGE_DIR, "submissions")
@@ -12,16 +19,32 @@ SCREENSHOTS_DIR = os.path.join(BASE_STORAGE_DIR, "screenshots")
 os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
 os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
+# ---- Global CSS (wrapping + card for policy text) ----
 st.markdown("""
 <style>
-/* Make ALL st.code blocks wrap instead of overflowing */
-div[data-testid="stCodeBlock"] pre {
-  white-space: pre-wrap !important;   /* respect newlines, allow wrapping */
-  overflow-wrap: anywhere !important; /* wrap long tokens like 13-digit numbers */
-  word-break: break-word !important;
+/* Soft card for policy blocks */
+.wrap-policy {
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 12px;
 }
-div[data-testid="stCodeBlock"] {
-  overflow-x: visible !important;     /* no horizontal scrollbar/bleed */
+.wrap-policy pre {
+  margin: 0;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+  font-size: 0.92rem;
+}
+
+/* Wrap Streamlit code blocks generally (service case id, etc.) */
+div[data-testid="stCodeBlock"] pre,
+div[data-testid="stMarkdownContainer"] pre,
+pre {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -51,6 +74,10 @@ WAIVER_PATTERNS = [
     r"ENDORSEMENT[:\s]+RF-[A-Z0-9]{3,15}",  # Travelport extended
 ]
 
+def _html_escape(s: str) -> str:
+    s = s or ""
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
 def load_json(path, default=None):
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -58,13 +85,11 @@ def load_json(path, default=None):
     except FileNotFoundError:
         return default
 
-
 def airline_name_to_plating_code(name_line: str) -> str | None:
     if not name_line:
         return None
     m = re.search(r"\((\d{3})\)", name_line)
     return m.group(1) if m else None
-
 
 def detect_waiver_signature(text: str) -> bool:
     for p in WAIVER_PATTERNS:
@@ -72,14 +97,11 @@ def detect_waiver_signature(text: str) -> bool:
             return True
     return False
 
-
 def normalize_excluded(excl):
-    """Ensure excluded agencies render as a clean list of names.
-    Accepts list or string; splits comma-delimited singletons."""
+    """Ensure excluded agencies render as a clean list of names."""
     if not excl:
         return []
     if isinstance(excl, list):
-        # Handle one long comma-joined string inside a list
         if len(excl) == 1 and isinstance(excl[0], str) and "," in excl[0]:
             return [x.strip() for x in excl[0].split(",") if x.strip()]
         return [str(x).strip() for x in excl if str(x).strip()]
@@ -87,16 +109,10 @@ def normalize_excluded(excl):
         return [x.strip() for x in excl.split(",") if x.strip()]
     return [str(excl).strip()]  # fallback
 
-
 def render_deadlines(deadline_data: dict | None):
-    """Render deadlines / fare-rule timing info for a given service type.
-    - If an eligible rebooking window is present, show the nice sentence.
-    - Otherwise, list any key/value fields present so nothing gets lost.
-    """
     if not deadline_data:
         st.markdown("—")
         return
-
     d = deadline_data.get("eligible_rebooking_range_deadline")
     if d and all(k in d for k in ("before_original_departure", "after_original_departure")):
         st.markdown(
@@ -106,7 +122,6 @@ def render_deadlines(deadline_data: dict | None):
         rest = {k: v for k, v in deadline_data.items() if k != "eligible_rebooking_range_deadline"}
     else:
         rest = dict(deadline_data)
-
     if rest:
         def pretty(s): return s.replace("_", " ").capitalize()
         st.markdown("**Additional timing rules on file:**")
@@ -134,22 +149,22 @@ st.markdown("""
 <style>
 div.stButton > button {
     height: 48px !important;
-    width: 100% !important;              /* fill the column = same width */
-    background-color: #BFE6FF !important; /* light blue */
-    color: #0F172A !important;            /* dark text */
+    width: 100% !important;
+    background-color: #BFE6FF !important;
+    color: #0F172A !important;
     font-weight: 600 !important;
-    border: 1px solid #93C8E8 !important; /* slightly darker blue border */
+    border: 1px solid #93C8E8 !important;
     border-radius: 10px !important;
 }
 div.stButton > button:hover {
-    background-color: #9DD7FF !important; /* hover light blue */
+    background-color: #9DD7FF !important;
     color: #0F172A !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# --- Three equal columns with real spacing ---
-c1, c2, c3 = st.columns(3, gap="large")  # gap prevents crowding/overlap
+# --- Four equal columns with spacing ---
+c1, c2, c3, c4 = st.columns(4, gap="large")
 
 with c1:
     st.button("💵 Refunds / Reissues",
@@ -166,6 +181,11 @@ with c3:
               on_click=_set_type, args=("Airline Policies",),
               key="btn_policy", use_container_width=True)
 
+with c4:
+    st.button("👥 Groups",
+              on_click=_set_type, args=("Groups",),
+              key="btn_groups", use_container_width=True)
+
 # Now use the persisted selection
 support_type = st.session_state.support_type
 
@@ -180,7 +200,7 @@ if support_type == "Refunds / Reissues":
         service_type_label = st.selectbox("🛠️ Service Request Type", SERVICE_TYPES)
         service_request_type = SERVICE_TYPE_KEYS[service_type_label]
         airline_record_locator = st.text_input("📄 Airline Record Locator Number")
-        agency_id = st.text_input("🏢 Agency ID (ARC/IATA or CLIA Number)")
+        agency_id = st.text_input("🏢 Agency ID (ARC Number)")
         agency_name = st.text_input("🏷️ Agency Name")
         full_pnr = st.file_uploader("📎 Full PNR Screenshot (required for refund/reissue)", type=["png", "jpg", "jpeg", "pdf"])
         email = st.text_input("📧 Email Address")
@@ -191,37 +211,43 @@ if support_type == "Refunds / Reissues":
         if not re.fullmatch(r"\d{13}", ticket_number or ""):
             st.error("❌ Ticket Number must be exactly 13 digits — no dashes, letters, or symbols.")
             st.stop()
+
         eligible_codes = load_json(ELIGIBLE_CODE_PATH, default={}) or {}
         ticket_prefix = (ticket_number or "")[:4]
         if ticket_prefix not in eligible_codes:
-            st.error(
-                f"❌ This ticket is not eligible — APG does not currently service the country of origin for carrier code `{ticket_prefix}`."
-            )
+            st.error(f"❌ This ticket is not eligible — APG does not currently service the country of origin for carrier code `{ticket_prefix}`.")
             st.stop()
+
         if not re.fullmatch(r"[A-Za-z0-9]{6}", airline_record_locator or ""):
             st.error("❌ Record Locator must be exactly 6 letters/numbers — no symbols.")
             st.stop()
+
         required_fields = [ticket_number, service_request_type, airline_record_locator, agency_id, email]
         if not all(required_fields):
             st.error("⚠️ Please fill in all required fields.")
             st.stop()
+
         if service_request_type in ["involuntary_refund", "involuntary_reissue", "medical_refund", "voluntary_refund"] and not full_pnr:
             st.error("📎 PNR screenshot is required for refund or reissue-related requests.")
             st.stop()
+
         plating_code = ticket_number[:3]
         submission_time = datetime.now().strftime("%m%d-%I%M%p")
         service_case_id = f"{plating_code}-{agency_id}-{submission_time}"
         submitted_at_iso = datetime.now(timezone.utc).isoformat()
+
         policy_file = os.path.join(POLICY_DIR, f"{plating_code}.json")
         if not os.path.exists(policy_file):
             st.error(f"❌ No policy found for plating carrier `{plating_code}`.")
             st.stop()
+
         data = load_json(policy_file, default={}) or {}
         excluded = normalize_excluded(data.get("agency_exclusion_list", {}).get("excluded_agencies", []))
+
         waiver_present, ocr_text = False, ""
-        # Always persist the uploaded file (image or PDF) for future parsing
         saved_file_path = None
         attachment_mime = None
+
         if full_pnr is not None:
             try:
                 file_bytes = full_pnr.read()
@@ -232,7 +258,6 @@ if support_type == "Refunds / Reissues":
                     out_file.write(file_bytes)
                 attachment_mime = full_pnr.type
 
-                # OCR only for images
                 if full_pnr.type in ("image/png", "image/jpeg", "image/jpg"):
                     img = Image.open(io.BytesIO(file_bytes))
                     ocr_text = pytesseract.image_to_string(img)
@@ -241,30 +266,22 @@ if support_type == "Refunds / Reissues":
                     st.info("ℹ️ PDF saved for future parsing. OCR not applied in this flow.")
             except Exception:
                 st.warning("⚠️ Unable to process the uploaded file. Proceeding without waiver detection.")
+
         st.subheader("📌 Service Case #")
         st.code(service_case_id)
+
         st.subheader("⚠️ Disclaimer & Exclusions")
         st.markdown("Please review fare rules to avoid any ADM")
         st.markdown(f"**Agency Eligibility Exclusions:** `{', '.join(excluded) if excluded else 'None on file'}`")
-        # Enable wrapping in st.code boxes
-        st.markdown("""
-            <style>
-            pre {
-                white-space: pre-wrap !important;
-                word-wrap: break-word !important;
-            }
-            </style>
-        """, unsafe_allow_html=True)
 
-        # ... keep everything above the same ...
-
+        # --- Policy (wrapped, no overspill) ---
         st.subheader("📋 Airline Policy")
         policy_text = (data.get("policies", {}) or {}).get(
             service_request_type,
             "No policy information found."
         )
         st.markdown("<div class='wrap-policy'>", unsafe_allow_html=True)
-        st.code(policy_text)
+        st.markdown(f"<pre>{_html_escape(policy_text)}</pre>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
         st.subheader("🔖 Applicable Waiver Codes")
@@ -273,15 +290,17 @@ if support_type == "Refunds / Reissues":
             st.markdown(f"`{', '.join(endo_codes) if endo_codes else '—'}`")
         else:
             st.markdown(" No applicable waiver code found ")
+
         st.subheader("⏰ Policy Deadlines")
         deadline_data = (data.get("policy_deadlines", {}) or {}).get(service_request_type, {})
         render_deadlines(deadline_data)
+
         submitted_at = datetime.now().strftime("%m%d-%I%M%p")
         log_entry = {
             "service_case_id": service_case_id,
             "route": "refund_reissue",
-            "submitted_at": submission_time,          # keep human-readable
-            "submitted_at_iso": submitted_at_iso,     # machine-parseable ISO
+            "submitted_at": submission_time,
+            "submitted_at_iso": submitted_at_iso,
             "ticket_number": ticket_number,
             "ticket_prefix": ticket_prefix,
             "plating_code": plating_code,
@@ -307,7 +326,8 @@ elif support_type == "General Inquiries":
         unsafe_allow_html=True
     )
     with st.form("general_form"):
-        agency_name = st.text_input("🏷️ Agency Name")
+        agency_name = st.text_input("🏷️ Agency Name")  # ← already included
+        agency_id = st.text_input("🏢 Agency ID (ARC Number)")
         email = st.text_input("📧 Email Address")
         comment = st.text_area("💬 Comment")
         submitted = st.form_submit_button("Submit Inquiry")
@@ -335,23 +355,17 @@ elif support_type == "Airline Policies":
     with st.form("policy_form"):
         agency_name = st.text_input("🏷️ Agency Name")
 
-        # Load mapping: { "018": "Juneyao Airlines", ... }
         airlines_map_raw = load_json(AIRLINE_LIST_PATH, default={}) or {}
         if not isinstance(airlines_map_raw, dict):
             st.error("❌ Airline list must be a mapping of plating code → airline name.")
             st.stop()
 
-        # Normalize: zero-pad codes, strip whitespace
         airlines_map = {str(k).zfill(3): str(v).strip() for k, v in airlines_map_raw.items()}
-
-        # Sorted options → "Name (code)"
         options = sorted([(name, code) for code, name in airlines_map.items()],
                          key=lambda x: x[0].lower())
         labels = [f"{name} ({code})" for name, code in options]
 
-        # Default index to 0 so it works on older Streamlit versions
         selected_label = st.selectbox("🛫 Airline", labels)
-
         policy_service_pretty = None
         pretty_to_key = {}
 
@@ -376,7 +390,6 @@ elif support_type == "Airline Policies":
 
             policy_service_pretty = st.selectbox("🛠️ Support Request Type", pretty_names)
 
-        # ✅ Ensure the submit button is inside the form
         submitted = st.form_submit_button("🔍 Lookup")
 
     if submitted and selected_label and policy_service_pretty:
@@ -394,24 +407,16 @@ elif support_type == "Airline Policies":
             st.error("❌ Could not resolve the selected request type.")
             st.stop()
 
-        # --- Render policy text
         st.subheader("📋 Policy")
         ptext = (pdata.get("policies", {}) or {}).get(key, "No policy available for this request type.")
         st.markdown("<div class='wrap-policy'>", unsafe_allow_html=True)
-        st.code(ptext)
+        st.markdown(f"<pre>{_html_escape(ptext)}</pre>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # --- Deadlines
-        st.subheader("⏰ Policy Deadlines")
-        dl = (pdata.get("policy_deadlines", {}) or {}).get(key, {})
-        render_deadlines(dl)
-
-        # --- Excluded agencies
         st.subheader("🚫 Excluded Agencies (if any)")
         excl = normalize_excluded((pdata.get("agency_exclusion_list", {}) or {}).get("excluded_agencies", []))
         st.markdown(f"`{', '.join(excl) if excl else 'None on file'}`")
 
-        # --- Log
         pol_time = datetime.now().strftime("%m%d-%I%M%p")
         pol_time_iso = datetime.now(timezone.utc).isoformat()
         pol_case_id = f"{code}-POL-{pol_time}"
@@ -428,3 +433,32 @@ elif support_type == "Airline Policies":
         }
         with open(os.path.join(SUBMISSIONS_DIR, f"{pol_case_id}.json"), "w", encoding="utf-8") as f:
             json.dump(pol_log, f, indent=2)
+
+# ==================== 4) GROUPS (same as General Inquiries) ==================== #
+elif support_type == "Groups":
+    st.markdown(
+        "<h2 style='text-align: center;'>👥 Groups Inquiry</h2>",
+        unsafe_allow_html=True
+    )
+    with st.form("groups_form"):
+        agency_name = st.text_input("🏷️ Agency Name")
+        agency_id = st.text_input("🏢 Agency ID (ARC Number)")
+        email = st.text_input("📧 Email Address")
+        comment = st.text_area("💬 Group Request / Notes")
+        submitted = st.form_submit_button("Submit Groups Request")
+    if submitted:
+        grp_time = datetime.now().strftime("%m%d-%I%M%p")
+        grp_time_iso = datetime.now(timezone.utc).isoformat()
+        grp_case_id = f"GRP-{grp_time}"
+        grp_log = {
+            "service_case_id": grp_case_id,
+            "route": "groups",
+            "agency_name": agency_name,
+            "email": email,
+            "comment": comment,
+            "submitted_at": grp_time,
+            "submitted_at_iso": grp_time_iso,
+        }
+        with open(os.path.join(SUBMISSIONS_DIR, f"{grp_case_id}.json"), "w", encoding="utf-8") as f:
+            json.dump(grp_log, f, indent=2)
+        st.success("✅ Groups request submitted. Our team will contact you shortly.")
