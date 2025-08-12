@@ -28,20 +28,31 @@ st.markdown("""
   background: #f8fafc;
   border-radius: 10px;
   padding: 12px;
-}
-.wrap-policy pre {
-  margin: 0;
-  white-space: pre-wrap !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-  font-size: 0.92rem;
+  overflow-x: hidden;            /* prevent horizontal scroll */
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
-/* Wrap Streamlit code blocks generally (service case id, etc.) */
+/* Ensure wrapping in both <pre> and <code> inside the card */
+.wrap-policy pre,
+.wrap-policy code {
+  display: block;
+  margin: 0;
+  white-space: pre-wrap !important;     /* preserve newlines, wrap long lines */
+  overflow-wrap: anywhere !important;   /* wrap long tokens/URLs */
+  word-break: break-word !important;
+  tab-size: 2;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+/* Wrap Streamlit code/markdown blocks app-wide (service case id, etc.) */
 div[data-testid="stCodeBlock"] pre,
 div[data-testid="stMarkdownContainer"] pre,
-pre {
+div[data-testid="stMarkdownContainer"] code,
+pre,
+code {
   white-space: pre-wrap !important;
   overflow-wrap: anywhere !important;
   word-break: break-word !important;
@@ -276,9 +287,7 @@ if support_type == "Refunds / Reissues":
             service_request_type,
             "No policy information found."
         )
-        st.markdown("<div class='wrap-policy'>", unsafe_allow_html=True)
-        st.markdown(f"<pre>{_html_escape(policy_text)}</pre>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='wrap-policy'><pre>{_html_escape(policy_text)}</pre></div>", unsafe_allow_html=True)
 
         st.subheader("🔖 Applicable Waiver Codes")
         endo_codes = (data.get("endorsement_codes", {}) or {}).get(f"{service_request_type}_code", [])
@@ -322,7 +331,7 @@ elif support_type == "General Inquiries":
         unsafe_allow_html=True
     )
     with st.form("general_form"):
-        agency_name = st.text_input("🏷️ Agency Name")  # ← already included
+        agency_name = st.text_input("🏷️ Agency Name")
         agency_id = st.text_input("🏢 Agency ID (ARC Number)")
         email = st.text_input("📧 Email Address")
         comment = st.text_area("💬 Comment")
@@ -405,9 +414,7 @@ elif support_type == "Airline Policies":
 
         st.subheader("📋 Airline Policy")
         ptext = (pdata.get("policies", {}) or {}).get(key, "No policy available for this request type.")
-        st.markdown("<div class='wrap-policy'>", unsafe_allow_html=True)
-        st.markdown(f"<pre>{_html_escape(ptext)}</pre>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='wrap-policy'><pre>{_html_escape(ptext)}</pre></div>", unsafe_allow_html=True)
 
         st.subheader("🚫 Excluded Agencies (if any)")
         excl = normalize_excluded((pdata.get("agency_exclusion_list", {}) or {}).get("excluded_agencies", []))
