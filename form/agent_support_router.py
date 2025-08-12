@@ -12,20 +12,16 @@ SCREENSHOTS_DIR = os.path.join(BASE_STORAGE_DIR, "screenshots")
 os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
 os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
-st.set_page_config(page_title="APG Agency Support Requests", layout="centered")
-st.markdown(
-    "<h1 style='text-align: center;'>🧭 APG Agency Support Request</h1>",
-    unsafe_allow_html=True
-)
-
 st.markdown("""
 <style>
-/* Wrap Streamlit code blocks */
-div[data-testid="stCodeBlock"] pre,
-div[data-testid="stCodeBlock"] code {
-  white-space: pre-wrap !important;
+/* Make ALL st.code blocks wrap instead of overflowing */
+div[data-testid="stCodeBlock"] pre {
+  white-space: pre-wrap !important;   /* respect newlines, allow wrapping */
+  overflow-wrap: anywhere !important; /* wrap long tokens like 13-digit numbers */
   word-break: break-word !important;
-  overflow-wrap: anywhere !important;
+}
+div[data-testid="stCodeBlock"] {
+  overflow-x: visible !important;     /* no horizontal scrollbar/bleed */
 }
 </style>
 """, unsafe_allow_html=True)
