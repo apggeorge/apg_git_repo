@@ -6,6 +6,8 @@ from PIL import Image
 import pytesseract
 from pathlib import Path
 
+from streamlit_cloud_apps.apg_storage import storage
+
 # =========================
 # Page config + Header
 # =========================
@@ -16,7 +18,7 @@ st.markdown(
 )
 
 # =========================
-# Repo + Storage Paths
+# Repo + Data Paths
 # =========================
 # repo root is one level up from streamlit_cloud_apps/
 REPO_ROOT = Path(__file__).resolve().parent.parent  # => apg_git_repo/
@@ -27,13 +29,6 @@ def _pick_existing(*cands) -> str:
         if c and os.path.exists(c):
             return c
     return cands[0]
-
-# Storage: default to <repo>/storage for local dev; allow override for Streamlit Cloud
-BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", str(REPO_ROOT / "storage"))
-SUBMISSIONS_DIR = os.path.join(BASE_STORAGE_DIR, "submissions")
-SCREENSHOTS_DIR = os.path.join(BASE_STORAGE_DIR, "screenshots")
-os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
-os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
 # Data locations (new canonical paths with fallbacks)
 POLICY_DIR = _pick_existing(
@@ -277,8 +272,9 @@ if support_type == "Refunds / Reissues":
         excluded = normalize_excluded(data.get("agency_exclusion_list", {}).get("excluded_agencies", []))
 
         # Handle attachment + waiver detection
-        waiver_present, ocr_text = False, ""
-        saved_file_path = None
+        waiver_present = False
+        attachment_key = None
+        attachment_url = None
         attachment_mime = None
 
         if full_pnr is not None:
@@ -286,10 +282,10 @@ if support_type == "Refunds / Reissues":
                 file_bytes = full_pnr.read()
                 full_pnr.seek(0)
                 ext = os.path.splitext(full_pnr.name)[-1] or ""
-                saved_file_path = os.path.join(SCREENSHOTS_DIR, f"{service_case_id}{ext}")
-                with open(saved_file_path, "wb") as out_file:
-                    out_file.write(file_bytes)
+                attachment_key = f"screenshots/{service_case_id}{ext}"
+                storage.save_bytes(attachment_key, file_bytes, content_type=full_pnr.type)
                 attachment_mime = full_pnr.type
+                attachment_url = storage.url(attachment_key)
 
                 if full_pnr.type in ("image/png", "image/jpeg", "image/jpg"):
                     img = Image.open(io.BytesIO(file_bytes))
@@ -322,7 +318,7 @@ if support_type == "Refunds / Reissues":
         st.markdown("Please review fare rules to avoid any ADMs ")
         st.markdown(f"**Agency Eligibility Exclusions:** `{', '.join(excluded) if excluded else 'None on file'}`")
 
-        submitted_at = datetime.now().strftime("%m%d-%I%M%p")
+        # Persist submission (shared storage)
         log_entry = {
             "service_case_id": service_case_id,
             "route": "refund_reissue",
@@ -341,10 +337,13 @@ if support_type == "Refunds / Reissues":
             "endorsement_code": endo_codes if waiver_present else [],
             "waiver_detected": waiver_present,
             "attachment_mime": attachment_mime,
-            "saved_file_path": saved_file_path,
+            # Shared storage references:
+            "attachment_key": attachment_key,
+            "attachment_url": attachment_url,
         }
-        with open(os.path.join(SUBMISSIONS_DIR, f"{service_case_id}.json"), "w", encoding="utf-8") as f:
-            json.dump(log_entry, f, indent=2)
+        log_key = f"submissions/{service_case_id}.json"
+        log_entry["storage_key"] = log_key
+        storage.write_json(log_key, log_entry)
 
 # =========================
 # 2) GENERAL INQUIRIES
@@ -369,13 +368,15 @@ elif support_type == "General Inquiries":
             "service_case_id": gi_case_id,
             "route": "general_inquiry",
             "agency_name": agency_name,
+            "agency_id": agency_id,
             "email": email,
             "comment": comment,
             "submitted_at": gi_time,
             "submitted_at_iso": gi_time_iso,
         }
-        with open(os.path.join(SUBMISSIONS_DIR, f"{gi_case_id}.json"), "w", encoding="utf-8") as f:
-            json.dump(gi_log, f, indent=2)
+        gi_key = f"submissions/{gi_case_id}.json"
+        gi_log["storage_key"] = gi_key
+        storage.write_json(gi_key, gi_log)
         st.success("✅ Inquiry submitted. Our team will contact you shortly.")
 
 # =========================
@@ -461,8 +462,9 @@ elif support_type == "Airline Policies":
             "submitted_at_iso": pol_time_iso,
             "excluded_agencies": excl
         }
-        with open(os.path.join(SUBMISSIONS_DIR, f"{pol_case_id}.json"), "w", encoding="utf-8") as f:
-            json.dump(pol_log, f, indent=2)
+        pol_key = f"submissions/{pol_case_id}.json"
+        pol_log["storage_key"] = pol_key
+        storage.write_json(pol_key, pol_log)
 
 # =========================
 # 4) GROUPS (same as General Inquiries)
@@ -487,11 +489,13 @@ elif support_type == "Groups":
             "service_case_id": grp_case_id,
             "route": "groups",
             "agency_name": agency_name,
+            "agency_id": agency_id,
             "email": email,
             "comment": comment,
             "submitted_at": grp_time,
             "submitted_at_iso": grp_time_iso,
         }
-        with open(os.path.join(SUBMISSIONS_DIR, f"{grp_case_id}.json"), "w", encoding="utf-8") as f:
-            json.dump(grp_log, f, indent=2)
+        grp_key = f"submissions/{grp_case_id}.json"
+        grp_log["storage_key"] = grp_key
+        storage.write_json(grp_key, grp_log)
         st.success("✅ Groups request submitted. Our team will contact you shortly.")

@@ -1,17 +1,14 @@
 # 📊 INSIDE SALES DASHBOARD (inside_sales_dashboard.py)
 import streamlit as st
-import json, os, re
+import json, re
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
+
+from streamlit_cloud_apps.apg_storage import storage
 
 # ---------- Page config ----------
 st.set_page_config(page_title="APG Inside Sales Dashboard", layout="wide")
 st.markdown("<h1 style='text-align:center;'>📥 Inside Sales Dashboard</h1>", unsafe_allow_html=True)
-
-# ---------- Storage configuration (must match your form app) ----------
-BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", "/app/storage")
-SUBMISSIONS_DIR = os.path.join(BASE_STORAGE_DIR, "submissions")
-os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
 
 # ---------- UI helpers ----------
 TRIGGER_WORDS = [
@@ -45,39 +42,31 @@ STATUS_COLORS = {
 }
 
 def pretty_request_title(item: Dict[str, Any]) -> str:
-    # Prefer the explicit service_request_type (normalized) if present
     key = item.get("service_request_type")
     if key and key in REQUEST_TYPE_TITLE_MAP:
         return REQUEST_TYPE_TITLE_MAP[key]
-
-    # Otherwise deduce from route or special ids
     route = item.get("route")
     if route == "refund_reissue":
-        # Map a few likely keys; fallback label if missing
         return REQUEST_TYPE_TITLE_MAP.get(key, "Refund/Reissue")
     if route in REQUEST_TYPE_TITLE_MAP:
         return REQUEST_TYPE_TITLE_MAP[route]
     return "Request"
 
 def parse_when(item: Dict[str, Any]) -> datetime:
-    # Prefer ISO for proper sorting; fallback to local string
     iso = item.get("submitted_at_iso")
     if iso:
         try:
             return datetime.fromisoformat(iso.replace("Z", "+00:00"))
         except Exception:
             pass
-    # Fallback if only "submitted_at" exists (e.g., "0814-0933AM")
     s = item.get("submitted_at")
     if s:
         try:
-            # naive best effort: monthday-hourminAMPM (no year) → assume this year
             now = datetime.now()
             dt = datetime.strptime(s, "%m%d-%I%M%p")
             return dt.replace(year=now.year)
         except Exception:
             pass
-    # As a last resort: put it at epoch to not crash sorting
     return datetime(1970, 1, 1, tzinfo=timezone.utc)
 
 def is_urgent(text: Optional[str]) -> bool:
@@ -86,35 +75,19 @@ def is_urgent(text: Optional[str]) -> bool:
     return bool(TRIGGER_RE.search(text))
 
 def load_all_submissions() -> List[Dict[str, Any]]:
-    out = []
-    for name in os.listdir(SUBMISSIONS_DIR):
-        if not name.endswith(".json"):
-            continue
-        path = os.path.join(SUBMISSIONS_DIR, name)
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            # Ensure a few standard fields exist
-            data["_file"] = path
-            # Default status if not present
-            data["status"] = data.get("status", "open")
-            out.append(data)
-        except Exception:
-            # Skip corrupt files but continue
-            continue
-    # Newest first
-    out.sort(key=parse_when, reverse=True)
-    return out
+    items = storage.list_json("submissions")  # each dict has injected _key
+    for it in items:
+        it["status"] = it.get("status", "open")
+    items.sort(key=parse_when, reverse=True)
+    return items
 
-def save_submission(path: str, payload: Dict[str, Any]) -> None:
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2)
+def save_submission(key: str, payload: Dict[str, Any]) -> None:
+    storage.write_json(key, payload)
 
 def header_line(item: Dict[str, Any]) -> str:
     """Format: Request Type — Agency Name — Date — Time"""
     title = pretty_request_title(item)
     agency = item.get("agency_name") or "—"
-    # Show local-ish timestamp based on what we have
     dt = parse_when(item)
     date_str = dt.strftime("%Y-%m-%d")
     time_str = dt.strftime("%I:%M%p").lstrip("0")
@@ -129,7 +102,6 @@ def status_badge(status: str) -> str:
 def urgent_badge(flagged: bool) -> str:
     if not flagged:
         return ""
-    # Yellow badge
     return "<span style='background:#fde68a;color:#7c2d12;padding:2px 8px;border-radius:999px;font-size:12px;margin-left:8px;'>⚠️ Urgent</span>"
 
 # ---------- Sidebar filters ----------
@@ -193,7 +165,6 @@ if not filtered:
     st.info("No submissions match your current filters.")
 else:
     for idx, it in enumerate(filtered):
-        # Determine urgency from comments (handles both 'comments' and 'comment' keys)
         comments_text = it.get("comments") or it.get("comment") or ""
         urgent = is_urgent(comments_text)
 
@@ -249,7 +220,6 @@ else:
             st.markdown("**Comment:**")
             st.write(comments_text if comments_text else "—")
 
-            # If your form wrote these fields, show them smartly
             if it.get("excluded_agencies"):
                 st.markdown("**Excluded Agencies on File:**")
                 st.code(", ".join(it.get("excluded_agencies") or []), language="text")
@@ -258,14 +228,17 @@ else:
                 st.markdown("**Endorsement/Waiver Codes:**")
                 st.code(", ".join(it.get("endorsement_code") or []), language="text")
 
-            if it.get("saved_file_path"):
-                st.markdown(f"**Attachment:** `{it.get('saved_file_path')}`")
+            # Attachment link (from shared storage)
+            if it.get("attachment_url"):
+                st.markdown(f"**Attachment:** [Open attachment]({it['attachment_url']})")
+            elif it.get("attachment_key"):
+                st.markdown(f"**Attachment key:** `{it['attachment_key']}`")
 
             if show_json:
                 st.markdown("**Raw JSON:**")
                 st.code(json.dumps(it, indent=2), language="json")
 
-            # Handle status updates (write back into the same JSON file)
+            # Handle status updates (write back via shared storage)
             if mark_done or reopen:
                 new_status = "completed" if mark_done else "open"
                 it["status"] = new_status
@@ -274,7 +247,10 @@ else:
                 else:
                     it.pop("completed_at_iso", None)
                 try:
-                    save_submission(it["_file"], it)
+                    key = it.get("_key") or it.get("storage_key")
+                    if not key:
+                        raise RuntimeError("Missing storage key for update.")
+                    save_submission(key, it)
                     st.success(f"Status updated to **{new_status}**.")
                 except Exception as e:
                     st.error(f"Failed to update status: {e}")
