@@ -193,41 +193,26 @@ def render_deadlines(deadline_data: dict | None):
             st.markdown("—")
 
 # =========================
-# Top-level selection (Dropdown)
+# Top-level selection (Dropdown) — single source of truth
 # =========================
-if "support_type" not in st.session_state:
-    st.session_state.support_type = None
-
 st.markdown("<h3 style='text-align: center;'>How can we help you?</h3>", unsafe_allow_html=True)
 
 PLACEHOLDER = "— Select a request type —"
-_core_options = [
-    "Airline Policies",
-    "General Inquiries",
-    "Groups",
-    "Refunds / Reissues",
-]
-_core_options.sort(key=str.casefold)
-
-options = [PLACEHOLDER] + _core_options
-
-# If user already chose something earlier, preselect it; otherwise show placeholder
-index = options.index(st.session_state.support_type) if st.session_state.support_type in options else 0
+_core = ["Airline Policies", "General Inquiries", "Groups", "Refunds / Reissues"]
+options = [PLACEHOLDER] + sorted(_core, key=str.casefold)
 
 choice = st.selectbox(
     "Select a request type",
     options,
-    index=index,
+    index=0,                              # always start on placeholder
+    key="support_type_select",            # widget manages its own state
     label_visibility="collapsed",
 )
 
-st.session_state.support_type = None if choice == PLACEHOLDER else choice
+if choice == PLACEHOLDER:
+    st.stop()                             # render nothing below until chosen
 
-# ⛔ Do not render any section until a real choice is made
-if st.session_state.support_type is None:
-    st.stop()
-
-support_type = st.session_state.support_type
+support_type = choice                     # <-- use this variable below
 
 # =========================
 # 1) REFUNDS / REISSUES
