@@ -200,24 +200,34 @@ if "support_type" not in st.session_state:
 
 st.markdown("<h3 style='text-align: center;'>How can we help you?</h3>", unsafe_allow_html=True)
 
-_support_options = [
+PLACEHOLDER = "— Select a request type —"
+_core_options = [
     "Airline Policies",
     "General Inquiries",
     "Groups",
     "Refunds / Reissues",
 ]
-_support_options.sort(key=str.casefold)
+_core_options.sort(key=str.casefold)
 
-_default_index = _support_options.index(st.session_state.support_type) \
-    if st.session_state.support_type in _support_options else 0
+options = [PLACEHOLDER] + _core_options
 
-support_type = st.selectbox(
+# If user already chose something earlier, preselect it; otherwise show placeholder
+index = options.index(st.session_state.support_type) if st.session_state.support_type in options else 0
+
+choice = st.selectbox(
     "Select a request type",
-    _support_options,
-    index=_default_index,
+    options,
+    index=index,
     label_visibility="collapsed",
 )
-st.session_state.support_type = support_type
+
+st.session_state.support_type = None if choice == PLACEHOLDER else choice
+
+# ⛔ Do not render any section until a real choice is made
+if st.session_state.support_type is None:
+    st.stop()
+
+support_type = st.session_state.support_type
 
 # =========================
 # 1) REFUNDS / REISSUES
