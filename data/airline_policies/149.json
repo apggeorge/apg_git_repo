@@ -16,7 +16,7 @@
     "short_term_cancellation_policy": "\u2022 Tickets may be voided same-day within BSPLink standard window.\n\u2022 After that window, refund rules apply per fare category.\n\u2022 No post-midnight voiding unless authorized by Luxair ARC contact.\n\u2022 No penalty-free void outside same-day issuance window."
   },
   "agency_exclusion_list": {
-    "excluded_agencies": ["Expedia", "Priceline", "Hopper", "Fareportal", "Travix"]
+    "excluded_agencies": []
   },
   "endorsement_codes": {
     "involuntary_refund_code": [],

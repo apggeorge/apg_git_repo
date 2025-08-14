@@ -294,10 +294,10 @@ if support_type == "Refunds / Reissues":
         if waiver_present:
             st.markdown(f"`{', '.join(endo_codes) if endo_codes else '—'}`")
         else:
-            st.markdown(" No applicable waiver code found ")
+            st.markdown(" Waiver Code is not required. ")
 
         st.subheader("⚠️ Disclaimer & Exclusions")
-        st.markdown("Please review fare rules to avoid any ADM")
+        st.markdown("Please review fare rules to avoid any ADMs ")
         st.markdown(f"**Agency Eligibility Exclusions:** `{', '.join(excluded) if excluded else 'None on file'}`")
 
         submitted_at = datetime.now().strftime("%m%d-%I%M%p")

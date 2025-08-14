@@ -16,7 +16,7 @@
     "short_term_cancellation_policy": "If GDS void fails within 24 hours:\n\u2022 Ensure all conditions met:\n  \u2022 USA-issued ticket\n  \u2022 Amadeus or Sabre\n  \u2022 Within 24h window\n\u2022 Agent should:\n  \u2022 Cancel all segments\n  \u2022 Refund with waiver code in ENDO (e.g., NO703204)\n  \u2022 Open IR in Amadeus\n  \u2022 Email case to: distribution@neosair.it\n  \u2022 CC: filippo.casali@neosair.it\n\u2022 Use subject: 'Unable to void within 24 hours \u2013 Neos PNR\u2026'\n\u2022 Log all exceptions in waiver Excel.\n\u2022 Fri\u2013Sun exceptions: Monday voids may apply."
   },
   "agency_exclusion_list": {
-    "excluded_agencies": ["Expedia, Etraveli Group, Gotogate, eDreams, MyTrip.com, All ARC branches"]
+    "excluded_agencies": ["Expedia"]
   },
   "endorsement_codes": {
     "involuntary_refund_code": ["INV REF NO FLT#/DATE-CXL", "INV REF NO [Flight#/Date-CXL]"],
