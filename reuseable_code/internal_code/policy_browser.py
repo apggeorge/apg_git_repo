@@ -3,11 +3,10 @@ import json
 import os
 from glob import glob
 from typing import Any, Dict, List, Optional, Tuple
-
 import streamlit as st
 
 # ---------- Config ----------
-DEFAULT_DIR = os.path.join("apg_hub", "data", "airline_policies")  # adjust if needed
+DEFAULT_DIR = os.path.join("data", "airline_policies")
 
 TITLE_MAP = {
     "involuntary_refund": "Involuntary Refund",
@@ -30,7 +29,7 @@ SCHEMA_HINT = {
         "policies", "agency_exclusion_list", "endorsement_codes",
         "support_contacts"
     ],
-    "policies_required": PREFERRED_ORDER,  # you can trim or change this if some are optional
+    "policies_required": PREFERRED_ORDER,
     "endorsement_subkeys": [
         "involuntary_refund_code",
         "involuntary_reissue_code",
@@ -38,7 +37,7 @@ SCHEMA_HINT = {
     ],
 }
 
-# ---------- Small helpers ----------
+# ---------- Helpers ----------
 def titleize_policy_key(key: str) -> str:
     return TITLE_MAP.get(key, key.replace("_", " ").title())
 
@@ -52,14 +51,10 @@ def load_json(path: str) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
 def normalize_md(text: str) -> str:
     if not isinstance(text, str):
         return ""
-    # Normalize common bullet characters and tidy whitespace
-    out = text.replace("\r\n", "\n").replace("•", "-").replace("\u2022", "-")
-    out = out.replace("→", "→")  # keep arrows; placeholder for future transforms
-    return out.strip()
+    return text.replace("\r\n", "\n").replace("•", "-").replace("\u2022", "-").strip()
 
 def validate_policy(doc: Dict[str, Any]) -> List[str]:
     errs = []
-    # top-level presence
     for k in SCHEMA_HINT["top_level_required"]:
         if k not in doc:
             errs.append(f"Missing top-level key: `{k}`")
@@ -69,12 +64,10 @@ def validate_policy(doc: Dict[str, Any]) -> List[str]:
         errs.append("`policies` must be an object")
         return errs
 
-    # required policy keys (treat as warnings if you prefer)
     for k in SCHEMA_HINT["policies_required"]:
         if k not in policies:
             errs.append(f"Missing policy key: `{k}`")
 
-    # endorsement codes structure
     enc = doc.get("endorsement_codes", {})
     if not isinstance(enc, dict):
         errs.append("`endorsement_codes` must be an object")
@@ -82,9 +75,6 @@ def validate_policy(doc: Dict[str, Any]) -> List[str]:
         for sub in SCHEMA_HINT["endorsement_subkeys"]:
             if sub not in enc:
                 errs.append(f"Missing endorsement subkey: `{sub}`")
-
-    # spot common empties
-    if isinstance(enc, dict):
         for k, v in enc.items():
             if v in (None, "", []) and k.endswith("_code"):
                 errs.append(f"`{k}` is empty")
@@ -100,8 +90,10 @@ def render_header(doc: Dict[str, Any]):
     with col1:
         st.markdown(f"## {doc.get('airline_name', 'Unknown Airline')}")
         sub = []
-        if doc.get("iata_code"): sub.append(f"**IATA:** {doc['iata_code']}")
-        if doc.get("plating_carrier"): sub.append(f"**Plating Carrier:** {doc['plating_carrier']}")
+        if doc.get("iata_code"):
+            sub.append(f"**IATA:** {doc['iata_code']}")
+        if doc.get("plating_carrier"):
+            sub.append(f"**Plating Carrier:** {doc['plating_carrier']}")
         st.markdown(" • ".join(sub) if sub else "")
         if doc.get("official_website"):
             st.markdown(f"[Official Website]({doc['official_website']})")
@@ -110,7 +102,6 @@ def render_header(doc: Dict[str, Any]):
         st.metric("Excluded Agencies", len(excluded) if isinstance(excluded, list) else 0)
 
 def render_policies(policies: Dict[str, Any]):
-    # ordered display: our preferred order first, then any extras
     ordered_keys = PREFERRED_ORDER + [k for k in policies.keys() if k not in PREFERRED_ORDER]
     seen = set()
     for key in ordered_keys:
@@ -124,14 +115,10 @@ def render_endorsements(enc: Dict[str, Any]):
     if not isinstance(enc, dict) or not enc:
         st.info("No endorsement codes provided.")
         return
-
     rows = []
     for k, v in enc.items():
         label = k.replace("_code", "")
-        rows.append({
-            "Type": titleize_policy_key(label),
-            "Codes": ", ".join(v) if isinstance(v, list) and v else "—"
-        })
+        rows.append({"Type": titleize_policy_key(label), "Codes": ", ".join(v) if v else "—"})
     st.table(rows)
 
 def render_deadlines(deadlines: Dict[str, Any]):
@@ -149,7 +136,6 @@ def render_deadlines(deadlines: Dict[str, Any]):
             else:
                 st.markdown("- Eligible rebooking window: _not fully specified_.")
         else:
-            # fallback raw view
             st.code(json.dumps(cfg, indent=2), language="json")
 
 def render_support_contacts(contacts: Dict[str, Any]):
@@ -157,7 +143,6 @@ def render_support_contacts(contacts: Dict[str, Any]):
     if not isinstance(contacts, dict) or not contacts:
         st.info("No internal contacts listed.")
         return
-    # Do not expose in emails; this is only for reviewers
     for k, v in contacts.items():
         st.markdown(f"- **{k.replace('_', ' ').title()}**: {v}")
 
@@ -168,26 +153,18 @@ def list_policy_files(base_dir: str) -> List[str]:
 st.set_page_config(page_title="Airline Policy Browser", layout="wide")
 st.title("🧭 Airline Policy Browser")
 
+# Sidebar
 with st.sidebar:
     st.header("Settings")
-    base_dir = st.text_input("Policies directory", value=DEFAULT_DIR)
+    base_dir = DEFAULT_DIR
+    st.caption(f"Browsing: {os.path.abspath(base_dir)}")
     files = list_policy_files(base_dir)
     st.caption(f"Found {len(files)} JSON file(s).")
-
-    # derive code list from filename (e.g., 275.json -> 275)
-    options = []
-    code_map = {}
-    for path in files:
-        name = os.path.basename(path)
-        code = os.path.splitext(name)[0]
-        options.append(f"{code}  —  {name}")
-        code_map[f"{code}  —  {name}"] = path
-
+    options = [f"{os.path.splitext(os.path.basename(p))[0]}  —  {os.path.basename(p)}" for p in files]
+    code_map = {opt: path for opt, path in zip(options, files)}
     chosen = st.selectbox("Select plating carrier file", options) if options else None
     search = st.text_input("Filter by airline name/code (within file contents)", value="").strip().lower()
     show_raw = st.checkbox("Show raw JSON at bottom", value=False)
-    st.markdown("---")
-    st.caption("Tip: Put this app at repo root. Adjust path if your layout differs.")
 
 if not files:
     st.warning("No JSON files found. Check the directory path.")
@@ -203,14 +180,13 @@ if err or not isinstance(doc, dict):
     st.error(f"Failed to load JSON: {err or 'not an object'}")
     st.stop()
 
-# Optional content search filter
 if search:
     hay = json.dumps(doc).lower()
     if search not in hay:
-        st.info(f"No match for '{search}' in this file. Clear the filter or pick another file.")
+        st.info(f"No match for '{search}' in this file.")
         st.stop()
 
-# Validation summary
+# Validation
 errors = validate_policy(doc)
 if errors:
     with st.expander(f"⚠️ {len(errors)} issue(s) detected – click to review", expanded=True):
@@ -219,12 +195,11 @@ if errors:
 else:
     st.success("Schema looks good.")
 
-# Render content
+# Render
 render_header(doc)
 st.markdown("---")
 st.subheader("Policies")
 render_policies(doc.get("policies", {}))
-
 st.markdown("---")
 render_endorsements(doc.get("endorsement_codes", {}))
 
@@ -238,7 +213,6 @@ if isinstance(contacts, dict) and contacts:
     st.markdown("---")
     render_support_contacts(contacts)
 
-# Agency exclusions (for reviewers)
 excl = (doc.get("agency_exclusion_list") or {}).get("excluded_agencies", [])
 st.markdown("---")
 st.markdown("### 🚫 Agency Exclusions")
