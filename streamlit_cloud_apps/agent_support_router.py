@@ -4,35 +4,54 @@ import json, os, re, io
 from datetime import datetime, timezone
 from PIL import Image
 import pytesseract
-
 from pathlib import Path
 
-# repo root is one level up from streamlit_cloud_apps/
-REPO_ROOT = Path(__file__).resolve().parent.parent
-
-# Use Cloud-friendly default; override with APG_STORAGE_DIR if set
-BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", "/app/storage")
-SUBMISSIONS_DIR = os.path.join(str(BASE_STORAGE_DIR), "submissions")
-SCREENSHOTS_DIR = os.path.join(str(BASE_STORAGE_DIR), "screenshots")
-os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
-os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
-
-# repo-relative data paths
-POLICY_DIR = str(REPO_ROOT / "airline_policies")
-ELIGIBILITY_DIR = REPO_ROOT / "eligibility"
-ELIGIBLE_CODE_PATH = str(ELIGIBILITY_DIR / "eligible_4_digit_codes.json")
-AIRLINE_LIST_PATH = str(ELIGIBILITY_DIR / "eligible_airline_names.json")
-
-# ---- Page config ----
+# =========================
+# Page config + Header
+# =========================
 st.set_page_config(page_title="APG Agency Support Requests", layout="centered")
 st.markdown(
     "<h1 style='text-align: center;'>🧭 APG Agency Support Request</h1>",
     unsafe_allow_html=True
 )
 
+# =========================
+# Repo + Storage Paths
+# =========================
+# repo root is one level up from streamlit_cloud_apps/
+REPO_ROOT = Path(__file__).resolve().parent.parent  # => apg_git_repo/
+
+def _pick_existing(*cands) -> str:
+    """Return the first existing path from candidates; otherwise first candidate."""
+    for c in cands:
+        if c and os.path.exists(c):
+            return c
+    return cands[0]
+
+# Storage: default to <repo>/storage for local dev; allow override for Streamlit Cloud
+BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", str(REPO_ROOT / "storage"))
+SUBMISSIONS_DIR = os.path.join(BASE_STORAGE_DIR, "submissions")
+SCREENSHOTS_DIR = os.path.join(BASE_STORAGE_DIR, "screenshots")
+os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
 os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
-# ---- Global CSS (wrapping + card for policy text) ----
+# Data locations (new canonical paths with fallbacks)
+POLICY_DIR = _pick_existing(
+    str(REPO_ROOT / "airline_policies"),
+    "data/airline_policies",
+)
+ELIGIBLE_CODE_PATH = _pick_existing(
+    str(REPO_ROOT / "eligibility" / "eligible_4_digit_codes.json"),
+    str(REPO_ROOT / "reuseable_code" / "internal_code" / "eligible_4_digit_codes.json"),
+)
+AIRLINE_LIST_PATH = _pick_existing(
+    str(REPO_ROOT / "eligibility" / "eligible_airline_names.json"),
+    str(REPO_ROOT / "reuseable_code" / "internal_code" / "eligible_airline_names.json"),
+)
+
+# =========================
+# Global CSS (wrapping)
+# =========================
 st.markdown("""
 <style>
 /* Soft card for policy blocks */
@@ -41,25 +60,23 @@ st.markdown("""
   background: #f8fafc;
   border-radius: 10px;
   padding: 12px;
-  overflow-x: hidden;            /* prevent horizontal scroll */
+  overflow-x: hidden;
   box-sizing: border-box;
   max-width: 100%;
 }
-
 /* Ensure wrapping in both <pre> and <code> inside the card */
 .wrap-policy pre,
 .wrap-policy code {
   display: block;
   margin: 0;
-  white-space: pre-wrap !important;     /* preserve newlines, wrap long lines */
-  overflow-wrap: anywhere !important;   /* wrap long tokens/URLs */
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
   word-break: break-word !important;
   tab-size: 2;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
   font-size: 0.92rem;
   line-height: 1.4;
 }
-
 /* Wrap Streamlit code/markdown blocks app-wide (service case id, etc.) */
 div[data-testid="stCodeBlock"] pre,
 div[data-testid="stMarkdownContainer"] pre,
@@ -73,7 +90,9 @@ code {
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------- Helpers -------------------- #
+# =========================
+# Helpers
+# =========================
 SERVICE_TYPES = [
     "Involuntary Refund",
     "Involuntary Reissue",
@@ -104,6 +123,24 @@ def load_json(path, default=None):
             return json.load(f)
     except FileNotFoundError:
         return default
+
+def load_eligible_codes(path: str) -> set[str]:
+    """
+    Accepts JSON as either:
+      - ["2757", "2758", ...] OR
+      - {"codes": [...]}      OR
+      - {"2757": true, ...}   (keys used)
+    Returns a set of zero-padded 4-digit strings.
+    """
+    raw = load_json(path, default=[]) or []
+    if isinstance(raw, dict):
+        raw = raw.get("codes", list(raw.keys()))
+    codes = set()
+    for item in raw:
+        s = re.sub(r"\D", "", str(item))  # digits only
+        if s:
+            codes.add(s.zfill(4))
+    return codes
 
 def airline_name_to_plating_code(name_line: str) -> str | None:
     if not name_line:
@@ -155,61 +192,36 @@ def render_deadlines(deadline_data: dict | None):
         if not d:
             st.markdown("—")
 
-# ---- Persisted selection for support type ----
+# =========================
+# Top-level selection (Dropdown)
+# =========================
 if "support_type" not in st.session_state:
     st.session_state.support_type = None
 
-def _set_type(val: str):
-    st.session_state.support_type = val
-
 st.markdown("<h3 style='text-align: center;'>How can we help you?</h3>", unsafe_allow_html=True)
 
-# --- Button styles (uniform + light blue) ---
-st.markdown("""
-<style>
-div.stButton > button {
-    height: 48px !important;
-    width: 100% !important;
-    background-color: #BFE6FF !important;
-    color: #0F172A !important;
-    font-weight: 600 !important;
-    border: 1px solid #93C8E8 !important;
-    border-radius: 10px !important;
-}
-div.stButton > button:hover {
-    background-color: #9DD7FF !important;
-    color: #0F172A !important;
-}
-</style>
-""", unsafe_allow_html=True)
+_support_options = [
+    "Airline Policies",
+    "General Inquiries",
+    "Groups",
+    "Refunds / Reissues",
+]
+_support_options.sort(key=str.casefold)
 
-# --- Four equal columns with spacing ---
-c1, c2, c3, c4 = st.columns(4, gap="large")
+_default_index = _support_options.index(st.session_state.support_type) \
+    if st.session_state.support_type in _support_options else 0
 
-with c1:
-    st.button("💵 Refunds / Reissues",
-              on_click=_set_type, args=("Refunds / Reissues",),
-              key="btn_refund", use_container_width=True)
+support_type = st.selectbox(
+    "Select a request type",
+    _support_options,
+    index=_default_index,
+    label_visibility="collapsed",
+)
+st.session_state.support_type = support_type
 
-with c2:
-    st.button("📩 General Inquiries",
-              on_click=_set_type, args=("General Inquiries",),
-              key="btn_general", use_container_width=True)
-
-with c3:
-    st.button("📑 Airline Policies",
-              on_click=_set_type, args=("Airline Policies",),
-              key="btn_policy", use_container_width=True)
-
-with c4:
-    st.button("👥 Groups",
-              on_click=_set_type, args=("Groups",),
-              key="btn_groups", use_container_width=True)
-
-# Now use the persisted selection
-support_type = st.session_state.support_type
-
-# ==================== 1) REFUNDS / REISSUES ==================== #
+# =========================
+# 1) REFUNDS / REISSUES
+# =========================
 if support_type == "Refunds / Reissues":
     st.markdown(
         "<h2 style='text-align: center;'>🛫 Refund / Reissue Submission</h2>",
@@ -222,20 +234,25 @@ if support_type == "Refunds / Reissues":
         airline_record_locator = st.text_input("📄 Airline Record Locator Number")
         agency_id = st.text_input("🏢 Agency ID (ARC Number)")
         agency_name = st.text_input("🏷️ Agency Name")
-        full_pnr = st.file_uploader("📎 Full PNR Screenshot (required for refund/reissue)", type=["png", "jpg", "jpeg", "pdf"])
+        full_pnr = st.file_uploader(
+            "📎 Full PNR Screenshot (required for refund/reissue)",
+            type=["png", "jpg", "jpeg", "pdf"]
+        )
         email = st.text_input("📧 Email Address")
         comments = st.text_area("💬 Comments (optional)")
         submitted = st.form_submit_button("🚀 Submit")
 
     if submitted:
+        # Basic field checks
         if not re.fullmatch(r"\d{13}", ticket_number or ""):
             st.error("❌ Ticket Number must be exactly 13 digits — no dashes, letters, or symbols.")
             st.stop()
 
-        eligible_codes = load_json(ELIGIBLE_CODE_PATH, default={}) or {}
+        eligible_codes = load_eligible_codes(ELIGIBLE_CODE_PATH)
         ticket_prefix = (ticket_number or "")[:4]
         if ticket_prefix not in eligible_codes:
             st.error(f"❌ This ticket is not eligible — APG does not currently service the country of origin for carrier code `{ticket_prefix}`.")
+            st.caption(f"Debug: using {ELIGIBLE_CODE_PATH}; {len(eligible_codes)} codes loaded.")
             st.stop()
 
         if not re.fullmatch(r"[A-Za-z0-9]{6}", airline_record_locator or ""):
@@ -256,14 +273,15 @@ if support_type == "Refunds / Reissues":
         service_case_id = f"{plating_code}-{agency_id}-{submission_time}"
         submitted_at_iso = datetime.now(timezone.utc).isoformat()
 
+        # Load policy
         policy_file = os.path.join(POLICY_DIR, f"{plating_code}.json")
         if not os.path.exists(policy_file):
             st.error(f"❌ No policy found for plating carrier `{plating_code}`.")
             st.stop()
-
         data = load_json(policy_file, default={}) or {}
         excluded = normalize_excluded(data.get("agency_exclusion_list", {}).get("excluded_agencies", []))
 
+        # Handle attachment + waiver detection
         waiver_present, ocr_text = False, ""
         saved_file_path = None
         attachment_mime = None
@@ -287,10 +305,10 @@ if support_type == "Refunds / Reissues":
             except Exception:
                 st.warning("⚠️ Unable to process the uploaded file. Proceeding without waiver detection.")
 
+        # Display results
         st.subheader("📌 Service Case ID")
         st.code(service_case_id)
 
-        # --- Policy (wrapped, no overspill) ---
         st.subheader("📋 Airline Policy")
         policy_text = (data.get("policies", {}) or {}).get(
             service_request_type,
@@ -333,7 +351,9 @@ if support_type == "Refunds / Reissues":
         with open(os.path.join(SUBMISSIONS_DIR, f"{service_case_id}.json"), "w", encoding="utf-8") as f:
             json.dump(log_entry, f, indent=2)
 
-# ==================== 2) GENERAL INQUIRIES ==================== #
+# =========================
+# 2) GENERAL INQUIRIES
+# =========================
 elif support_type == "General Inquiries":
     st.markdown(
         "<h2 style='text-align: center;'>📨 General Inquiry</h2>",
@@ -345,6 +365,7 @@ elif support_type == "General Inquiries":
         email = st.text_input("📧 Email Address")
         comment = st.text_area("💬 Comment")
         submitted = st.form_submit_button("Submit Inquiry")
+
     if submitted:
         gi_time = datetime.now().strftime("%m%d-%I%M%p")
         gi_time_iso = datetime.now(timezone.utc).isoformat()
@@ -362,7 +383,9 @@ elif support_type == "General Inquiries":
             json.dump(gi_log, f, indent=2)
         st.success("✅ Inquiry submitted. Our team will contact you shortly.")
 
-# ==================== 3) AIRLINE POLICIES ==================== #
+# =========================
+# 3) AIRLINE POLICIES
+# =========================
 elif support_type == "Airline Policies":
     st.markdown("<h2 style='text-align:center;'>📚 Airline Policy Lookup</h2>", unsafe_allow_html=True)
 
@@ -446,7 +469,9 @@ elif support_type == "Airline Policies":
         with open(os.path.join(SUBMISSIONS_DIR, f"{pol_case_id}.json"), "w", encoding="utf-8") as f:
             json.dump(pol_log, f, indent=2)
 
-# ==================== 4) GROUPS (same as General Inquiries) ==================== #
+# =========================
+# 4) GROUPS (same as General Inquiries)
+# =========================
 elif support_type == "Groups":
     st.markdown(
         "<h2 style='text-align: center;'>👥 Groups Inquiry</h2>",
@@ -458,6 +483,7 @@ elif support_type == "Groups":
         email = st.text_input("📧 Email Address")
         comment = st.text_area("💬 Group Request / Notes")
         submitted = st.form_submit_button("Submit Groups Request")
+
     if submitted:
         grp_time = datetime.now().strftime("%m%d-%I%M%p")
         grp_time_iso = datetime.now(timezone.utc).isoformat()
