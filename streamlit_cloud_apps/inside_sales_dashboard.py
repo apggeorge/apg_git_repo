@@ -9,7 +9,7 @@ st.set_page_config(page_title="APG Inside Sales Dashboard", layout="wide")
 st.markdown("<h1 style='text-align:center;'>📥 Inside Sales Dashboard</h1>", unsafe_allow_html=True)
 
 # ---------- Storage configuration (must match your form app) ----------
-BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", os.path.expanduser("~/apg_hub/storage"))
+BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", "/app/storage")
 SUBMISSIONS_DIR = os.path.join(BASE_STORAGE_DIR, "submissions")
 os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
 
@@ -181,7 +181,7 @@ with left:
 with mid:
     sort_choice = st.selectbox("Sort by", ["Newest first", "Oldest first"], index=0, label_visibility="collapsed")
 with right:
-    show_json = st.toggle("Show raw JSON in details", value=False)
+    show_json = st.checkbox("Show raw JSON in details", value=False)
 
 if sort_choice == "Oldest first":
     filtered = list(reversed(filtered))

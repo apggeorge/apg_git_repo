@@ -5,6 +5,24 @@ from datetime import datetime, timezone
 from PIL import Image
 import pytesseract
 
+from pathlib import Path
+
+# repo root is one level up from streamlit_cloud_apps/
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# Use Cloud-friendly default; override with APG_STORAGE_DIR if set
+BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", "/app/storage")
+SUBMISSIONS_DIR = os.path.join(str(BASE_STORAGE_DIR), "submissions")
+SCREENSHOTS_DIR = os.path.join(str(BASE_STORAGE_DIR), "screenshots")
+os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
+os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
+
+# repo-relative data paths
+POLICY_DIR = str(REPO_ROOT / "airline_policies")
+ELIGIBILITY_DIR = REPO_ROOT / "eligibility"
+ELIGIBLE_CODE_PATH = str(ELIGIBILITY_DIR / "eligible_4_digit_codes.json")
+AIRLINE_LIST_PATH = str(ELIGIBILITY_DIR / "eligible_airline_names.json")
+
 # ---- Page config ----
 st.set_page_config(page_title="APG Agency Support Requests", layout="centered")
 st.markdown(
@@ -12,11 +30,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---- Storage configuration (APG_STORAGE_DIR) ----
-BASE_STORAGE_DIR = os.environ.get("APG_STORAGE_DIR", os.path.expanduser("~/apg_hub/storage"))
-SUBMISSIONS_DIR = os.path.join(BASE_STORAGE_DIR, "submissions")
-SCREENSHOTS_DIR = os.path.join(BASE_STORAGE_DIR, "screenshots")
-os.makedirs(SUBMISSIONS_DIR, exist_ok=True)
 os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
 # ---- Global CSS (wrapping + card for policy text) ----

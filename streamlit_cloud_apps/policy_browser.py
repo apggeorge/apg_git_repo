@@ -5,8 +5,9 @@ from glob import glob
 from typing import Any, Dict, List, Optional, Tuple
 import streamlit as st
 
-# ---------- Config ----------
-DEFAULT_DIR = os.path.join("data", "airline_policies")
+from pathlib import Path
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_DIR = str(REPO_ROOT / "airline_policies")
 
 TITLE_MAP = {
     "involuntary_refund": "Involuntary Refund",
