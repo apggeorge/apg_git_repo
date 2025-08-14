@@ -8,6 +8,15 @@ from pathlib import Path
 
 from streamlit_cloud_apps.apg_storage import storage
 
+# preferred (when repo root is on sys.path)
+try:
+    from streamlit_cloud_apps.apg_storage import storage
+except ModuleNotFoundError:
+    # fallback: import as a sibling module
+    import os, sys
+    sys.path.append(os.path.dirname(__file__))
+    from apg_storage import storage
+
 # =========================
 # Page config + Header
 # =========================

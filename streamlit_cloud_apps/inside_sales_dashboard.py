@@ -6,6 +6,15 @@ from typing import Dict, Any, List, Optional
 
 from streamlit_cloud_apps.apg_storage import storage
 
+# preferred (when repo root is on sys.path)
+try:
+    from streamlit_cloud_apps.apg_storage import storage
+except ModuleNotFoundError:
+    # fallback: import as a sibling module
+    import os, sys
+    sys.path.append(os.path.dirname(__file__))
+    from apg_storage import storage
+
 # ---------- Page config ----------
 st.set_page_config(page_title="APG Inside Sales Dashboard", layout="wide")
 st.markdown("<h1 style='text-align:center;'>📥 Inside Sales Dashboard</h1>", unsafe_allow_html=True)
