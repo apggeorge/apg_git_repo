@@ -87,10 +87,6 @@ SERVICE_TYPE_KEYS = {
     "Voluntary Refund": "voluntary_refund",
 }
 
-ELIGIBLE_CODE_PATH = "reuseable_code/internal_code/eligible_4_digit_codes.json"
-AIRLINE_LIST_PATH = "reuseable_code/internal_code/eligible_airline_names.json"
-POLICY_DIR = "data/airline_policies"
-
 WAIVER_PATTERNS = [
     r"/DC[A-Z0-9]{2,3}\*[A-Z0-9]{4,10}/E",  # Sabre
     r"RF-[A-Z0-9]{4,10}",                   # Amadeus
