@@ -186,7 +186,7 @@ else:
 
         with st.expander(f"{header_line(it)}   — {badge}{urgent_tag}", expanded=urgent):
             # --- Compact Status Toggle (auto-save) ---
-            top_l, top_r = st.columns([6, 1])
+            top_l, top_r = st.columns([8, 2])
             with top_r:
                 state_key = f"_last_status_{idx}"
                 last_status = st.session_state.get(state_key, it.get("status", "open"))
