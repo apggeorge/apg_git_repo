@@ -3,3 +3,5 @@ pytesseract
 Pillow
 python-dateutil
 requests
+numpy
+matplotlib
