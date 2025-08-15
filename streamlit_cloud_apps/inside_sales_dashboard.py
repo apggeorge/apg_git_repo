@@ -16,7 +16,7 @@ except ModuleNotFoundError:
 URGENCY_KEYWORDS = [
     "urgent", "critical", "asap", "immediately",
     "emergency", "priority", "important",
-    "expedite", "rush", "high priority"
+    "expedite", "rush", "high priority",
 ]
 TRIGGER_RE = re.compile(r"\b(" + "|".join(map(re.escape, URGENCY_KEYWORDS)) + r")\b", re.IGNORECASE)
 
@@ -24,6 +24,7 @@ TRIGGER_RE = re.compile(r"\b(" + "|".join(map(re.escape, URGENCY_KEYWORDS)) + r"
 st.set_page_config(page_title="APG Inside Sales Dashboard", layout="wide")
 st.markdown("<h1 style='text-align:center;'>📥 Inside Sales Dashboard</h1>", unsafe_allow_html=True)
 
+# small polish for expanders + toggle spacing
 st.markdown("""
 <style>
 details.st-expander {
@@ -32,6 +33,8 @@ details.st-expander {
 details.st-expander > summary {
   padding:10px 14px; list-style:none; cursor:pointer;
 }
+/* keep the toggle compact so it sits nicely in the header row of details */
+div[data-testid="stCheckbox"] label p { margin-bottom: 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -95,7 +98,7 @@ def _fetch_from_index() -> List[Dict[str, Any]]:
         return []
     if not isinstance(index, list) or not index:
         return []
-    out = []
+    out: List[Dict[str, Any]] = []
     for entry in index:
         try:
             if isinstance(entry, dict) and "key" in entry:
@@ -140,11 +143,7 @@ def header_line(item: Dict[str, Any]) -> str:
 
 # ---------- Sidebar filters ----------
 st.sidebar.header("Filters")
-route_filter = st.sidebar.multiselect(
-    "Route",
-    options=list(ROUTE_FRIENDLY.values()),
-    default=[]
-)
+route_filter = st.sidebar.multiselect("Route", options=list(ROUTE_FRIENDLY.values()), default=[])
 status_filter = st.sidebar.multiselect("Status", options=["open", "completed"], default=["open"])
 search_query = st.sidebar.text_input("Search (agency, email, case id, comments)")
 st.sidebar.caption("Tip: leave filters blank to show everything.")
@@ -186,12 +185,35 @@ else:
         badge = "🟢 Completed" if it.get("status") == "completed" else "🟠 Open"
 
         with st.expander(f"{header_line(it)}   — {badge}{urgent_tag}", expanded=urgent):
-            cols = st.columns([1, 1, 6])
-            with cols[0]:
-                mark_done = st.button("✅ Mark Completed", key=f"done_{idx}", disabled=(it.get("status") == "completed"))
-            with cols[1]:
-                reopen = st.button("↩️ Reopen", key=f"reopen_{idx}", disabled=(it.get("status") != "completed"))
+            # --- Compact Status Toggle (auto-save) ---
+            top_l, top_r = st.columns([6, 1])
+            with top_r:
+                state_key = f"_last_status_{idx}"
+                last_status = st.session_state.get(state_key, it.get("status", "open"))
+                completed_now = st.toggle(
+                    "Completed",
+                    value=(last_status == "completed"),
+                    key=f"completed_toggle_{idx}",
+                    help="Flip to mark this ticket completed / reopen",
+                )
+                new_status = "completed" if completed_now else "open"
+                if new_status != last_status:
+                    it["status"] = new_status
+                    if new_status == "completed":
+                        it["completed_at_iso"] = datetime.now(timezone.utc).isoformat()
+                    else:
+                        it.pop("completed_at_iso", None)
+                    try:
+                        key = it.get("_key") or it.get("storage_key")
+                        if not key:
+                            raise RuntimeError("Missing storage key for update.")
+                        save_submission(key, it)
+                        st.session_state[state_key] = new_status
+                        st.success(f"Status updated to **{new_status}**.")
+                    except Exception as e:
+                        st.error(f"Failed to update status: {e}")
 
+            # --- Core metadata ---
             def field(label, value):
                 st.markdown(f"**{label}:** {value if value not in [None, ''] else '—'}")
 
@@ -230,22 +252,6 @@ else:
 
             if st.checkbox("Show raw JSON", key=f"showjson_{idx}"):
                 st.code(json.dumps(it, indent=2), language="json")
-
-            if mark_done or reopen:
-                new_status = "completed" if mark_done else "open"
-                it["status"] = new_status
-                if new_status == "completed":
-                    it["completed_at_iso"] = datetime.now(timezone.utc).isoformat()
-                else:
-                    it.pop("completed_at_iso", None)
-                try:
-                    key = it.get("_key") or it.get("storage_key")
-                    if not key:
-                        raise RuntimeError("Missing storage key for update.")
-                    save_submission(key, it)
-                    st.success(f"Status updated to **{new_status}**.")
-                except Exception as e:
-                    st.error(f"Failed to update status: {e}")
 
 st.markdown("---")
 st.caption("💡 Pro tip: urgent keywords in comments trigger a yellow caution icon and auto-open the case.")
