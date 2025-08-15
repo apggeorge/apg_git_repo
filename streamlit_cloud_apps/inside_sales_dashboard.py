@@ -33,7 +33,7 @@ details.st-expander {
 details.st-expander > summary {
   padding:10px 14px; list-style:none; cursor:pointer;
 }
-/* keep the toggle compact so it sits nicely in the header row of details */
+/* keep any checkbox/toggle labels tight */
 div[data-testid="stCheckbox"] label p { margin-bottom: 0; }
 </style>
 """, unsafe_allow_html=True)
@@ -185,33 +185,32 @@ else:
         badge = "🟢 Completed" if it.get("status") == "completed" else "🟠 Open"
 
         with st.expander(f"{header_line(it)}   — {badge}{urgent_tag}", expanded=urgent):
-            # --- Compact Status Toggle (auto-save) ---
-            top_l, top_r = st.columns([8, 2])
-            with top_r:
-                state_key = f"_last_status_{idx}"
-                last_status = st.session_state.get(state_key, it.get("status", "open"))
-                completed_now = st.toggle(
-                    "Completed",
-                    value=(last_status == "completed"),
-                    key=f"completed_toggle_{idx}",
-                    help="Flip to mark this ticket completed / reopen",
-                )
-                new_status = "completed" if completed_now else "open"
-                if new_status != last_status:
-                    it["status"] = new_status
-                    if new_status == "completed":
-                        it["completed_at_iso"] = datetime.now(timezone.utc).isoformat()
-                    else:
-                        it.pop("completed_at_iso", None)
-                    try:
-                        key = it.get("_key") or it.get("storage_key")
-                        if not key:
-                            raise RuntimeError("Missing storage key for update.")
-                        save_submission(key, it)
-                        st.session_state[state_key] = new_status
-                        st.success(f"Status updated to **{new_status}**.")
-                    except Exception as e:
-                        st.error(f"Failed to update status: {e}")
+            # --- Completed toggle LEFT-ALIGNED (auto-save) ---
+            # lives directly under the expander header, aligned with the content
+            state_key = f"_last_status_{idx}"
+            last_status = st.session_state.get(state_key, it.get("status", "open"))
+            completed_now = st.toggle(
+                "Completed",
+                value=(last_status == "completed"),
+                key=f"completed_toggle_{idx}",
+                help="Flip to mark this ticket completed / reopen",
+            )
+            new_status = "completed" if completed_now else "open"
+            if new_status != last_status:
+                it["status"] = new_status
+                if new_status == "completed":
+                    it["completed_at_iso"] = datetime.now(timezone.utc).isoformat()
+                else:
+                    it.pop("completed_at_iso", None)
+                try:
+                    key = it.get("_key") or it.get("storage_key")
+                    if not key:
+                        raise RuntimeError("Missing storage key for update.")
+                    save_submission(key, it)
+                    st.session_state[state_key] = new_status
+                    st.success(f"Status updated to **{new_status}**.")
+                except Exception as e:
+                    st.error(f"Failed to update status: {e}")
 
             # --- Core metadata ---
             def field(label, value):
