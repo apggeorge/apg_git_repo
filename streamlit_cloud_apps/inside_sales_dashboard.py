@@ -29,6 +29,10 @@ with st.expander("Storage debug", expanded=False):
     except Exception as e:
         st.error(f"Storage error: {e}")
 
+    # extra visibility on the computed path
+    st.write("APG_GH_PREFIX:", os.environ.get("APG_GH_PREFIX"))
+    st.write("Full path requested:", f"{os.environ.get('APG_GH_PREFIX')}/submissions/")
+
 with st.expander("Direct read test", expanded=False):
     try:
         # 👇 use an actual filename you see in GitHub (no leading slash)
