@@ -5,3 +5,4 @@ python-dateutil
 requests
 numpy
 matplotlib
+pandas
