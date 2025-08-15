@@ -65,7 +65,6 @@ st.markdown("""
   box-sizing: border-box;
   max-width: 100%;
 }
-/* Ensure wrapping in both <pre> and <code> inside the card */
 .wrap-policy pre,
 .wrap-policy code {
   display: block;
@@ -78,7 +77,6 @@ st.markdown("""
   font-size: 0.92rem;
   line-height: 1.4;
 }
-/* Wrap Streamlit code/markdown blocks app-wide (service case id, etc.) */
 div[data-testid="stCodeBlock"] pre,
 div[data-testid="stMarkdownContainer"] pre,
 div[data-testid="stMarkdownContainer"] code,
@@ -202,7 +200,6 @@ def _index_add(dir_key: str, meta: dict):
     if hasattr(storage, "upsert_index_item"):
         storage.upsert_index_item(dir_key, meta)
         return
-    # fallback: keep a list of keys (no metadata)
     index_key = f"{dir_key.rstrip('/')}/_index.json"
     try:
         lst = storage.read_json(index_key)
@@ -216,6 +213,318 @@ def _index_add(dir_key: str, meta: dict):
         storage.write_json(index_key, lst)
 
 # =========================
+# NEW: OCR + GDS detection + PNR parsing helpers
+# =========================
+GDS_SABRE_HINTS = ("WETR*", "PCC:", "/DC", "PLT", "FCI")
+GDS_AMADEUS_HINTS = ("TST/", "FA PAX", "NONEND", "INVOL", "FE PAX")
+GDS_TRAVELPORT_HINTS = ("WAIVER:", "ENDORSEMENT:", "WORLDSPAN", "GALILEO", "APOLLO")
+
+MONTH_MAP = {"JAN":1,"FEB":2,"MAR":3,"APR":4,"MAY":5,"JUN":6,
+             "JUL":7,"AUG":8,"SEP":9,"OCT":10,"NOV":11,"DEC":12}
+
+def detect_gds(text: str) -> str:
+    t = (text or "").upper()
+    if any(h in t for h in GDS_SABRE_HINTS): return "sabre"
+    if any(h in t for h in GDS_AMADEUS_HINTS): return "amadeus"
+    if any(h in t for h in GDS_TRAVELPORT_HINTS): return "travelport"
+    if re.search(r"/DC[A-Z0-9]{2,3}\*[A-Z0-9]{4,10}/E", t): return "sabre"
+    if re.search(r"NONEND|RF-[A-Z0-9]{3,}", t): return "amadeus"
+    return "unknown"
+
+def _parse_issued_date_token(tok: str):
+    tok = tok.strip().upper()
+    m = re.match(r"(\d{1,2})([A-Z]{3})(\d{2,4})$", tok)
+    if not m: return None
+    d, mon, y = m.groups()
+    year = int(y) if len(y)==4 else 2000 + int(y)
+    try:
+        return datetime(year, MONTH_MAP[mon], int(d))
+    except Exception:
+        return None
+
+def _time_token_to_minutes(t: str):
+    if not t: return None
+    t = t.strip().upper()
+    m = re.match(r"(\d{1,4})([AP])", t)
+    if not m: return None
+    raw, ap = m.groups()
+    raw = raw.zfill(4)
+    hh, mm = int(raw[:-2]), int(raw[-2:])
+    if ap == "P" and hh != 12: hh += 12
+    if ap == "A" and hh == 12: hh = 0
+    return hh*60 + mm
+
+# --- extra time parser that handles both 12h (150P) and 24h (1550 or 0015+1) ---
+def _to_minutes_any(tok: str):
+    if not tok: return None
+    t = tok.strip().upper()
+    m = re.match(r"(\d{3,4})([AP])$", t)  # 0350P
+    if m:
+        h = int(m.group(1)[:-2] or "0"); mmin = int(m.group(1)[-2:])
+        if m.group(2) == "P" and h != 12: h += 12
+        if m.group(2) == "A" and h == 12: h = 0
+        return h*60 + mmin
+    m = re.match(r"^([01]\d|2[0-3])([0-5]\d)(?:\+1)?$", t)  # 1550 or 0015+1
+    if m:
+        return int(m.group(1))*60 + int(m.group(2))
+    return None
+
+def _minutes_to_hm(m):
+    if m is None: return None
+    m = int(m)
+    if m < 0: m = (m + 1440) % 1440
+    return f"{m//60}h {m%60}m"
+
+def extract_common_signatures(text: str):
+    t = (text or "")
+    sigs = []
+    sigs += re.findall(r"/DC[A-Z0-9]{2,3}\*[A-Z0-9]{4,12}/E", t, flags=re.I)           # Sabre
+    sigs += re.findall(r"(?:NONEND[^\n]*?WAIVER[^\n]*?[A-Z0-9]{3,})", t, flags=re.I)   # Amadeus
+    sigs += re.findall(r"RF-[A-Z0-9]{3,12}", t, flags=re.I)                            # RF- reasons
+    sigs += re.findall(r"WAIVER[:\s]+[A-Z0-9]{3,15}", t, flags=re.I)                   # Travelport
+    return sorted(set(sigs))
+
+def extract_status_codes(text: str):
+    pat = r"\b(HK\d?|HX\d?|TK\d?|SC|HS\/HK\d?|HK\/HX\d?|NN\/\w+|SS\d?)\b"
+    return sorted(set(re.findall(pat, text or "", flags=re.I)))
+
+def extract_ticket_issue_date(text: str):
+    m = re.search(r"ISSUED[:\s]*(\d{1,2}[A-Z]{3}\d{2,4})", text or "", flags=re.I)
+    if not m:
+        m = re.search(r"\bDT(\d{1,2}[A-Z]{3}\d{2,4})\b", text or "", flags=re.I)  # Amadeus FA/DT
+    if not m: return None, None
+    raw = m.group(1).upper()
+    dt = _parse_issued_date_token(raw)
+    return (dt, raw)
+
+def extract_pnr_locator(text: str):
+    m = re.search(r"\bPNR[:\s]*([A-Z0-9]{5,6})\b", text or "", flags=re.I)
+    if m: return m.group(1).upper()
+    m = re.search(r"\bLOCATOR[:\s-]*([A-Z0-9]{6})\b", text or "", flags=re.I)
+    return m.group(1).upper() if m else None
+
+def extract_ticket_number(text: str):
+    m = re.search(r"\bTKT[:\s-]*?(\d{10,14})\b", text or "", flags=re.I)
+    if m: return m.group(1)
+    m = re.search(r"\bFA\s+PAX\s+(\d{10,14})\b", text or "", flags=re.I)  # Amadeus
+    return m.group(1) if m else None
+
+def extract_sabre_segments(text: str):
+    segs = []
+    pat = re.compile(
+        r"^(?:\s*\d+|AS)\s+([A-Z0-9]{2})\s+([A-Z0-9]+)\s+(\d{1,2}[A-Z]{3})\s+([A-Z]{3})([A-Z]{3})\s+([A-Z/]{2,6}\d?)\s+(\d{3,4}[AP])\s+(\d{3,4}[AP])",
+        re.I | re.M
+    )
+    for car, flt, dt, o, d, stat, dep, arr in pat.findall(text or ""):
+        segs.append({
+            "car":car.upper(),"flt":flt.upper(),"date":dt.upper(),
+            "orig":o.upper(),"dest":d.upper(),"stat":stat.upper(),
+            "dep":dep.upper(),"arr":arr.upper()
+        })
+    return segs
+
+# --- Generic (Amadeus/Travelport) segments (24h and 12h times) ---
+SEG_ROW_24H = re.compile(
+    r"^\s*\d+\s+([A-Z0-9]{2})\s+([A-Z0-9]+)\s+[A-Z]?\s+(\d{1,2}[A-Z]{3})\s+([A-Z]{3})\s*([A-Z]{3})\s+([A-Z]{2}\d?)\s+(\d{4}(?:\+1)?)\s+(\d{4}(?:\+1)?)",
+    re.I | re.M
+)
+SEG_ROW_12H = re.compile(
+    r"^\s*(?:\d+|0?\d)\s+([A-Z0-9]{2})\s+([A-Z0-9]+)\s+[A-Z]?\s+(\d{1,2}[A-Z]{3})\s+([A-Z]{3})\s*([A-Z]{3})\s+([A-Z/]{2,6}\d?)\s+(\d{3,4}[AP])\s+(\d{3,4}[AP])",
+    re.I | re.M
+)
+def extract_generic_segments(text: str):
+    segs = []
+    idx = 0
+    for r in SEG_ROW_24H.findall(text or ""):
+        car, flt, dt, o, d, stat, dep, arr = [x.upper() for x in r]
+        segs.append({"idx": idx, "car":car,"flt":flt,"date":dt,"orig":o,"dest":d,"stat":stat,"dep":dep,"arr":arr}); idx+=1
+    for r in SEG_ROW_12H.findall(text or ""):
+        car, flt, dt, o, d, stat, dep, arr = [x.upper() for x in r]
+        segs.append({"idx": idx, "car":car,"flt":flt,"date":dt,"orig":o,"dest":d,"stat":stat,"dep":dep,"arr":arr}); idx+=1
+    return segs
+
+CXL = re.compile(r"^(HX|UN|UC|US|NO)\d*$", re.I)
+OK  = re.compile(r"^(HK|OK|HS|TKOK)\d*$", re.I)
+
+def extract_sabre_schedule_change(text: str):
+    t = text or ""
+    sc = re.search(
+        r"^\s*SC\s+([A-Z0-9]{2})\s+([A-Z0-9]+)\s+(\d{1,2}[A-Z]{3})\s+([A-Z]{3})([A-Z]{3})\s+[A-Z/]{2,6}\d?\s+(\d{3,4}[AP])\s+(\d{3,4}[AP])",
+        t, flags=re.I | re.M
+    )
+    if not sc: return None
+    car, flt, dt, o, d, old_dep, old_arr = [g.upper() for g in sc.groups()]
+    segs = extract_sabre_segments(t)
+    new = next((s for s in segs if s["date"]==dt and s["orig"]==o and s["dest"]==d), None)
+    if not new:
+        return {"date":dt,"orig":o,"dest":d,"old_dep":old_dep,"old_arr":old_arr}
+
+    old_dep_m = _time_token_to_minutes(old_dep)
+    old_arr_m = _time_token_to_minutes(old_arr)
+    new_dep_m = _time_token_to_minutes(new["dep"])
+    new_arr_m = _time_token_to_minutes(new["arr"])
+    dep_delta = (new_dep_m - old_dep_m) if (new_dep_m is not None and old_dep_m is not None) else None
+    arr_delta = (new_arr_m - old_arr_m) if (new_arr_m is not None and old_arr_m is not None) else None
+    if dep_delta is not None and dep_delta < -720: dep_delta += 1440
+    if arr_delta is not None and arr_delta < -720: arr_delta += 1440
+
+    return {
+        "date": dt, "orig": o, "dest": d,
+        "old_dep": old_dep, "old_arr": old_arr,
+        "new_dep": new["dep"], "new_arr": new["arr"],
+        "delta_dep_min": dep_delta, "delta_arr_min": arr_delta,
+        "max_delta_min": max([x for x in (dep_delta, arr_delta) if x is not None], default=None),
+        "method": "sabre_sc_line"
+    }
+
+def compute_schedule_change_from_segments(segs):
+    """
+    Pair a cancelled 'old' seg with a confirmed 'new' seg for same date+OD.
+    Returns the largest absolute delta (minutes) and details.
+    """
+    best = None
+    key_to_old = {}
+    key_to_new = {}
+    for s in segs:
+        key = (s.get("date"), s.get("orig"), s.get("dest"))
+        if not key[0] or not key[1] or not key[2]: 
+            continue
+        if CXL.match(s.get("stat","")):
+            key_to_old.setdefault(key, []).append(s)
+        elif OK.match(s.get("stat","")):
+            key_to_new.setdefault(key, []).append(s)
+
+    for key in set(key_to_old) & set(key_to_new):
+        for old in key_to_old[key]:
+            for new in key_to_new[key]:
+                od = _to_minutes_any(old["dep"]); nd = _to_minutes_any(new["dep"])
+                oa = _to_minutes_any(old["arr"]); na = _to_minutes_any(new["arr"])
+                if None in (od, nd, oa, na): 
+                    continue
+                dep_delta = nd - od
+                arr_delta = na - oa
+                if dep_delta < -720: dep_delta += 1440
+                if arr_delta < -720: arr_delta += 1440
+                cand = {
+                    "date": key[0], "orig": key[1], "dest": key[2],
+                    "old_dep": old["dep"], "old_arr": old["arr"],
+                    "new_dep": new["dep"], "new_arr": new["arr"],
+                    "delta_dep_min": dep_delta, "delta_arr_min": arr_delta,
+                    "max_delta_min": max(dep_delta, arr_delta),
+                    "method": "pair_old_new_segments"
+                }
+                if not best or cand["max_delta_min"] > best["max_delta_min"]:
+                    best = cand
+    return best
+
+def compute_layover_minutes(segments):
+    """Compute layover between seg0 arrival and seg1 departure if present."""
+    if not segments or len(segments) < 2: return None
+    a = _to_minutes_any(segments[0]["arr"])
+    d = _to_minutes_any(segments[1]["dep"])
+    if a is None or d is None: return None
+    lay = d - a
+    if lay < 0: lay += 1440
+    return lay
+
+# ========= Sign-off + Issue detection (minimal, cross-GDS) =========
+RE_REASON_CODES = re.compile(r"\bRF-[A-Z0-9]{3,12}\b", re.I)
+ISSUE_PATTERNS = [
+    ("schedule_change",  re.compile(r"\b(SC(HD)?\s?CHG|SKCHG|SCHG|SCHEDULE\s*CHANGE|RETIMED?|RE-TIME)\b", re.I)),
+    ("cancellation",     re.compile(r"\b(CXL|CANCEL(L|ED|ATION)?|FLT\s*CNL|NO-OP)\b", re.I)),
+    ("delay",            re.compile(r"\b(DELAY|DLAY|RETARD)\b", re.I)),
+    ("denied_boarding",  re.compile(r"\b(DENIED\s*BOARDING|OVERSALE|OVERSOLD|DB|INVOL\s*DNB)\b", re.I)),
+    ("misconnect",       re.compile(r"\b(MISCONNECT|MISCONX|MISCNX)\b", re.I)),
+    ("weather",          re.compile(r"\b(WEATHER|WX)\b", re.I)),
+    ("maintenance",      re.compile(r"\b(MX|MAINT(ENANCE)?)\b", re.I)),
+    ("atc",              re.compile(r"\b(ATC|AIR\s*TRAFFIC\s*CONTROL)\b", re.I)),
+    ("security",         re.compile(r"\b(SECURITY|SEC)\b", re.I)),
+    ("involuntary",      re.compile(r"\b(INVOL(UNTARY)?|IRROPS?|IROP)\b", re.I)),
+]
+def detect_airline_signoff(text: str, signatures: list[str]) -> bool:
+    if signatures:
+        return True
+    t = (text or "").upper()
+    if re.search(r"/DC[A-Z0-9]{2,3}\*[A-Z0-9]{4,12}/E", t):  # Sabre ENDO
+        return True
+    if re.search(r"\bWAIVER[:\s]+[A-Z0-9]{3,}\b", t):        # Travelport-style
+        return True
+    if re.search(r"\b(ENDORSEMENT|AUTH(?:ORIZATION| CODE)?|APPR(?:OVAL)?)\b", t):
+        return True
+    return False
+
+def detect_issue_tokens(text: str) -> tuple[list[str], str | None]:
+    tokens = []
+    best = None
+    for label, rx in ISSUE_PATTERNS:
+        if rx.search(text or ""):
+            tokens.append(label)
+            if best is None:
+                best = label
+    return sorted(set(tokens)), best
+
+def extract_reason_codes(text: str) -> list[str]:
+    return sorted(set(RE_REASON_CODES.findall(text or "")))
+
+def parse_pnr_text(text: str) -> dict:
+    gds = detect_gds(text)
+    out = {
+        "gds": gds,
+        "pnr": extract_pnr_locator(text),
+        "ticket_number": extract_ticket_number(text),
+        "status_codes": extract_status_codes(text),
+        "endorsement_signatures": extract_common_signatures(text),
+        "issue_date_raw": None,
+        "issue_date_iso": None,
+        "time_since_issue_days": None,
+        "time_until_expiration_days": None,
+        "schedule_change": None,
+        "layover_minutes": None,
+        "segments": [],
+        # NEW:
+        "airline_signed_off": False,
+        "issue_tokens": [],
+        "issue_label": None,
+        "reason_codes": [],
+    }
+
+    issued_dt, issued_raw = extract_ticket_issue_date(text)
+    if issued_dt:
+        out["issue_date_raw"] = issued_raw
+        out["issue_date_iso"] = issued_dt.strftime("%Y-%m-%d")
+        out["time_since_issue_days"] = (datetime.now() - issued_dt).days
+        exp_days = (issued_dt.replace(year=issued_dt.year+1) - datetime.now()).days
+        out["time_until_expiration_days"] = max(exp_days, 0)
+
+    # Segments + layover + schedule change per GDS
+    if gds == "sabre":
+        segs = extract_sabre_segments(text)
+        sc = extract_sabre_schedule_change(text)
+        if not sc:
+            # fallback to pairing if SC not present
+            sc = compute_schedule_change_from_segments(segs)
+    else:
+        segs = extract_generic_segments(text)
+        sc = compute_schedule_change_from_segments(segs)
+
+    out["segments"] = segs
+    out["layover_minutes"] = compute_layover_minutes(segs)
+    out["schedule_change"] = sc
+
+    # INV REF eligibility (3h)
+    out["inv_ref_eligibility_minutes"] = (sc or {}).get("max_delta_min")
+    out["inv_ref_eligibility_3h"] = (out["inv_ref_eligibility_minutes"] is not None
+                                     and out["inv_ref_eligibility_minutes"] >= 180)
+
+    # Sign-off + issue detection + reason codes
+    out["airline_signed_off"] = detect_airline_signoff(text, out["endorsement_signatures"])
+    toks, best = detect_issue_tokens(text)
+    out["issue_tokens"], out["issue_label"] = toks, best
+    out["reason_codes"] = extract_reason_codes(text)
+
+    return out
+
+# =========================
 # Top-level selection (Dropdown) — single source of truth
 # =========================
 st.markdown("<h3 style='text-align: center;'>How can we help you?</h3>", unsafe_allow_html=True)
@@ -227,15 +536,25 @@ options = [PLACEHOLDER] + sorted(_core, key=str.casefold)
 choice = st.selectbox(
     "Select a request type",
     options,
-    index=0,                              # always start on placeholder
-    key="support_type_select",            # widget manages its own state
+    index=0,
+    key="support_type_select",
     label_visibility="collapsed",
 )
 
 if choice == PLACEHOLDER:
-    st.stop()                             # render nothing below until chosen
+    st.stop()
 
-support_type = choice                     # <-- use this variable below
+support_type = choice
+
+# ======= bottom bar helper (shown after any submission) =======
+def render_additional_bar(suffix: str):
+    st.markdown("<hr style='margin-top:1.25rem;margin-bottom:0.75rem;'>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; font-weight:600;'>Additional Support Requests?</div>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1,1,1])
+    with col2:
+        if st.button("➕ Start another request", key=f"new_req_{suffix}"):
+            st.session_state["support_type_select"] = PLACEHOLDER
+            st.rerun()
 
 # =========================
 # 1) REFUNDS / REISSUES
@@ -299,11 +618,12 @@ if support_type == "Refunds / Reissues":
         data = load_json(policy_file, default={}) or {}
         excluded = normalize_excluded(data.get("agency_exclusion_list", {}).get("excluded_agencies", []))
 
-        # Handle attachment + waiver detection
+        # Handle attachment + OCR + parsing
         waiver_present = False
         attachment_key = None
         attachment_url = None
         attachment_mime = None
+        parsed_meta = {}
 
         if full_pnr is not None:
             try:
@@ -316,13 +636,14 @@ if support_type == "Refunds / Reissues":
                 attachment_url = storage.url(attachment_key)
 
                 if full_pnr.type in ("image/png", "image/jpeg", "image/jpg"):
-                    img = Image.open(io.BytesIO(file_bytes))
+                    img = Image.open(io.BytesIO(file_bytes)).convert("L")
                     ocr_text = pytesseract.image_to_string(img)
-                    waiver_present = detect_waiver_signature(ocr_text)
+                    parsed_meta = parse_pnr_text(ocr_text)
+                    waiver_present = bool(parsed_meta.get("endorsement_signatures"))
                 elif full_pnr.type == "application/pdf":
                     st.info("ℹ️ PDF saved for future parsing. OCR not applied in this flow.")
-            except Exception:
-                st.warning("⚠️ Unable to process the uploaded file. Proceeding without waiver detection.")
+            except Exception as e:
+                st.warning(f"⚠️ Unable to process the uploaded file ({e}). Proceeding without waiver detection.")
 
         # Display results
         st.subheader("📌 Service Case ID")
@@ -341,6 +662,44 @@ if support_type == "Refunds / Reissues":
             st.markdown(f"`{', '.join(endo_codes) if endo_codes else '—'}`")
         else:
             st.markdown(" Waiver Code is not required. ")
+
+        # Parsed metadata & quick eligibility
+        st.subheader("🧠 Parsed PNR Metadata")
+        st.json({
+            "gds": parsed_meta.get("gds"),
+            "pnr": parsed_meta.get("pnr"),
+            "ticket_number_in_pnr": parsed_meta.get("ticket_number"),
+            "issue_date_raw": parsed_meta.get("issue_date_raw"),
+            "issue_date_iso": parsed_meta.get("issue_date_iso"),
+            "time_since_issue_days": parsed_meta.get("time_since_issue_days"),
+            "time_until_ticket_expiration_days": parsed_meta.get("time_until_expiration_days"),
+            "status_codes": parsed_meta.get("status_codes"),
+            "endorsement_signatures": parsed_meta.get("endorsement_signatures"),
+            "segments": parsed_meta.get("segments"),
+            "layover_minutes": parsed_meta.get("layover_minutes"),
+            "schedule_change": parsed_meta.get("schedule_change"),
+            "inv_ref_eligibility_minutes": parsed_meta.get("inv_ref_eligibility_minutes"),
+            "inv_ref_eligibility_3h": parsed_meta.get("inv_ref_eligibility_3h"),
+            "airline_signed_off": parsed_meta.get("airline_signed_off"),
+            "reason_codes": parsed_meta.get("reason_codes"),
+            "issue_tokens": parsed_meta.get("issue_tokens"),
+            "issue_label": parsed_meta.get("issue_label"),
+        })
+
+        sc_min = parsed_meta.get("inv_ref_eligibility_minutes")
+        if sc_min is not None:
+            if sc_min >= 180:
+                st.success(f"✅ Schedule change delta = {_minutes_to_hm(sc_min)} (≥ 3h). INV REF likely eligible.")
+            else:
+                st.info(f"ℹ️ Schedule change delta = {_minutes_to_hm(sc_min)} (< 3h). Likely NOT eligible for INV REF.")
+
+        st.subheader("✍️ Airline Sign-Off & Issue Summary")
+        st.markdown(
+            f"- **Airline sign-off detected:** {'✅ Yes' if parsed_meta.get('airline_signed_off') else '❌ No'}\n"
+            f"- **Reason codes (RF-):** `{', '.join(parsed_meta.get('reason_codes') or []) or '—'}`\n"
+            f"- **Issue tokens:** `{', '.join(parsed_meta.get('issue_tokens') or []) or '—'}`\n"
+            f"- **Primary issue label:** `{parsed_meta.get('issue_label') or '—'}`"
+        )
 
         st.subheader("⚠️ Disclaimer & Exclusions")
         st.markdown("Please review fare rules to avoid any ADMs ")
@@ -365,9 +724,29 @@ if support_type == "Refunds / Reissues":
             "endorsement_code": endo_codes if waiver_present else [],
             "waiver_detected": waiver_present,
             "attachment_mime": attachment_mime,
-            # Shared storage references:
             "attachment_key": attachment_key,
             "attachment_url": attachment_url,
+            # store all parsed metadata
+            "pnr_metadata": {
+                "gds": parsed_meta.get("gds"),
+                "pnr": parsed_meta.get("pnr"),
+                "ticket_number_in_pnr": parsed_meta.get("ticket_number"),
+                "issue_date_raw": parsed_meta.get("issue_date_raw"),
+                "issue_date_iso": parsed_meta.get("issue_date_iso"),
+                "time_since_issue_days": parsed_meta.get("time_since_issue_days"),
+                "time_until_expiration_days": parsed_meta.get("time_until_expiration_days"),
+                "status_codes": parsed_meta.get("status_codes"),
+                "endorsement_signatures": parsed_meta.get("endorsement_signatures"),
+                "segments": parsed_meta.get("segments"),
+                "layover_minutes": parsed_meta.get("layover_minutes"),
+                "schedule_change": parsed_meta.get("schedule_change"),
+                "inv_ref_eligibility_minutes": parsed_meta.get("inv_ref_eligibility_minutes"),
+                "inv_ref_eligibility_3h": parsed_meta.get("inv_ref_eligibility_3h"),
+                "airline_signed_off": parsed_meta.get("airline_signed_off"),
+                "reason_codes": parsed_meta.get("reason_codes"),
+                "issue_tokens": parsed_meta.get("issue_tokens"),
+                "issue_label": parsed_meta.get("issue_label"),
+            }
         }
         log_key = f"submissions/{service_case_id}.json"
         log_entry["storage_key"] = log_key
@@ -386,6 +765,9 @@ if support_type == "Refunds / Reissues":
             "attachment_key": attachment_key,
             "attachment_url": attachment_url,
         })
+
+        # Bottom bar
+        render_additional_bar("refund")
 
 # =========================
 # 2) GENERAL INQUIRIES
@@ -430,6 +812,7 @@ elif support_type == "General Inquiries":
         })
 
         st.success("✅ Inquiry submitted. Our team will contact you shortly.")
+        render_additional_bar("general")
 
 # =========================
 # 3) AIRLINE POLICIES
@@ -529,6 +912,8 @@ elif support_type == "Airline Policies":
             "submitted_at_iso": pol_time_iso,
         })
 
+        render_additional_bar("policies")
+
 # =========================
 # 4) GROUPS (same as General Inquiries)
 # =========================
@@ -572,3 +957,4 @@ elif support_type == "Groups":
         })
 
         st.success("✅ Groups request submitted. Our team will contact you shortly.")
+        render_additional_bar("groups")
