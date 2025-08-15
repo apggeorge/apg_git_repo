@@ -193,6 +193,28 @@ def render_deadlines(deadline_data: dict | None):
         if not d:
             st.markdown("—")
 
+# ---- Index helpers (use new storage API if available; fallback to simple key list) ----
+def _index_add(dir_key: str, meta: dict):
+    """
+    Prefer storage.upsert_index_item(dir, meta). If unavailable,
+    keep a simple list of keys at dir/_index.json for backward compatibility.
+    """
+    if hasattr(storage, "upsert_index_item"):
+        storage.upsert_index_item(dir_key, meta)
+        return
+    # fallback: keep a list of keys (no metadata)
+    index_key = f"{dir_key.rstrip('/')}/_index.json"
+    try:
+        lst = storage.read_json(index_key)
+        if not isinstance(lst, list):
+            lst = []
+    except Exception:
+        lst = []
+    k = meta.get("key")
+    if k and k not in lst:
+        lst.append(k)
+        storage.write_json(index_key, lst)
+
 # =========================
 # Top-level selection (Dropdown) — single source of truth
 # =========================
@@ -351,6 +373,20 @@ if support_type == "Refunds / Reissues":
         log_entry["storage_key"] = log_key
         storage.write_json(log_key, log_entry)
 
+        # Update index (metadata so dashboard can list fast)
+        _index_add("submissions", {
+            "key": log_key,
+            "service_case_id": service_case_id,
+            "route": "refund_reissue",
+            "agency_name": agency_name,
+            "email": email,
+            "plating_code": plating_code,
+            "service_request_type": service_request_type,
+            "submitted_at_iso": submitted_at_iso,
+            "attachment_key": attachment_key,
+            "attachment_url": attachment_url,
+        })
+
 # =========================
 # 2) GENERAL INQUIRIES
 # =========================
@@ -383,6 +419,16 @@ elif support_type == "General Inquiries":
         gi_key = f"submissions/{gi_case_id}.json"
         gi_log["storage_key"] = gi_key
         storage.write_json(gi_key, gi_log)
+
+        _index_add("submissions", {
+            "key": gi_key,
+            "service_case_id": gi_case_id,
+            "route": "general_inquiry",
+            "agency_name": agency_name,
+            "email": email,
+            "submitted_at_iso": gi_time_iso,
+        })
+
         st.success("✅ Inquiry submitted. Our team will contact you shortly.")
 
 # =========================
@@ -472,6 +518,17 @@ elif support_type == "Airline Policies":
         pol_log["storage_key"] = pol_key
         storage.write_json(pol_key, pol_log)
 
+        _index_add("submissions", {
+            "key": pol_key,
+            "service_case_id": pol_case_id,
+            "route": "airline_policy_lookup",
+            "agency_name": agency_name,
+            "airline": airline_name,
+            "plating_code": code,
+            "service_request_type": key,
+            "submitted_at_iso": pol_time_iso,
+        })
+
 # =========================
 # 4) GROUPS (same as General Inquiries)
 # =========================
@@ -504,4 +561,14 @@ elif support_type == "Groups":
         grp_key = f"submissions/{grp_case_id}.json"
         grp_log["storage_key"] = grp_key
         storage.write_json(grp_key, grp_log)
+
+        _index_add("submissions", {
+            "key": grp_key,
+            "service_case_id": grp_case_id,
+            "route": "groups",
+            "agency_name": agency_name,
+            "email": email,
+            "submitted_at_iso": grp_time_iso,
+        })
+
         st.success("✅ Groups request submitted. Our team will contact you shortly.")

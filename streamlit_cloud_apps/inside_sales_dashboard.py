@@ -4,44 +4,13 @@ import json, re
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 
-# resilient import for apg_storage
+# ---------- Resilient import for shared storage ----------
 try:
     from streamlit_cloud_apps.apg_storage import storage
 except ModuleNotFoundError:
     import os, sys
     sys.path.append(os.path.dirname(__file__))  # allow sibling import
     from apg_storage import storage
-
-with st.expander("Storage debug", expanded=False):
-    import os
-    st.write({
-        "BACKEND": os.environ.get("APG_STORAGE_BACKEND"),
-        "OWNER": os.environ.get("APG_GH_OWNER"),
-        "REPO": os.environ.get("APG_GH_REPO"),
-        "BRANCH": os.environ.get("APG_GH_BRANCH"),
-        "PREFIX": os.environ.get("APG_GH_PREFIX"),
-    })
-    try:
-        data = storage.list_json("submissions/")
-        st.write("Fetched items:", len(data))
-        if data:
-            st.code(data[0].get("_key", "no _key in first item"))
-    except Exception as e:
-        st.error(f"Storage error: {e}")
-
-    # extra visibility on the computed path
-    st.write("APG_GH_PREFIX:", os.environ.get("APG_GH_PREFIX"))
-    st.write("Full path requested:", f"{os.environ.get('APG_GH_PREFIX')}/submissions/")
-
-with st.expander("Direct read test", expanded=False):
-    try:
-        # 👇 use an actual filename you see in GitHub (no leading slash)
-        key = "submissions/GEN-0815-0331AM.json"
-        obj = storage.read_json(key)
-        st.success(f"Direct read worked for: {key}")
-        st.code(obj)
-    except Exception as e:
-        st.error(f"Direct read failed: {e}")
 
 # ---------- Page config ----------
 st.set_page_config(page_title="APG Inside Sales Dashboard", layout="wide")
@@ -55,7 +24,7 @@ TRIGGER_WORDS = [
 TRIGGER_RE = re.compile("|".join(TRIGGER_WORDS), re.IGNORECASE)
 
 REQUEST_TYPE_TITLE_MAP = {
-    # Keys from refund/reissue submissions (your SERVICE_TYPE_KEYS)
+    # Keys from refund/reissue submissions (SERVICE_TYPE_KEYS)
     "involuntary_refund": "Involuntary Refund",
     "involuntary_reissue": "Involuntary Reissue",
     "medical_refund": "Medical Refund",
@@ -111,10 +80,67 @@ def is_urgent(text: Optional[str]) -> bool:
         return False
     return bool(TRIGGER_RE.search(text))
 
+# ---------- Storage reading (index-aware) ----------
+INDEX_KEY = "submissions/_index.json"
+SUBMISSIONS_DIR = "submissions/"
+
+def _fetch_from_index() -> List[Dict[str, Any]]:
+    """
+    Reads submissions/_index.json and returns the full submission objects.
+    Supports two shapes:
+      1) [ {"key": "submissions/XYZ.json", ...meta...}, ... ]
+      2) [ "submissions/XYZ.json", ... ]
+    Falls back to [] if index missing or empty.
+    """
+    try:
+        index = storage.read_json(INDEX_KEY)
+    except Exception:
+        return []
+
+    if not isinstance(index, list) or not index:
+        return []
+
+    out: List[Dict[str, Any]] = []
+    for entry in index:
+        try:
+            # shape 1: dict with key
+            if isinstance(entry, dict) and "key" in entry:
+                key = entry["key"]
+                data = storage.read_json(key)
+                data["_key"] = key  # for updates
+                # Merge a few helpful meta fields from index if missing
+                for k in ("service_case_id", "route", "service_request_type",
+                          "agency_name", "email", "plating_code", "submitted_at_iso",
+                          "attachment_key", "attachment_url"):
+                    if k not in data and k in entry:
+                        data[k] = entry[k]
+                out.append(data)
+            # shape 2: simple string key
+            elif isinstance(entry, str):
+                key = entry
+                data = storage.read_json(key)
+                data["_key"] = key
+                out.append(data)
+        except Exception:
+            # Skip unreadable entries but continue
+            continue
+    return out
+
 def load_all_submissions() -> List[Dict[str, Any]]:
-    items = storage.list_json("submissions/")  # each dict has injected _key
+    # 1) prefer index (fast, deterministic)
+    items = _fetch_from_index()
+    if not items:
+        # 2) fallback to listing the folder (older deployments)
+        try:
+            items = storage.list_json(SUBMISSIONS_DIR)
+        except Exception:
+            items = []
+
+    # normalize + default status
     for it in items:
         it["status"] = it.get("status", "open")
+
+    # newest first
     items.sort(key=parse_when, reverse=True)
     return items
 
