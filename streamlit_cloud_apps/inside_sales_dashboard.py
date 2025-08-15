@@ -181,10 +181,10 @@ else:
     for idx, it in enumerate(filtered):
         comments_text = it.get("comments") or it.get("comment") or ""
         urgent = is_urgent(comments_text)
-        urgent_tag = "  🟡 Caution" if urgent else ""
+        urgent_tag = "  ⚠️ Caution" if urgent else ""
         badge = "🟢 Completed" if it.get("status") == "completed" else "🟠 Open"
 
-        with st.expander(f"{header_line(it)}   — {badge}{urgent_tag}", expanded=urgent):
+        with st.expander(f"{header_line(it)} — {badge}{urgent_tag}", expanded=False):
             # --- Completed toggle LEFT-ALIGNED (auto-save) ---
             # lives directly under the expander header, aligned with the content
             state_key = f"_last_status_{idx}"
@@ -253,4 +253,4 @@ else:
                 st.code(json.dumps(it, indent=2), language="json")
 
 st.markdown("---")
-st.caption("💡 Pro tip: urgent keywords in comments trigger a yellow caution icon and auto-open the case.")
+st.caption("💡 Pro tip: urgent keywords in comments add a ⚠️ caution badge in the list.")
