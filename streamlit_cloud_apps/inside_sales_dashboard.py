@@ -22,7 +22,7 @@ with st.expander("Storage debug", expanded=False):
         "PREFIX": os.environ.get("APG_GH_PREFIX"),
     })
     try:
-        data = storage.list_json("submissions")
+        data = storage.list_json("submissions/")
         st.write("Fetched items:", len(data))
         if data:
             st.code(data[0].get("_key", "no _key in first item"))
