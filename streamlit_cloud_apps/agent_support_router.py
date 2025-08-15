@@ -1,6 +1,6 @@
 # 📄 AGENT SUPPORT ROUTER (agent_support_router.py)
 import streamlit as st
-import json, os, re, io
+import json, os, re, io, shutil
 from datetime import datetime, timezone
 from PIL import Image
 import pytesseract
@@ -26,21 +26,15 @@ st.markdown(
 # =========================
 # Repo + Data Paths
 # =========================
-# repo root is one level up from streamlit_cloud_apps/
 REPO_ROOT = Path(__file__).resolve().parent.parent  # => apg_git_repo/
 
 def _pick_existing(*cands) -> str:
-    """Return the first existing path from candidates; otherwise first candidate."""
     for c in cands:
         if c and os.path.exists(c):
             return c
     return cands[0]
 
-# Data locations (new canonical paths with fallbacks)
-POLICY_DIR = _pick_existing(
-    str(REPO_ROOT / "airline_policies"),
-    "data/airline_policies",
-)
+POLICY_DIR = _pick_existing(str(REPO_ROOT / "airline_policies"), "data/airline_policies")
 ELIGIBLE_CODE_PATH = _pick_existing(
     str(REPO_ROOT / "eligibility" / "eligible_4_digit_codes.json"),
     str(REPO_ROOT / "reuseable_code" / "internal_code" / "eligible_4_digit_codes.json"),
@@ -55,7 +49,6 @@ AIRLINE_LIST_PATH = _pick_existing(
 # =========================
 st.markdown("""
 <style>
-/* Soft card for policy blocks */
 .wrap-policy {
   border: 1px solid #e5e7eb;
   background: #f8fafc;
@@ -107,7 +100,7 @@ SERVICE_TYPE_KEYS = {
 
 WAIVER_PATTERNS = [
     r"/DC[A-Z0-9]{2,3}\*[A-Z0-9]{4,10}/E",  # Sabre
-    r"RF-[A-Z0-9]{4,10}",                   # Amadeus
+    r"RF-[A-Z0-9]{4,10}",                   # Amadeus / generic
     r"WAIVER[:\s]+[A-Z0-9]{3,15}",          # Travelport
     r"ENDORSEMENT[:\s]+RF-[A-Z0-9]{3,15}",  # Travelport extended
 ]
@@ -124,19 +117,12 @@ def load_json(path, default=None):
         return default
 
 def load_eligible_codes(path: str) -> set[str]:
-    """
-    Accepts JSON as either:
-      - ["2757", "2758", ...] OR
-      - {"codes": [...]}      OR
-      - {"2757": true, ...}   (keys used)
-    Returns a set of zero-padded 4-digit strings.
-    """
     raw = load_json(path, default=[]) or []
     if isinstance(raw, dict):
         raw = raw.get("codes", list(raw.keys()))
     codes = set()
     for item in raw:
-        s = re.sub(r"\D", "", str(item))  # digits only
+        s = re.sub(r"\D", "", str(item))
         if s:
             codes.add(s.zfill(4))
     return codes
@@ -154,7 +140,6 @@ def detect_waiver_signature(text: str) -> bool:
     return False
 
 def normalize_excluded(excl):
-    """Ensure excluded agencies render as a clean list of names."""
     if not excl:
         return []
     if isinstance(excl, list):
@@ -163,7 +148,7 @@ def normalize_excluded(excl):
         return [str(x).strip() for x in excl if str(x).strip()]
     if isinstance(excl, str):
         return [x.strip() for x in excl.split(",") if x.strip()]
-    return [str(excl).strip()]  # fallback
+    return [str(excl).strip()]
 
 def render_deadlines(deadline_data: dict | None):
     if not deadline_data:
@@ -191,12 +176,8 @@ def render_deadlines(deadline_data: dict | None):
         if not d:
             st.markdown("—")
 
-# ---- Index helpers (use new storage API if available; fallback to simple key list) ----
+# ---- Index helpers ----
 def _index_add(dir_key: str, meta: dict):
-    """
-    Prefer storage.upsert_index_item(dir, meta). If unavailable,
-    keep a simple list of keys at dir/_index.json for backward compatibility.
-    """
     if hasattr(storage, "upsert_index_item"):
         storage.upsert_index_item(dir_key, meta)
         return
@@ -213,7 +194,7 @@ def _index_add(dir_key: str, meta: dict):
         storage.write_json(index_key, lst)
 
 # =========================
-# NEW: OCR + GDS detection + PNR parsing helpers
+# OCR + GDS detection + PNR parsing helpers
 # =========================
 GDS_SABRE_HINTS = ("WETR*", "PCC:", "/DC", "PLT", "FCI")
 GDS_AMADEUS_HINTS = ("TST/", "FA PAX", "NONEND", "INVOL", "FE PAX")
@@ -254,7 +235,6 @@ def _time_token_to_minutes(t: str):
     if ap == "A" and hh == 12: hh = 0
     return hh*60 + mm
 
-# --- extra time parser that handles both 12h (150P) and 24h (1550 or 0015+1) ---
 def _to_minutes_any(tok: str):
     if not tok: return None
     t = tok.strip().upper()
@@ -323,7 +303,6 @@ def extract_sabre_segments(text: str):
         })
     return segs
 
-# --- Generic (Amadeus/Travelport) segments (24h and 12h times) ---
 SEG_ROW_24H = re.compile(
     r"^\s*\d+\s+([A-Z0-9]{2})\s+([A-Z0-9]+)\s+[A-Z]?\s+(\d{1,2}[A-Z]{3})\s+([A-Z]{3})\s*([A-Z]{3})\s+([A-Z]{2}\d?)\s+(\d{4}(?:\+1)?)\s+(\d{4}(?:\+1)?)",
     re.I | re.M
@@ -378,16 +357,12 @@ def extract_sabre_schedule_change(text: str):
     }
 
 def compute_schedule_change_from_segments(segs):
-    """
-    Pair a cancelled 'old' seg with a confirmed 'new' seg for same date+OD.
-    Returns the largest absolute delta (minutes) and details.
-    """
     best = None
     key_to_old = {}
     key_to_new = {}
     for s in segs:
         key = (s.get("date"), s.get("orig"), s.get("dest"))
-        if not key[0] or not key[1] or not key[2]: 
+        if not key[0] or not key[1] or not key[2]:
             continue
         if CXL.match(s.get("stat","")):
             key_to_old.setdefault(key, []).append(s)
@@ -418,7 +393,6 @@ def compute_schedule_change_from_segments(segs):
     return best
 
 def compute_layover_minutes(segments):
-    """Compute layover between seg0 arrival and seg1 departure if present."""
     if not segments or len(segments) < 2: return None
     a = _to_minutes_any(segments[0]["arr"])
     d = _to_minutes_any(segments[1]["dep"])
@@ -427,7 +401,7 @@ def compute_layover_minutes(segments):
     if lay < 0: lay += 1440
     return lay
 
-# ========= Sign-off + Issue detection (minimal, cross-GDS) =========
+# ---- Sign-off + Issue detection (cross-GDS) ----
 RE_REASON_CODES = re.compile(r"\bRF-[A-Z0-9]{3,12}\b", re.I)
 ISSUE_PATTERNS = [
     ("schedule_change",  re.compile(r"\b(SC(HD)?\s?CHG|SKCHG|SCHG|SCHEDULE\s*CHANGE|RETIMED?|RE-TIME)\b", re.I)),
@@ -442,20 +416,15 @@ ISSUE_PATTERNS = [
     ("involuntary",      re.compile(r"\b(INVOL(UNTARY)?|IRROPS?|IROP)\b", re.I)),
 ]
 def detect_airline_signoff(text: str, signatures: list[str]) -> bool:
-    if signatures:
-        return True
+    if signatures: return True
     t = (text or "").upper()
-    if re.search(r"/DC[A-Z0-9]{2,3}\*[A-Z0-9]{4,12}/E", t):  # Sabre ENDO
-        return True
-    if re.search(r"\bWAIVER[:\s]+[A-Z0-9]{3,}\b", t):        # Travelport-style
-        return True
-    if re.search(r"\b(ENDORSEMENT|AUTH(?:ORIZATION| CODE)?|APPR(?:OVAL)?)\b", t):
-        return True
+    if re.search(r"/DC[A-Z0-9]{2,3}\*[A-Z0-9]{4,12}/E", t): return True
+    if re.search(r"\bWAIVER[:\s]+[A-Z0-9]{3,}\b", t): return True
+    if re.search(r"\b(ENDORSEMENT|AUTH(?:ORIZATION| CODE)?|APPR(?:OVAL)?)\b", t): return True
     return False
 
 def detect_issue_tokens(text: str) -> tuple[list[str], str | None]:
-    tokens = []
-    best = None
+    tokens, best = [], None
     for label, rx in ISSUE_PATTERNS:
         if rx.search(text or ""):
             tokens.append(label)
@@ -481,7 +450,6 @@ def parse_pnr_text(text: str) -> dict:
         "schedule_change": None,
         "layover_minutes": None,
         "segments": [],
-        # NEW:
         "airline_signed_off": False,
         "issue_tokens": [],
         "issue_label": None,
@@ -496,13 +464,9 @@ def parse_pnr_text(text: str) -> dict:
         exp_days = (issued_dt.replace(year=issued_dt.year+1) - datetime.now()).days
         out["time_until_expiration_days"] = max(exp_days, 0)
 
-    # Segments + layover + schedule change per GDS
     if gds == "sabre":
         segs = extract_sabre_segments(text)
-        sc = extract_sabre_schedule_change(text)
-        if not sc:
-            # fallback to pairing if SC not present
-            sc = compute_schedule_change_from_segments(segs)
+        sc = extract_sabre_schedule_change(text) or compute_schedule_change_from_segments(segs)
     else:
         segs = extract_generic_segments(text)
         sc = compute_schedule_change_from_segments(segs)
@@ -510,22 +474,30 @@ def parse_pnr_text(text: str) -> dict:
     out["segments"] = segs
     out["layover_minutes"] = compute_layover_minutes(segs)
     out["schedule_change"] = sc
-
-    # INV REF eligibility (3h)
     out["inv_ref_eligibility_minutes"] = (sc or {}).get("max_delta_min")
     out["inv_ref_eligibility_3h"] = (out["inv_ref_eligibility_minutes"] is not None
                                      and out["inv_ref_eligibility_minutes"] >= 180)
 
-    # Sign-off + issue detection + reason codes
     out["airline_signed_off"] = detect_airline_signoff(text, out["endorsement_signatures"])
     toks, best = detect_issue_tokens(text)
     out["issue_tokens"], out["issue_label"] = toks, best
     out["reason_codes"] = extract_reason_codes(text)
-
     return out
 
+# ======= quiet OCR helper =======
+def ocr_image_bytes(file_bytes: bytes):
+    """Return (text, status) where status in {'ok','tesseract_missing','error'}."""
+    try:
+        if not shutil.which("tesseract"):
+            return ("", "tesseract_missing")
+        img = Image.open(io.BytesIO(file_bytes)).convert("L")
+        txt = pytesseract.image_to_string(img)
+        return (txt or "", "ok")
+    except Exception:
+        return ("", "error")
+
 # =========================
-# Top-level selection (Dropdown) — single source of truth
+# Top-level selection (Dropdown)
 # =========================
 st.markdown("<h3 style='text-align: center;'>How can we help you?</h3>", unsafe_allow_html=True)
 
@@ -540,10 +512,8 @@ choice = st.selectbox(
     key="support_type_select",
     label_visibility="collapsed",
 )
-
 if choice == PLACEHOLDER:
     st.stop()
-
 support_type = choice
 
 # ======= bottom bar helper (shown after any submission) =======
@@ -560,10 +530,7 @@ def render_additional_bar(suffix: str):
 # 1) REFUNDS / REISSUES
 # =========================
 if support_type == "Refunds / Reissues":
-    st.markdown(
-        "<h2 style='text-align: center;'>🛫 Refund / Reissue Submission</h2>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<h2 style='text-align: center;'>🛫 Refund / Reissue Submission</h2>", unsafe_allow_html=True)
     with st.form("refund_form", clear_on_submit=False):
         ticket_number = st.text_input("🎫 Airline Ticket Number")
         service_type_label = st.selectbox("🛠️ Service Request Type", SERVICE_TYPES)
@@ -571,10 +538,7 @@ if support_type == "Refunds / Reissues":
         airline_record_locator = st.text_input("📄 Airline Record Locator Number")
         agency_id = st.text_input("🏢 Agency ID (ARC Number)")
         agency_name = st.text_input("🏷️ Agency Name")
-        full_pnr = st.file_uploader(
-            "📎 Full PNR Screenshot (required for refund/reissue)",
-            type=["png", "jpg", "jpeg", "pdf"]
-        )
+        full_pnr = st.file_uploader("📎 Full PNR Screenshot (required for refund/reissue)", type=["png", "jpg", "jpeg", "pdf"])
         email = st.text_input("📧 Email Address")
         comments = st.text_area("💬 Comments (optional)")
         submitted = st.form_submit_button("🚀 Submit")
@@ -618,12 +582,13 @@ if support_type == "Refunds / Reissues":
         data = load_json(policy_file, default={}) or {}
         excluded = normalize_excluded(data.get("agency_exclusion_list", {}).get("excluded_agencies", []))
 
-        # Handle attachment + OCR + parsing
+        # Attachment + OCR + parsing (quiet)
         waiver_present = False
         attachment_key = None
         attachment_url = None
         attachment_mime = None
         parsed_meta = {}
+        ocr_status = None
 
         if full_pnr is not None:
             try:
@@ -636,76 +601,42 @@ if support_type == "Refunds / Reissues":
                 attachment_url = storage.url(attachment_key)
 
                 if full_pnr.type in ("image/png", "image/jpeg", "image/jpg"):
-                    img = Image.open(io.BytesIO(file_bytes)).convert("L")
-                    ocr_text = pytesseract.image_to_string(img)
-                    parsed_meta = parse_pnr_text(ocr_text)
-                    waiver_present = bool(parsed_meta.get("endorsement_signatures"))
+                    ocr_text, ocr_status = ocr_image_bytes(file_bytes)
+                    if ocr_status == "ok":
+                        parsed_meta = parse_pnr_text(ocr_text)
+                        waiver_present = bool(parsed_meta.get("endorsement_signatures"))
                 elif full_pnr.type == "application/pdf":
-                    st.info("ℹ️ PDF saved for future parsing. OCR not applied in this flow.")
-            except Exception as e:
-                st.warning(f"⚠️ Unable to process the uploaded file ({e}). Proceeding without waiver detection.")
+                    ocr_status = "skipped_pdf"
+            except Exception:
+                ocr_status = "save_or_ocr_error"
+                parsed_meta = {}
 
-        # Display results
+        # PUBLIC-FACING OUTPUT (no raw metadata)
         st.subheader("📌 Service Case ID")
         st.code(service_case_id)
 
         st.subheader("📋 Airline Policy")
-        policy_text = (data.get("policies", {}) or {}).get(
-            service_request_type,
-            "No policy information found."
-        )
+        policy_text = (data.get("policies", {}) or {}).get(service_request_type, "No policy information found.")
         st.markdown(f"<div class='wrap-policy'><pre>{_html_escape(policy_text)}</pre></div>", unsafe_allow_html=True)
 
         st.subheader("🔖 Applicable Waiver Codes")
         endo_codes = (data.get("endorsement_codes", {}) or {}).get(f"{service_request_type}_code", [])
-        if waiver_present:
-            st.markdown(f"`{', '.join(endo_codes) if endo_codes else '—'}`")
+        inv_ref_3h = bool(parsed_meta.get("inv_ref_eligibility_3h")) if parsed_meta else False
+        airline_signed_off = bool(parsed_meta.get("airline_signed_off")) if parsed_meta else False
+        justification_detected = airline_signed_off or inv_ref_3h or ("involuntary" in (parsed_meta.get("issue_tokens") or []))
+
+        if justification_detected and endo_codes:
+            st.markdown(f"`{', '.join(endo_codes)}`")
+        elif justification_detected and not endo_codes:
+            st.markdown("Triggers detected for manual approval. No pre-filled waiver code on file.")
         else:
-            st.markdown(" Waiver Code is not required. ")
-
-        # Parsed metadata & quick eligibility
-        st.subheader("🧠 Parsed PNR Metadata")
-        st.json({
-            "gds": parsed_meta.get("gds"),
-            "pnr": parsed_meta.get("pnr"),
-            "ticket_number_in_pnr": parsed_meta.get("ticket_number"),
-            "issue_date_raw": parsed_meta.get("issue_date_raw"),
-            "issue_date_iso": parsed_meta.get("issue_date_iso"),
-            "time_since_issue_days": parsed_meta.get("time_since_issue_days"),
-            "time_until_ticket_expiration_days": parsed_meta.get("time_until_expiration_days"),
-            "status_codes": parsed_meta.get("status_codes"),
-            "endorsement_signatures": parsed_meta.get("endorsement_signatures"),
-            "segments": parsed_meta.get("segments"),
-            "layover_minutes": parsed_meta.get("layover_minutes"),
-            "schedule_change": parsed_meta.get("schedule_change"),
-            "inv_ref_eligibility_minutes": parsed_meta.get("inv_ref_eligibility_minutes"),
-            "inv_ref_eligibility_3h": parsed_meta.get("inv_ref_eligibility_3h"),
-            "airline_signed_off": parsed_meta.get("airline_signed_off"),
-            "reason_codes": parsed_meta.get("reason_codes"),
-            "issue_tokens": parsed_meta.get("issue_tokens"),
-            "issue_label": parsed_meta.get("issue_label"),
-        })
-
-        sc_min = parsed_meta.get("inv_ref_eligibility_minutes")
-        if sc_min is not None:
-            if sc_min >= 180:
-                st.success(f"✅ Schedule change delta = {_minutes_to_hm(sc_min)} (≥ 3h). INV REF likely eligible.")
-            else:
-                st.info(f"ℹ️ Schedule change delta = {_minutes_to_hm(sc_min)} (< 3h). Likely NOT eligible for INV REF.")
-
-        st.subheader("✍️ Airline Sign-Off & Issue Summary")
-        st.markdown(
-            f"- **Airline sign-off detected:** {'✅ Yes' if parsed_meta.get('airline_signed_off') else '❌ No'}\n"
-            f"- **Reason codes (RF-):** `{', '.join(parsed_meta.get('reason_codes') or []) or '—'}`\n"
-            f"- **Issue tokens:** `{', '.join(parsed_meta.get('issue_tokens') or []) or '—'}`\n"
-            f"- **Primary issue label:** `{parsed_meta.get('issue_label') or '—'}`"
-        )
+            st.markdown("Waiver Code is not required.")
 
         st.subheader("⚠️ Disclaimer & Exclusions")
         st.markdown("Please review fare rules to avoid any ADMs ")
         st.markdown(f"**Agency Eligibility Exclusions:** `{', '.join(excluded) if excluded else 'None on file'}`")
 
-        # Persist submission (shared storage)
+        # Persist submission (with full metadata)
         log_entry = {
             "service_case_id": service_case_id,
             "route": "refund_reissue",
@@ -726,33 +657,13 @@ if support_type == "Refunds / Reissues":
             "attachment_mime": attachment_mime,
             "attachment_key": attachment_key,
             "attachment_url": attachment_url,
-            # store all parsed metadata
-            "pnr_metadata": {
-                "gds": parsed_meta.get("gds"),
-                "pnr": parsed_meta.get("pnr"),
-                "ticket_number_in_pnr": parsed_meta.get("ticket_number"),
-                "issue_date_raw": parsed_meta.get("issue_date_raw"),
-                "issue_date_iso": parsed_meta.get("issue_date_iso"),
-                "time_since_issue_days": parsed_meta.get("time_since_issue_days"),
-                "time_until_expiration_days": parsed_meta.get("time_until_expiration_days"),
-                "status_codes": parsed_meta.get("status_codes"),
-                "endorsement_signatures": parsed_meta.get("endorsement_signatures"),
-                "segments": parsed_meta.get("segments"),
-                "layover_minutes": parsed_meta.get("layover_minutes"),
-                "schedule_change": parsed_meta.get("schedule_change"),
-                "inv_ref_eligibility_minutes": parsed_meta.get("inv_ref_eligibility_minutes"),
-                "inv_ref_eligibility_3h": parsed_meta.get("inv_ref_eligibility_3h"),
-                "airline_signed_off": parsed_meta.get("airline_signed_off"),
-                "reason_codes": parsed_meta.get("reason_codes"),
-                "issue_tokens": parsed_meta.get("issue_tokens"),
-                "issue_label": parsed_meta.get("issue_label"),
-            }
+            "ocr_status": ocr_status,
+            "pnr_metadata": parsed_meta or {}
         }
         log_key = f"submissions/{service_case_id}.json"
         log_entry["storage_key"] = log_key
         storage.write_json(log_key, log_entry)
 
-        # Update index (metadata so dashboard can list fast)
         _index_add("submissions", {
             "key": log_key,
             "service_case_id": service_case_id,
@@ -766,17 +677,17 @@ if support_type == "Refunds / Reissues":
             "attachment_url": attachment_url,
         })
 
-        # Bottom bar
+        # Optional tiny debug hint (toggle with APG_DEBUG_UI=1)
+        if os.environ.get("APG_DEBUG_UI") == "1":
+            st.caption(f"Debug: OCR={ocr_status}; signed_off={airline_signed_off}; 3h_elig={inv_ref_3h}")
+
         render_additional_bar("refund")
 
 # =========================
 # 2) GENERAL INQUIRIES
 # =========================
 elif support_type == "General Inquiries":
-    st.markdown(
-        "<h2 style='text-align: center;'>📨 General Inquiry</h2>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<h2 style='text-align: center;'>📨 General Inquiry</h2>", unsafe_allow_html=True)
     with st.form("general_form"):
         agency_name = st.text_input("🏷️ Agency Name")
         agency_id = st.text_input("🏢 Agency ID (ARC Number)")
@@ -819,7 +730,6 @@ elif support_type == "General Inquiries":
 # =========================
 elif support_type == "Airline Policies":
     st.markdown("<h2 style='text-align:center;'>📚 Airline Policy Lookup</h2>", unsafe_allow_html=True)
-
     with st.form("policy_form"):
         agency_name = st.text_input("🏷️ Agency Name")
 
@@ -829,8 +739,7 @@ elif support_type == "Airline Policies":
             st.stop()
 
         airlines_map = {str(k).zfill(3): str(v).strip() for k, v in airlines_map_raw.items()}
-        options = sorted([(name, code) for code, name in airlines_map.items()],
-                         key=lambda x: x[0].lower())
+        options = sorted([(name, code) for code, name in airlines_map.items()], key=lambda x: x[0].lower())
         labels = [f"{name} ({code})" for name, code in options]
 
         selected_label = st.selectbox("🛫 Airline", labels)
@@ -918,10 +827,7 @@ elif support_type == "Airline Policies":
 # 4) GROUPS (same as General Inquiries)
 # =========================
 elif support_type == "Groups":
-    st.markdown(
-        "<h2 style='text-align: center;'>👥 Groups Inquiry</h2>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<h2 style='text-align: center;'>👥 Groups Inquiry</h2>", unsafe_allow_html=True)
     with st.form("groups_form"):
         agency_name = st.text_input("🏷️ Agency Name")
         agency_id = st.text_input("🏢 Agency ID (ARC Number)")
