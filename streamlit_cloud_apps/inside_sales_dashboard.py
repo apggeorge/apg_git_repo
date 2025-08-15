@@ -108,7 +108,7 @@ def is_urgent(text: Optional[str]) -> bool:
     return bool(TRIGGER_RE.search(text))
 
 def load_all_submissions() -> List[Dict[str, Any]]:
-    items = storage.list_json("submissions")  # each dict has injected _key
+    items = storage.list_json("submissions/")  # each dict has injected _key
     for it in items:
         it["status"] = it.get("status", "open")
     items.sort(key=parse_when, reverse=True)
