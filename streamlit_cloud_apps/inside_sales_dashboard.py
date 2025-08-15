@@ -29,6 +29,16 @@ with st.expander("Storage debug", expanded=False):
     except Exception as e:
         st.error(f"Storage error: {e}")
 
+with st.expander("Direct read test", expanded=False):
+    try:
+        # 👇 use an actual filename you see in GitHub (no leading slash)
+        key = "submissions/GEN-0815-0331AM.json"
+        obj = storage.read_json(key)
+        st.success(f"Direct read worked for: {key}")
+        st.code(obj)
+    except Exception as e:
+        st.error(f"Direct read failed: {e}")
+
 # ---------- Page config ----------
 st.set_page_config(page_title="APG Inside Sales Dashboard", layout="wide")
 st.markdown("<h1 style='text-align:center;'>📥 Inside Sales Dashboard</h1>", unsafe_allow_html=True)
