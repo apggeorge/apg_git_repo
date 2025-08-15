@@ -12,6 +12,23 @@ except ModuleNotFoundError:
     sys.path.append(os.path.dirname(__file__))  # allow sibling import
     from apg_storage import storage
 
+with st.expander("Storage debug", expanded=False):
+    import os
+    st.write({
+        "BACKEND": os.environ.get("APG_STORAGE_BACKEND"),
+        "OWNER": os.environ.get("APG_GH_OWNER"),
+        "REPO": os.environ.get("APG_GH_REPO"),
+        "BRANCH": os.environ.get("APG_GH_BRANCH"),
+        "PREFIX": os.environ.get("APG_GH_PREFIX"),
+    })
+    try:
+        data = storage.list_json("submissions")
+        st.write("Fetched items:", len(data))
+        if data:
+            st.code(data[0].get("_key", "no _key in first item"))
+    except Exception as e:
+        st.error(f"Storage error: {e}")
+
 # ---------- Page config ----------
 st.set_page_config(page_title="APG Inside Sales Dashboard", layout="wide")
 st.markdown("<h1 style='text-align:center;'>📥 Inside Sales Dashboard</h1>", unsafe_allow_html=True)
