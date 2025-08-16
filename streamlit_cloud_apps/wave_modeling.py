@@ -308,6 +308,44 @@ fig = go.Figure(
 fig.update_yaxes(scaleanchor="x", scaleratio=1)
 fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), xaxis_title="x (ft)", yaxis_title="y (ft)")
 
+# ----- Initial viewing window & quick view buttons -----
+# Start focused on a 500x500 ft box around the house center, but allow zooming out.
+initial_half_window = 250.0  # 250 ft each side -> 500 x 500 ft window
+
+# Set initial axis ranges centered on the house
+fig.update_xaxes(range=[house_cx - initial_half_window, house_cx + initial_half_window])
+fig.update_yaxes(range=[house_cy - initial_half_window, house_cy + initial_half_window])
+
+# Also add quick buttons to jump between "House 500 ft" and "Full extent"
+fig.update_layout(
+    updatemenus=[
+        dict(
+            type="buttons",
+            direction="right",
+            x=0.5, xanchor="center",
+            y=1.05, yanchor="bottom",
+            buttons=[
+                dict(
+                    label="House 500 ft view",
+                    method="relayout",
+                    args=[{
+                        "xaxis.range": [house_cx - initial_half_window, house_cx + initial_half_window],
+                        "yaxis.range": [house_cy - initial_half_window, house_cy + initial_half_window],
+                    }],
+                ),
+                dict(
+                    label="Full extent",
+                    method="relayout",
+                    args=[{
+                        "xaxis.range": [float(xs.min()), float(xs.max())],
+                        "yaxis.range": [float(ys.min()), float(ys.max())],
+                    }],
+                ),
+            ],
+        )
+    ]
+)
+
 # Ring guides
 for (R, _) in rings:
     fig.add_shape(type="circle", xref="x", yref="y", x0=-R, y0=-R, x1=R, y1=R,
