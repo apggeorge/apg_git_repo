@@ -16,7 +16,7 @@ G2T = 1e-4          # 1 Gauss = 1e-4 Tesla
 # Sidebar: Field & Grid
 # -----------------------------
 st.sidebar.header("Field & Grid")
-half_extent = st.sidebar.number_input("Half-extent (ft) → domain [-E, +E]", 50, 2000, 250, step=50)
+half_extent = st.sidebar.number_input("Half-extent (ft) → domain [-E, +E]", 50.0, 2000.0, 250.0, step=50.0)
 resolution  = st.sidebar.number_input("Grid resolution (ft)", 0.5, 10.0, 2.0, step=0.5)
 wavelength  = st.sidebar.number_input("Model wavelength (ft)", 0.5, 2000.0, 28.0, step=0.5)
 frequency   = st.sidebar.number_input("Model frequency (Hz)", 0.01, 5.0, 0.15, step=0.01)
@@ -92,8 +92,14 @@ if use_external:
     if ext_type == "Plane wave":
         ext_angle_deg = st.sidebar.slider("Plane wave angle (deg, 0°→+x, 90°→+y)", 0, 359, 45)
     else:
-        ext_px = st.sidebar.number_input("Point source X (ft)", -half_extent, half_extent, -half_extent, step=10)
-        ext_py = st.sidebar.number_input("Point source Y (ft)", -half_extent, half_extent, 0, step=10)
+        ext_px = st.sidebar.number_input(
+            "Point source X (ft)",
+            float(-half_extent), float(half_extent), float(-half_extent), step=10.0
+        )
+        ext_py = st.sidebar.number_input(
+            "Point source Y (ft)",
+            float(-half_extent), float(half_extent), float(0.0), step=10.0
+        )
 
 # -----------------------------
 # Rate of Loss / Superposition
@@ -143,8 +149,14 @@ show_house = st.sidebar.checkbox("Show house footprint", value=True)
 house_len = st.sidebar.number_input("House length (ft)", 1.0, 500.0, 60.0, step=1.0)
 house_wid = st.sidebar.number_input("House width (ft)", 1.0, 500.0, 40.0, step=1.0)
 house_rot = st.sidebar.slider("House rotation (deg)", -180, 180, 0)
-house_cx = st.sidebar.number_input("House center X (ft)", -half_extent, half_extent, 0.0, step=5.0)
-house_cy = st.sidebar.number_input("House center Y (ft)", -half_extent, half_extent, 0.0, step=5.0)
+house_cx = st.sidebar.number_input(
+    "House center X (ft)",
+    float(-half_extent), float(half_extent), float(0.0), step=5.0
+)
+house_cy = st.sidebar.number_input(
+    "House center Y (ft)",
+    float(-half_extent), float(half_extent), float(0.0), step=5.0
+)
 
 # -----------------------------
 # Grid & constants
@@ -261,7 +273,7 @@ def compute_maps(xs, ys, rings, nodes_per_ring, wavelength, frequency, samples,
 
     gain_pct = 100.0 * (I_total - I_baseline) / (I_baseline + 1e-12)
     u_total = (B_rms_total*G2T)**2 / (2*MU0)
-    u_base  = (B_rms_base*G2T)**2 / (2*MU0)
+    u_base  = (B_rms_base*G2T)**2  / (2*MU0)
 
     return gain_pct, B_rms_total, B_rms_base, u_total, u_base
 
@@ -362,7 +374,7 @@ with st.expander("Instantaneous Field (Gauss)"):
         for (R, A_G) in rings:
             SX, SY = ring_nodes(R, nodes_per_ring)
             dxs = X[..., None] - SX[None, None, :]
-            dys = Y[..., None] - SY[None, None, :]
+            dys = Y[..., None, :] - SY[None, None, :]
             RR = np.hypot(dxs, dys)
             F += np.sum(A_G * np.cos(k*RR - omega*t) * attenuation(RR), axis=-1)
         if use_external and ext_amp_G != 0:
