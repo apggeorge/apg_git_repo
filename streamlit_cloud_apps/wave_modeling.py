@@ -45,7 +45,7 @@ n_rings = st.sidebar.slider("Number of rings", 1, 12, 4)
 node_mode = st.sidebar.radio("Nodes per ring", ["4 (0/90/180/270°)", "6 (every 60°)"], index=0)
 nodes_per_ring = 4 if node_mode.startswith("4") else 6
 
-default_radii = [40.0, 75.0, 110.0, 145.0][:n_rings] or [40.0]
+default_radii = [1.0, 75.0, 100.0, 125.0][:n_rings] or [40.0]
 default_amps  = [100.0]*n_rings  # Gauss
 
 st.sidebar.caption("Edit ring radii (ft) and amplitudes (Gauss). Phase=0 for all nodes on a ring.")
@@ -373,16 +373,18 @@ with st.expander("Instantaneous Field (Gauss)"):
         F = np.zeros_like(X)
         for (R, A_G) in rings:
             SX, SY = ring_nodes(R, nodes_per_ring)
-            dxs = X[..., None] - SX[None, None, :]
-            dys = Y[..., None, :] - SY[None, None, :]
-            RR = np.hypot(dxs, dys)
-            F += np.sum(A_G * np.cos(k*RR - omega*t) * attenuation(RR), axis=-1)
+            dxs = X[..., None] - SX[None, None, :]   # (Ny, Nx, Nnodes)
+            dys = Y[..., None] - SY[None, None, :]   # (Ny, Nx, Nnodes)
+            RR  = np.hypot(dxs, dys)
+            F  += np.sum(A_G * np.cos(k*RR - omega*t) * attenuation(RR), axis=-1)
+
         if use_external and ext_amp_G != 0:
             if ext_type == "Plane wave":
                 thp = np.deg2rad(ext_angle_deg)
                 F += ext_amp_G * np.cos(k*(X*np.cos(thp) + Y*np.sin(thp)) - omega*t)
             else:
-                dx = X - ext_px; dy = Y - ext_py
+                dx = X - ext_px
+                dy = Y - ext_py
                 Rpt = np.hypot(dx, dy)
                 F += ext_amp_G * np.cos(k*Rpt - omega*t) * attenuation(Rpt)
         return F
