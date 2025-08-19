@@ -1,6 +1,6 @@
 # 📊 INSIDE SALES DASHBOARD (inside_sales_dashboard.py)
 import streamlit as st
-import json, re
+import json, re, os, importlib, sys as _sys
 from datetime import datetime, timezone
 from typing import Dict, Any, List
 
@@ -8,8 +8,8 @@ from typing import Dict, Any, List
 try:
     from streamlit_cloud_apps.apg_storage import storage
 except ModuleNotFoundError:
-    import os, sys
-    sys.path.append(os.path.dirname(__file__))  # allow sibling import
+    import os as _os, sys as _sys2
+    _sys2.path.append(_os.path.dirname(__file__))  # allow sibling import
     from apg_storage import storage
 
 # ---------- Urgency keywords ----------
@@ -37,6 +37,93 @@ details.st-expander > summary {
 div[data-testid="stCheckbox"] label p { margin-bottom: 0; }
 </style>
 """, unsafe_allow_html=True)
+
+# ---------- Email service (dynamic import + wrappers) ----------
+INSIDE_SALES_FROM = os.environ.get("APG_INSIDE_SALES_FROM", "inside.sales@apg.example")
+
+def _try_load(mod_path: str):
+    try:
+        mod = importlib.import_module(mod_path)
+        send = getattr(mod, "send_email", None)
+        search = getattr(mod, "search_messages_by_subject", None)
+        return send, search
+    except Exception:
+        return None, None
+
+_gmail_send, _gmail_search = _try_load("reuseable_code.external_code.gmail_api")
+if _gmail_send is None:
+    _gmail_send, _gmail_search = _try_load("services.email_api.gmail_api")
+if _gmail_send is None:
+    PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    _sys.path.extend([
+        PROJECT_ROOT,
+        os.path.join(PROJECT_ROOT, "reuseable_code"),
+    ])
+    _gmail_send, _gmail_search = _try_load("reuseable_code.external_code.gmail_api")
+
+# ---- Email logging helpers ----
+INDEX_EMAIL_DIR = "emails/"  # emails/{case_id}/...
+
+def _email_index_add(case_id: str, meta: Dict[str, Any]):
+    dir_key = f"{INDEX_EMAIL_DIR.rstrip('/')}/{case_id}"
+    try:
+        if hasattr(storage, "upsert_index_item"):
+            storage.upsert_index_item(dir_key, meta)
+            return
+        index_key = f"{dir_key}/_index.json"
+        try:
+            lst = storage.read_json(index_key)
+            if not isinstance(lst, list):
+                lst = []
+        except Exception:
+            lst = []
+        k = meta.get("key")
+        if k and k not in lst:
+            lst.append(k)
+            storage.write_json(index_key, lst)
+    except Exception:
+        pass
+
+
+def _log_sent_email(case_id: str, payload: Dict[str, Any]) -> str:
+    ts = datetime.now(timezone.utc).isoformat()
+    key = f"{INDEX_EMAIL_DIR.rstrip('/')}/{case_id}/{ts}.json"
+    try:
+        body = dict(payload or {})
+        body.update({"key": key, "logged_at": ts})
+        storage.write_json(key, body)
+        _email_index_add(case_id, {"key": key})
+    except Exception:
+        pass
+    return key
+
+
+def _send_email_via_api(*, to: List[str] | str, subject: str, text: str,
+                        html: str | None = None, attachments: List[Dict[str, Any]] | None = None,
+                        thread_id: str | None = None, sender: str | None = None) -> Dict[str, Any]:
+    to_list = to if isinstance(to, list) else [to]
+    payload = {
+        "from": sender or INSIDE_SALES_FROM,
+        "to": to_list,
+        "subject": subject,
+        "text": text,
+        "html": html,
+        "attachments": attachments or [],
+        "thread_id": thread_id,
+    }
+    resp: Dict[str, Any] = {"sent": False}
+    if _gmail_send:
+        try:
+            r = _gmail_send(
+                to=to_list, subject=subject, text=text, html=html,
+                attachments=attachments, thread_id=thread_id, sender=sender or INSIDE_SALES_FROM
+            )
+            resp = {"sent": True, **(r or {})}
+        except Exception as e:
+            resp = {"sent": False, "error": str(e)}
+    log_key = _log_sent_email(thread_id or subject, {**payload, **resp})
+    resp["log_key"] = log_key
+    return resp
 
 # ---------- UI helpers ----------
 REQUEST_TYPE_TITLE_MAP = {
@@ -91,6 +178,7 @@ def is_urgent(text: str) -> bool:
 INDEX_KEY = "submissions/_index.json"
 SUBMISSIONS_DIR = "submissions/"
 
+
 def _fetch_from_index() -> List[Dict[str, Any]]:
     try:
         index = storage.read_json(INDEX_KEY)
@@ -120,6 +208,7 @@ def _fetch_from_index() -> List[Dict[str, Any]]:
             continue
     return out
 
+
 def load_all_submissions() -> List[Dict[str, Any]]:
     items = _fetch_from_index()
     if not items:
@@ -132,14 +221,34 @@ def load_all_submissions() -> List[Dict[str, Any]]:
     items.sort(key=parse_when, reverse=True)
     return items
 
+
 def save_submission(key: str, payload: Dict[str, Any]) -> None:
     storage.write_json(key, payload)
+
 
 def header_line(item: Dict[str, Any]) -> str:
     title = pretty_request_title(item)
     agency = item.get("agency_name") or "—"
     dt = parse_when(item)
     return f"{title} — {agency} — {dt.strftime('%Y-%m-%d %I:%M%p').lstrip('0')}"
+
+# Helper: compact plain-text summary used in outbound emails
+
+def _case_summary_text(it: Dict[str, Any]) -> str:
+    lines = [
+        f"Service Case ID: {it.get('service_case_id','—')}",
+        f"Route: {ROUTE_FRIENDLY.get(it.get('route'), it.get('route','—'))}",
+        f"Request Type: {pretty_request_title(it)}",
+        f"Agency: {it.get('agency_name','—')} (ARC {it.get('agency_id','—')})",
+        f"Agent Email: {it.get('email','—')}",
+        f"Plating Code: {it.get('plating_code','—')}",
+        f"Ticket: {it.get('ticket_number','—')}",
+        f"Record Locator: {it.get('airline_record_locator','—')}",
+    ]
+    c = (it.get("comments") or it.get("comment") or "").strip()
+    if c:
+        lines += ["", "Agent Comment:", c]
+    return "\n".join(lines)
 
 # ---------- Sidebar filters ----------
 st.sidebar.header("Filters")
@@ -152,6 +261,7 @@ st.sidebar.caption("Tip: leave filters blank to show everything.")
 items = load_all_submissions()
 
 # ---------- Filter ----------
+
 def include_item(it: Dict[str, Any]) -> bool:
     if route_filter and ROUTE_FRIENDLY.get(it.get("route"), "Other") not in route_filter:
         return False
@@ -186,7 +296,6 @@ else:
 
         with st.expander(f"{header_line(it)} — {badge}{urgent_tag}", expanded=False):
             # --- Completed toggle LEFT-ALIGNED (auto-save) ---
-            # lives directly under the expander header, aligned with the content
             state_key = f"_last_status_{idx}"
             last_status = st.session_state.get(state_key, it.get("status", "open"))
             completed_now = st.toggle(
@@ -251,6 +360,89 @@ else:
 
             if st.checkbox("Show raw JSON", key=f"showjson_{idx}"):
                 st.code(json.dumps(it, indent=2), language="json")
+
+            # --- ✉️ Email Tools ---
+            st.markdown("<hr>", unsafe_allow_html=True)
+            st.subheader("✉️ Email Tools")
+            agent_email = (it.get("email") or "").strip()
+            case_id = it.get("service_case_id") or ""
+            can_send = bool(agent_email and case_id)
+
+            with st.form(f"compose_agent_email_{idx}"):
+                default_subject = f"[APG] {case_id} — Update" if case_id else "[APG] Update"
+                c_subject = st.text_input("Subject", value=default_subject)
+                default_body = (
+                    f"Hi there,\n\nThis is a follow-up on case {case_id}.\n\n" + _case_summary_text(it) + "\n\n— APG Inside Sales"
+                )
+                c_body = st.text_area("Message", value=default_body, height=180)
+                attach_pnr = st.checkbox("Attach PNR screenshot (if available)", value=bool(it.get("attachment_key")))
+                send_click = st.form_submit_button("Send Email to Agent", disabled=not can_send)
+
+            if send_click:
+                attachments = []
+                if attach_pnr and it.get("attachment_key") and it.get("attachment_key").startswith("screenshots/"):
+                    try:
+                        file_bytes = storage.read_bytes(it["attachment_key"])
+                        # fallback mime if original not stored on this record
+                        mime = it.get("attachment_mime") or "application/octet-stream"
+                        attachments = [{
+                            "filename": os.path.basename(it["attachment_key"]),
+                            "mime": mime,
+                            "bytes": file_bytes,
+                        }]
+                    except Exception:
+                        attachments = []
+                resp = _send_email_via_api(
+                    to=agent_email,
+                    subject=c_subject,
+                    text=c_body,
+                    html=None,
+                    attachments=attachments,
+                    thread_id=case_id,
+                    sender=INSIDE_SALES_FROM,
+                )
+                if resp.get("sent"):
+                    st.success("✅ Email sent to agent and logged.")
+                else:
+                    st.warning("Email logged locally, but sending via API may have failed.")
+
+            # Thread viewer / refresh
+            st.markdown("<h4>📬 Email Thread</h4>", unsafe_allow_html=True)
+            if st.button("🔄 Refresh thread", key=f"refresh_thread_{idx}"):
+                msgs = []
+                if _gmail_search and case_id:
+                    try:
+                        msgs = _gmail_search(subject=case_id) or []
+                    except Exception:
+                        msgs = []
+                snap_key = f"emails/{case_id}/thread_snapshot.json"
+                try:
+                    storage.write_json(snap_key, {"refreshed_at": datetime.now(timezone.utc).isoformat(), "messages": msgs})
+                    _email_index_add(case_id, {"key": snap_key})
+                except Exception:
+                    pass
+                st.experimental_rerun()
+
+            # Display last 10 logged emails / snapshot
+            try:
+                idx_list = storage.read_json(f"emails/{case_id}/_index.json")
+                if isinstance(idx_list, list):
+                    idx_list = [x for x in idx_list if x.endswith(".json")]
+                    idx_list = sorted(idx_list)[-10:]
+                    for k in idx_list:
+                        try:
+                            item = storage.read_json(k)
+                            subject = item.get("subject") or k.split("/")[-1]
+                            to_list = item.get("to")
+                            st.markdown(f"**{subject}**")
+                            st.caption(f"To: {', '.join(to_list) if isinstance(to_list, list) else to_list}")
+                            snippet = (item.get("text") or "").strip().splitlines()
+                            st.write("\n".join(snippet[:6]) + ("\n…" if len(snippet) > 6 else ""))
+                            st.markdown("<hr>", unsafe_allow_html=True)
+                        except Exception:
+                            continue
+            except Exception:
+                pass
 
 st.markdown("---")
 st.caption("💡 Pro tip: urgent keywords in comments add a ⚠️ caution badge in the list.")
