@@ -1,0 +1,5 @@
+{
+  "141": { "to": ["approvals@flydubai.example"], "cc": ["inside.sales@apg.example"] },
+  "188": { "to": ["hq@aircambodia.example"], "cc": [] },
+  "239": { "to": ["coc@airmauritius.example"], "cc": [] }
+}
