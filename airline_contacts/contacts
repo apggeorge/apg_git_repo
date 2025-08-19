@@ -1,5 +1,5 @@
 {
-  "141": { "to": ["approvals@flydubai.example"], "cc": ["inside.sales@apg.example"] },
-  "188": { "to": ["hq@aircambodia.example"], "cc": [] },
-  "239": { "to": ["coc@airmauritius.example"], "cc": [] }
+  "141": { "to": ["g.shtern@apg-ga.us"], "cc": [] },
+  "188": { "to": ["g.shtern@apg-ga.us"], "cc": [] },
+  "239": { "to": ["g.shtern@apg-ga.us"], "cc": [] }
 }
