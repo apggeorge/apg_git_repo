@@ -25,9 +25,47 @@ from glob import glob
 from typing import Any, Dict, List, Optional, Tuple
 from pathlib import Path
 from datetime import datetime, timezone
+import base64, requests, re
 
 import pandas as pd
 import streamlit as st
+
+# === GitHub helpers (place after imports) ===
+def _gh_headers():
+    return {
+        "Authorization": f"Bearer {st.secrets['github']['token']}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+
+def _slug(s: str, fallback="anon"):
+    s = (s or "").strip().lower()
+    s = re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+    return s or fallback
+
+def gh_put_file(owner: str, repo: str, branch: str, path: str,
+                content_bytes: bytes, message: str):
+    """Create/update a single file via GitHub Contents API."""
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+
+    # Check if it exists to capture sha
+    sha = None
+    r_get = requests.get(url, headers=_gh_headers(), params={"ref": branch})
+    if r_get.status_code == 200:
+        sha = r_get.json().get("sha")
+
+    payload = {
+        "message": message,
+        "content": base64.b64encode(content_bytes).decode("utf-8"),
+        "branch": branch,
+    }
+    if sha:
+        payload["sha"] = sha
+
+    r_put = requests.put(url, headers=_gh_headers(), json=payload)
+    if r_put.status_code not in (200, 201):
+        raise RuntimeError(f"GitHub write failed: {r_put.status_code} {r_put.text}")
+    return r_put.json()
 
 # =========================
 # Paths / Constants
