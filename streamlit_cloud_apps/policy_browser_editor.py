@@ -467,50 +467,13 @@ if show_raw:
     st.subheader("Raw JSON (edited)")
     st.code(new_txt, language="json")
 
-# SAVE / DOWNLOAD ACTIONS
+# === SAVE / DOWNLOAD (CTA-first) ===
 st.markdown("---")
-colA, colB, colC, colD, colE = st.columns(5)
+cta_col, json_col, patch_col = st.columns([2, 1, 1])
 
-with colA:
-    # Safe drafts
-    if st.button("💾 Save to _drafts/", type="primary"):
-        DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
-        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        fname = os.path.basename(path)
-        out_path = DRAFTS_DIR / f"{fname.rsplit('.json',1)[0]}__{ts}.json"
-        out_path.write_text(new_txt, encoding="utf-8")
-        st.success(f"Draft saved: {out_path}")
-
-with colB:
-    if st.button("🧷 Backup & overwrite original") and save_mode == "Backup + Overwrite original":
-        HISTORY_DIR.mkdir(parents=True, exist_ok=True)
-        # backup
-        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        bak = HISTORY_DIR / f"{os.path.basename(path)}.{ts}.bak.json"
-        bak.write_text(orig_txt, encoding="utf-8")
-        # overwrite
-        Path(path).write_text(new_txt, encoding="utf-8")
-        st.success(f"Backed up → {bak.name} and wrote changes to {path}")
-
-with colC:
-    st.download_button(
-        "⬇️ Download edited JSON",
-        data=new_txt,
-        file_name=os.path.basename(path),
-        mime="application/json",
-    )
-
-with colD:
-    st.download_button(
-        "⬇️ Download .patch",
-        data=d or "",
-        file_name=os.path.basename(path).replace(".json", ".patch"),
-        mime="text/x-diff",
-        disabled=not bool(d),
-    )
-
-with colE:
-    if st.button("📤 Submit suggestion to GitHub (no overwrite)"):
+with cta_col:
+    st.caption("Primary action")
+    if st.button("✅ Submit Modifications", type="primary", use_container_width=True):
         try:
             owner  = st.secrets["github"]["owner"]
             repo   = st.secrets["github"]["repo_suggestions"]
@@ -540,8 +503,8 @@ with colE:
                     "exclusions_changed": ((edited.get("agency_exclusion_list") or {}).get("excluded_agencies", [])) !=
                                           ((orig_doc.get("agency_exclusion_list") or {}).get("excluded_agencies", [])),
                 },
-                "diff_unified": d,                  # your unified diff string
-                "edited_json": json.loads(new_txt), # parsed JSON payload
+                "diff_unified": d,                  # your unified diff
+                "edited_json": json.loads(new_txt), # parsed JSON
             }
 
             gh_path = f"suggestions/{plating}/{ts[:4]}/{plating}-{airline}__{ts}__{editor}.suggestion.json"
@@ -556,11 +519,47 @@ with colE:
                 data=json.dumps(suggestion, indent=2, ensure_ascii=False),
                 file_name=os.path.basename(gh_path),
                 mime="application/json",
+                use_container_width=True,
             )
         except Exception as e:
             st.error(f"GitHub submission failed: {e}")
 
-st.caption(
-    "Tip: In Streamlit Cloud, downloads are the most reliable way to persist team edits. "
-    "If you want a one-click PR flow, we can wire a GitHub token and push commits from here."
-)
+with json_col:
+    st.download_button(
+        "Download edited JSON",
+        data=new_txt,
+        file_name=os.path.basename(path),
+        mime="application/json",
+        use_container_width=True,
+    )
+
+with patch_col:
+    st.download_button(
+        "Download .patch",
+        data=d or "",
+        file_name=os.path.basename(path).replace(".json", ".patch"),
+        mime="text/x-diff",
+        disabled=not bool(d),
+        use_container_width=True,
+    )
+
+# Optional: keep local saves but de-emphasize them
+with st.expander("Advanced / other save options", expanded=False):
+    a1, a2 = st.columns(2)
+    with a1:
+        if st.button("Save to _drafts/"):
+            DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
+            ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            fname = os.path.basename(path)
+            out_path = DRAFTS_DIR / f"{fname.rsplit('.json',1)[0]}__{ts}.json"
+            out_path.write_text(new_txt, encoding="utf-8")
+            st.success(f"Draft saved: {out_path}")
+
+    with a2:
+        if st.button("Backup & overwrite original"):
+            HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+            ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            bak = HISTORY_DIR / f"{os.path.basename(path)}.{ts}.bak.json"
+            bak.write_text(orig_txt, encoding="utf-8")
+            Path(path).write_text(new_txt, encoding="utf-8")
+            st.success(f"Backed up → {bak.name} and wrote changes to {path}")
