@@ -469,7 +469,7 @@ if show_raw:
 
 # SAVE / DOWNLOAD ACTIONS
 st.markdown("---")
-colA, colB, colC, colD = st.columns(4)
+colA, colB, colC, colD, colE = st.columns(5)
 
 with colA:
     # Safe drafts
@@ -508,6 +508,57 @@ with colD:
         mime="text/x-diff",
         disabled=not bool(d),
     )
+
+with colE:
+    if st.button("📤 Submit suggestion to GitHub (no overwrite)"):
+        try:
+            owner  = st.secrets["github"]["owner"]
+            repo   = st.secrets["github"]["repo_suggestions"]
+            branch = st.secrets["github"]["default_branch"]
+
+            ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            base = os.path.basename(path).rsplit(".json", 1)[0]
+            editor  = _slug(editor_name, "anon")
+            plating = _slug(str(edited.get("plating_carrier", "")), "unk")
+            airline = _slug(str(edited.get("airline_name", "")), "airline")
+
+            suggestion = {
+                "type": "policy_suggestion",
+                "source_file": os.path.basename(path),
+                "airline_name": edited.get("airline_name"),
+                "iata_code": edited.get("iata_code"),
+                "plating_carrier": edited.get("plating_carrier"),
+                "official_website": edited.get("official_website"),
+                "editor": editor_name or "anonymous",
+                "created_utc": datetime.now(timezone.utc).isoformat(),
+                "changed_sections": {
+                    "policies_changed": [k for k, v in edited.get("policies", {}).items()
+                                         if v != (orig_doc.get("policies", {}).get(k, ""))],
+                    "endorsements_changed": (edited.get("endorsement_codes") != orig_doc.get("endorsement_codes")),
+                    "deadlines_changed": (edited.get("policy_deadlines") or {}) != (orig_doc.get("policy_deadlines") or {}),
+                    "contacts_changed": (edited.get("support_contacts") or {}) != (orig_doc.get("support_contacts") or {}),
+                    "exclusions_changed": ((edited.get("agency_exclusion_list") or {}).get("excluded_agencies", [])) !=
+                                          ((orig_doc.get("agency_exclusion_list") or {}).get("excluded_agencies", [])),
+                },
+                "diff_unified": d,                  # your unified diff string
+                "edited_json": json.loads(new_txt), # parsed JSON payload
+            }
+
+            gh_path = f"suggestions/{plating}/{ts[:4]}/{plating}-{airline}__{ts}__{editor}.suggestion.json"
+            message = f"policy suggestion: {base} by {editor_name or 'anonymous'} @ {ts}"
+            gh_put_file(owner, repo, branch, gh_path,
+                        json.dumps(suggestion, indent=2, ensure_ascii=False).encode("utf-8"),
+                        message)
+
+            st.success(f"Submitted to GitHub → {owner}/{repo}@{branch}:{gh_path}")
+            st.download_button(
+                "⬇️ Download the same suggestion bundle",
+                data=json.dumps(suggestion, indent=2, ensure_ascii=False),
+                file_name=os.path.basename(gh_path),
+                mime="application/json",
+            )
+        except Exception as e:
+            st.error(f"GitHub submission failed: {e}")
 
 st.caption(
     "Tip: In Streamlit Cloud, downloads are the most reliable way to persist team edits. "
