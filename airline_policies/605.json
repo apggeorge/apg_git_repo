@@ -1,7 +1,7 @@
 {
   "airline_name": "Sky Airline",
   "iata_code": "H2",
-  "plating_carrier": "401",
+  "plating_carrier": "605",
   "official_website": "https://www.skyairline.com/en/unitedstates/sky-airline/",
   "policies": {
     "involuntary_refund": "Passengers are eligible for an involuntary refund in the following cases:\n• Flight is advanced by 15 minutes or more\n• Flight is delayed by 30 minutes or more\n• Flight or route is cancelled\n\nPassenger options:\n1. Change of date or flight without penalty or fare difference, within ticket validity.\n2. Full refund to the original form of payment.\n\nProcessing Requirements:\n• If more than 72 hours before departure: agency may process directly in GDS.\n• If less than 72 hours before departure: SKY handles rebooking automatically; agents must not take action until revalidation is complete.\n• If an ancillary EMD-A is attached: SKY will re-associate it if <72h; agents may do so >72h.\n• Reissue must be manual/historical, with penalty removed from mask.\n• Mandatory endorsement code: \"W04\" must be entered in both reissue and refund forms.\n• Failure to comply (e.g., class misuse or missing endorsement) may trigger ADM issuance.\n\nTo request a full refund via ARC/BSP (RI):\n• Use reason code \"W04\" in the refund reason field.\n• Credit Note must be included for local tax compliance.",
