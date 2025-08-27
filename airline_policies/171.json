@@ -1,7 +1,7 @@
 {
   "airline_name": "FlyDubai",
   "iata_code": "FZ",
-  "plating_carrier": "171",
+  "plating_carrier": "141",
   "official_website": "https://www.flydubai.com/en-us/",
   "policies": {
     "involuntary_refund": ":\n\u2022 Check disruption policy via FQN in GDS.\n\u2022 No waiver code required if 'UN' status applies.\n\u2022 Refunds are normally issued in the form of a Voucher unless otherwise required by law.\n\u2022 Vouchers are non-transferable, valid only for the named passenger, and redeemable via website, mobile app, or call center.\n\u2022 Refunds exclude credit card charges and optional extras unless refunded involuntarily.\n\u2022 If you miss your flight without prior notice, the fare is non-refundable unless laws dictate otherwise.\n\u2022 Refunds due to cancellations or delays >3h may be offered as a full voucher or free rebooking.\n\u2022 For group bookings, contact groupreservations@flydubai.com for refund terms.\n\u2022 Refunds must be requested by original payer with proper identification; third-party refund requests require notarized authorization.",

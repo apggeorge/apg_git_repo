@@ -1,0 +1,36 @@
+{
+    "airline_name": "Thai Lion Air",
+    "iata_code": "SL",
+    "plating_carrier": "310",
+    "official_website": "", 
+    "policies": {
+      "involuntary_refund": "",
+      "involuntary_reissue": "",
+      "voluntary_refund": "",
+      "medical_refund": "",
+      "name_change": "",
+      "group_booking": "",
+      "infant_policy": "",
+      "baggage_policy": "",
+      "seat_request_policy": "",
+      "short_term_cancellation_policy": ""
+    },
+    "agency_exclusion_list": {
+      "excluded_agencies": []
+    },
+    "endorsement_codes": {
+      "involuntary_refund_code": [""],
+      "involuntary_reissue_code": [""],
+      "medical_refund_code": []
+    },
+    "support_contacts": {
+      "_note": "",
+      "inside_sales_contacts": [
+        "",
+        "",
+        ""
+      ],
+      "cc": [""]
+    }
+  }
+  
