@@ -1,0 +1,32 @@
+{
+  "airline_name": "Air Burkina",
+  "iata_code": "2J",
+  "plating_carrier": "226",
+  "official_website": "https://air-burkina.com/en",
+  "policies": {
+    "involuntary_refund": "- If flight is canceled, agents may process the refund directly in the GDS.\n- If the new flight is affected by >3 hours, no waiver is required; add ENDO note (e.g., INV REF 2J flt#/date-cxl).\n- Refunds may be chosen instead of rebooking.\n- In practice, long delays (e.g., ≥5 hours) or strike-related cancellations may also qualify when documented.",
+    "involuntary_reissue": "- For involuntary schedule changes:\n  - If the passenger accepts the new flight, agents can reissue without penalty.\n  - Must include in ENDO Box: INVOL SKCHG\n  - No waiver required.\n  - Handled directly in the GDS.",
+    "voluntary_refund": "- Standard fare rules apply for voluntary refunds.\n- Some ticket classes may be non-refundable.\n- Refunds, when permitted, are returned to the original form of payment.",
+    "medical_refund": "",
+    "name_change": "- Minor spelling corrections may be allowed.\n- Full name changes are not permitted.\n- Otherwise handle via refund (per fare rules) and rebook with the correct name.",
+    "group_booking": "- Available for groups of 10+ passengers.\n- Discounts and flexible payment terms may be offered.\n- Booking via airline support or agency partners.\n- Name changes and other terms follow group travel rules.",
+    "infant_policy": "",
+    "baggage_policy": "- Liability for loss/delay/damage is limited under the Warsaw Convention.\n- Damage must be reported immediately or within 7 days; delay claims within 21 days of delivery.\n- Higher value may be declared with a supplemental fee; fragile/valuable/perishable items may be excluded.",
+    "seat_request_policy": "- Extra-legroom seat upgrades available for a fee.\n- No business class cabin.\n- Upgrades can be done during web check-in or at the airport counter; subject to availability.",
+    "short_term_cancellation_policy": "- No published same-day/24-hour void policy.\n- The right to transport becomes null and void for no-shows; cancel segments before departure to preserve value.\n- All changes must comply with fare rules and ticket conditions."
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": ["INV REF 2J flt#/date-cxl"],
+    "involuntary_reissue_code": ["INVOL SKCHG"],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails.",
+    "sales_support_email": "not_provided",
+    "internal_contact": "not_provided",
+    "arc_contact": "airburkina.arc@apg-ga.us"
+  }
+}
