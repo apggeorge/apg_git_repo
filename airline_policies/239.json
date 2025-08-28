@@ -4,23 +4,28 @@
   "plating_carrier": "239",
   "official_website": "https://www.airmauritius.com/en",
   "policies": {
-    "involuntary_refund": "Send full PNR history showing the flight cancelation or major schedule change of 3 hours or more to usa@apg-ga.us for review and authorization",
-    "involuntary_reissue": "If connection does not match the arrival on the long haul and ticket already issued:\n• Option 1: Rebook/Reissue on INVOL basis on the next available flight same day, same airline, same RBD or lowest available fare in same cabin\n• Option 2: Rebook/Reissue on INVOL basis on the next available flight next day, same airline, same RBD or lowest available fare in same cabin\nMANDATORY: Insert both canceled and rebooked flight details in the ENDO box to avoid ADMs",
+    "involuntary_refund": "Process the refund in the GDS, no waiver is required, add ENDO BOX as (INVL RFD MK123/25JUN CNXL)",
+    "involuntary_reissue": "If connection does not match the arrival on the long haul and ticket already issued:\n- Option 1: Rebook/Reissue on INVOL basis on the next available flight same day, same airline, same RBD or lowest available fare in same cabin\n- Option 2: Rebook/Reissue on INVOL basis on the next available flight next day, same airline, same RBD or lowest available fare in same cabin\nMANDATORY: Insert both canceled and rebooked flight details in the ENDO box to avoid ADMs",
     "voluntary_refund": "Proceed as per fare rules associated with the ticket",
     "medical_refund": "Proceed as per fare rules associated with the ticket",
-    "name_change": "1. Name change permitted for spelling/typing errors\n2. Married/Maiden name mismatch – proof required\n3. Inverse of first name and surname\nPROCEDURE:\n• Step 1: Rebook in same cabin and RBD if possible, or rebook in available classes under correct name\n• Step 2: Reissue original ticket under corrected name, collect ADC if any, and apply $25 name change fee\nRestrictions:\n• No passenger substitution\n• EMDs not permitted for name changes\n• Not allowed on codeshares (e.g., MK/EK, MK/AF)",
-    "group_booking": "• A group booking requires a minimum of 10 adults on the same flight\n• Benefits include:\n  - Preferential group fares\n  - Dedicated sales support\n  - Name changes permitted before ticket issuance\n  - Meal requests allowed (≥48 hours prior to departure)\n• Children and infants are not counted in the group minimum",
-    "infant_policy": "• Infant is defined as a passenger under 12 months",
-    "baggage_policy": "• Refer to the GDS",
-    "seat_request_policy": "Not specified",
-    "short_term_cancellation_policy": "• A full refund is available if the ticket is canceled within 24 hours of booking, provided the flight is at least 7 days away at the time of booking\n• After this 24-hour window, cancellation policies and any applicable fees depend on the fare rules of the ticket"
+    "name_change": "1. Name change permitted for spelling/typing errors\n2. Married/Maiden name mismatch – proof is required\n3. Inverse of first name and surname\nPROCEDURE:\n- Step 1: Rebook in same cabin and RBD if possible, or rebook in available classes under correct name\n- Step 2: Reissue original ticket under corrected name, collect ADC if any, and apply $25 name change fee\nRestrictions:\n- No passenger substitution. No name change allowed.\n- EMDs not permitted for name changes\n- Not allowed on codeshares (e.g., MK/EK, MK/AF)",
+    "group_booking": "- A group booking requires a minimum of 10 adults on the same flight\n- Benefits include:\n  - Preferential group fares\n  - Dedicated sales support\n  - Name changes permitted before ticket issuance\n  - Meal requests allowed (≥48 hours prior to departure)\n- Children and infants are not counted in the group minimum",
+    "infant_policy": "- Infant is defined as a passenger under 12 months",
+    "baggage_policy": "- Refer to the GDS",
+    "seat_request_policy": "Assign seats thru the GDS.\nChargeable seats should be collected thru EMD via the GDS.",
+    "short_term_cancellation_policy": "- A full refund is available if the ticket is canceled within 24 hours of booking, provided the flight is at least 7 days away at the time of booking\n- After this 24-hour window, cancellation policies and any applicable fees depend on the fare rules of the ticket."
   },
   "agency_exclusion_list": {
     "excluded_agencies": []
   },
   "endorsement_codes": {
-    "involuntary_refund_code": ["INV REFUND MK flight#/date-cancel."],
-    "involuntary_reissue_code": ["INV REISSUE MK # of the canceled flight + the # of the new flight.", "Cancelled + new rebooked flights must be listed in ENDO (no fixed format)"],
+    "involuntary_refund_code": [
+      "INV REFUND MK flight#/date-cancel."
+    ],
+    "involuntary_reissue_code": [
+      "INV REISSUE MK # of the canceled flight + the # of the new flight.",
+      "Cancelled + new rebooked flights must be listed in ENDO (no fixed format)"
+    ],
     "medical_refund_code": []
   },
   "support_contacts": {

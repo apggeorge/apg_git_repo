@@ -4,23 +4,26 @@
   "plating_carrier": "275",
   "official_website": "https://www.apgiet.com/",
   "policies": {
-    "involuntary_refund": "A full refund is allowed if:\n• The flight is canceled\n• The schedule is changed by 3 or more hours\n• Full refund via GDS is accepted in case of flight cancellation and if the schedule change is higher than 3 hours. FULL PNR history with the UN/SC segments and ticket numbers must be sent to usa@apg-ga.us for review and waiver.",
-    "involuntary_reissue": "In case of schedule change ≥3 hours or flight cancellation (UN/SC segments):\n• If new flight suits passenger and is same RBD → reissue without fees, add ENDO: SKCHG (schedule change) or INVOL (irregular op)\n• If new flight suits passenger but not same RBD → send FULL PNR history to usa@apg-ga.us showing who added the new flight\n• If no suitable flight or original canceled (UN) → penalty waived, reissue on same route/RBD/carrier, collect ADC (rerouting if fare rules allow)\n• APG will not pay compensation, hotel, transfers, meals, etc.\n• If disruption on other ticket affects GP-275 → no full refund, but ONE FREE CHANGE before departure applies\n• If status is HX → must contact usa@apg-ga.us",
-    "voluntary_refund": "• Fare rules of the operating carrier apply\n• Penalties collected via CP tax code\n• If multiple carriers involved on 275 ticket, apply most restrictive rule\nVOLUNTARY REISSUANCE (until further notice):\n• ONE FREE CHANGE before departure (for completely unused tickets)\n  → Only penalties waived\n  → ADC (fare/tax difference) must be collected\n  → Add ENDO: ONEFREECHANGE\n• From 2nd change onward → operating airline fare rules apply\n• No full refund unless fare rules allow\n• Rerouting only if fare rules permit\n• Coupons must be used in sequence",
-    "medical_refund": "Refund not applicable for medical reasons.\nInstead:\n• ONE FREE CHANGE before departure (for completely unused tickets)\n  → Only penalties waived\n  → ADC (fare/tax difference) must be collected\n  → Add ENDO: ONEFREECHANGE\n• From 2nd change onward → operating airline fare rules apply\n• No full refund unless fare rules allow\n• Rerouting only if fare rules permit\n• Coupons must be used in sequence",
-    "name_change": "Name corrections permitted for the same passenger only (not transferable).\nSteps:\n1. Create a new booking with correct name (same RBD or higher)\n2. Issue a new ticket on GP-275\n3. Notify APG with the new ticket number to usa@apg-ga.us\n4. APG will provide a waiver for refund of the original ticket\n• A $25 penalty applies to all name corrections.",
+    "involuntary_refund": "A full refund is allowed if:\n- The flight is canceled\n- The schedule is changed by 3 or more hours\n- Full refund via GDS is accepted in case of flight cancellation and if the schedule change is higher than 3 hours.",
+    "involuntary_reissue": "In case of schedule change ≥3 hours or flight cancellation (UN/SC segments):\n- If new flight suits passenger and is same RBD → reissue without fees, add ENDO: SKCHG (schedule change) or INVOL (irregular op)\n- If new flight suits passenger but not same RBD → submit the request to usa@apg-ga.us and attach the PNR history screenshot showing which operating carrier was affected.\n- If no suitable flight or original canceled (UN) → penalty waived, reissue on same route/RBD/carrier, collect ADC (rerouting if fare rules allow); if the offered option is not accepted, issue a refund in the GDS\n- APG will not pay compensation, hotel, transfers, meals, etc. that result from schedule change.\n- If disruption on other ticket affects GP-275 → no full refund, but ONE FREE CHANGE before departure applies\n- If status is HX → must contact usa@apg-ga.us",
+    "voluntary_refund": "- Fare rules of the operating carrier apply\n- Penalties collected via CP tax code\n- If multiple carriers involved on 275 ticket, apply most restrictive fare rule.\nVOLUNTARY REISSUANCE (until further notice):\n- ONE FREE CHANGE before departure (for completely unused tickets)\n  → Only penalties waived\n  → ADC (fare/tax difference) must be collected\n  → Add ENDO: ONEFREECHANGE\n- From 2nd change onward → operating airline fare rules apply\n- No full refund unless fare rules allow\n- Rerouting only if fare rules permit\n- Coupons must be used in sequence",
+    "medical_refund": "Refund not applicable for medical reasons.\nInstead:\n- ONE FREE CHANGE before departure (for completely unused tickets)\n  → Only penalties waived\n  → ADC (fare/tax difference) must be collected\n  → Add ENDO: ONEFREECHANGE\n- From 2nd change onward → operating airline fare rules apply\n- No full refund unless fare rules allow\n- Rerouting only if fare rules permit\n- Coupons must be used in sequence",
+    "name_change": "Name change not allowed.\nName corrections permitted for the same passenger only (not transferable).\nSteps:\n1. Create a new booking with correct name (same RBD or higher)\n2. Issue a new ticket on GP-275\n3. Notify APG with the new ticket number to usa@apg-ga.us\n4. APG will provide a waiver for refund of the original ticket\n- A $25 penalty applies to all name corrections.",
     "group_booking": "Not applicable.",
-    "infant_policy": "All infant and child travel rules follow the operating carrier’s policy.\n• Ensure proper SSR codes are included in the booking\n• If baggage allowance for infants is required, confirm directly with the operating carrier prior to departure",
-    "baggage_policy": "For baggage restrictions or special allowances, refer to your GDS or contact the operating carrier.\nGP-275 tickets include baggage delay insurance via Blue Ribbon Bags:\n• If a bag is not delivered within 96h, client may be eligible for compensation.\n→ Submit at: https://apgiet.blueribbonbags.com/",
-    "seat_request_policy": "Seat assignments, mobility assistance, and special meal requests are handled directly by the operating carrier.\n• APG does not process special service requests for interline segments\n• All ancillary service inquiries must be directed to the operating airline",
-    "short_term_cancellation_policy": "Voiding allowed on day of issuance only. After that, standard refund/reissue policies apply according to fare rules and waiver eligibility."
+    "infant_policy": "All infant and child travel rules follow the operating carrier’s policy.\n- Ensure proper SSR codes are included in the booking\n- If baggage allowance for infants is required, confirm directly with the operating carrier prior to departure",
+    "baggage_policy": "For baggage restrictions or special allowances, refer to your GDS or contact the operating carrier.\nGP-275 tickets include baggage delay insurance via Blue Ribbon Bags:\n- If a bag is not delivered within 96 hours, client may be eligible for compensation.\n→ Submit at: https://apgiet.blueribbonbags.com/",
+    "seat_request_policy": "Seat assignments, mobility assistance, and special meal requests are handled directly by the operating carrier.\n- APG does not process special service requests for interline segments\n- All ancillary service inquiries must be directed to the operating airline",
+    "short_term_cancellation_policy": "Voiding allowed on day of issuance only.\nAfter that, standard ARC refund/reissue policies apply according to fare rules and waiver eligibility."
   },
   "agency_exclusion_list": {
     "excluded_agencies": []
   },
   "endorsement_codes": {
     "involuntary_refund_code": [],
-    "involuntary_reissue_code": ["SKCHG"],
+    "involuntary_reissue_code": [
+      "SKCHG",
+      "INVOL"
+    ],
     "medical_refund_code": []
   },
   "support_contacts": {
@@ -32,7 +35,8 @@
       "eligible_rebooking_range_deadline": {
         "before_original_departure": 3,
         "after_original_departure": 3
-    }
+      }
     }
   }
 }
+
