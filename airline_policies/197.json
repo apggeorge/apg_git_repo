@@ -4,29 +4,33 @@
   "plating_carrier": "197",
   "official_website": "https://www.airtanzania.co.tz/",
   "policies": {
-    "involuntary_refund": "Allowed for canceled flights, missed connections due to a flight change, or major schedule changes of 3 hours or more.\n• Full refunds apply to unused tickets (must be processed through the GDS within 72 hours of booking affectation)\n• For partially used tickets, refunds apply to the unused portion (must be processed through the GDS within 72 hours of booking affectation)",
-    "involuntary_reissue": "Apply due to a flight cancellation or major schedule change of 3 hours or more.\n• Reissue tickets on the flight given as protection\n• Protect on a different date if required, but new travel must be within ticket validity (same RBD, same route, same operating carrier)\n• If same RBD not available, reissue before departure with next available RBD in the same cabin\n• Add an SSR message: TC #FLT CXL DATE AND ROUTE\n• Exchange tickets as even exchange and include in the ENDO BOX: INVOL CHANGE",
-    "voluntary_refund": "Proceed as per fare rules associated with the ticket.",
-    "medical_refund": "Waiver codes are not publicly listed but may be granted in the following scenarios:\n• Passenger or immediate family death (certified proof required)\n• Hospitalization of the traveler (medical invoice + certificate)\n• Waiver approval is at the airline’s discretion",
-    "name_change": "Corrections of up to 3 letters:\n• Add an SSR message and send a screenshot showing the update, along with passenger’s passport, to usa@apg-ga.us\nCorrections beyond 3 letters:\n• Create a new booking with the correct name (same carrier, route, and class or higher)\n• Issue the new ticket and email details of both bookings, with passport copy, to usa@apg-ga.us\n• APG will then provide a waiver to refund the incorrect ticket",
+    "involuntary_refund": "- Allowed for canceled flights, missed connections due to a flight change or major schedule changes of 3 hours or more:\n- Full refunds apply to unused tickets. Refunds must be processed through the GDS within 72 hours of disruption.\n- For partially used tickets, refunds apply to the unused portion. Refunds must be processed through the GDS within 72 hours of disruption.",
+    "involuntary_reissue": "Apply due to a flight cancelation or major schedule change of 3 hours or more.\n- Reissue tickets on the flight given as protection.\n- Protect on a different date, new travel date must be within ticket validity (same RBD, same route, same operating carrier).\n- If the same RBD is not available, reissue before departure with the next available RBD in the same cabin and add SSR message: TC #FLT CXL DATE AND ROUTE.\n- Exchange tickets as even exchange by including in ENDO BOX: INVOL CHANGE.",
+    "voluntary_refund": "- Proceed as per fare rules associated with the ticket.",
+    "medical_refund": "Waiver codes are not publicly listed but may be granted in the following scenarios:\n- Passenger or immediate family death (certified proof required)\n- Hospitalization of the traveler (medical invoice + certificate)\nApproval is at the airline’s discretion; fare difference and taxes remain payable.",
+    "name_change": "Corrections of up to 3 letters:\n- Add an SSR message and send a screenshot showing the update, with a copy of passenger’s passport, to usa@apg-ga.us.\n\nCorrections beyond 3 letters:\n- Create a new booking with the correct name (same operating carrier, route, and class or higher).\n- Issue the new ticket and email details of both bookings plus passport copy to usa@apg-ga.us.\n- A waiver will be provided to refund the ticket with the incorrect name.",
     "group_booking": "Group bookings are accepted for 10+ passengers traveling together.",
-    "infant_policy": "• Infants (<2 yrs) travel on lap at 10% of adult fare\n• 1 infant allowed per adult\n• Infant checked baggage allowance: 10 kg\n• Children 2–11 yrs require separate seat (reduced fare applies)\n• Children turning 12 during trip must be booked as adults\n• Child fare includes full adult baggage allowance",
-    "baggage_policy": "• Refer to the GDS information\n• Dangerous items, valuables, and electronics must not be packed in checked baggage",
-    "seat_request_policy": "Seat assignments may be adjusted for operational or safety reasons.\n• Children must sit in the same or adjacent row as accompanying adult\n• Special services must be requested at least 72 hours prior to departure (Tanzania time)",
-    "short_term_cancellation_policy": "Air Tanzania permits cancellations within 24 hours of booking with:\n• Full refund\n• No penalty, provided flight has not departed\n• Applies regardless of fare type"
+    "infant_policy": "- Infants (<2 yrs) travel on lap at 10% of adult fare\n- 1 infant allowed per adult\n- Infant checked baggage allowance: 10 kg\n- Children 2–11 yrs require separate seat; reduced fare applies\n- Children turning 12 during trip must be booked as adults\n- Child fare includes full adult baggage allowance",
+    "baggage_policy": "- Refer to the GDS\n- Dangerous items, valuables, and electronics must not be packed in checked baggage",
+    "seat_request_policy": "Seat assignments may be adjusted for operational or safety reasons.\n- Children must sit in the same or adjacent row as accompanying adult\n- Special service requests must be submitted at least 72 hours prior to departure (Tanzania time)",
+    "short_term_cancellation_policy": "Air Tanzania permits cancellations **within 24 hours of booking** with:\n- Full refund\n- No penalty, provided flight has not departed\n- Applies regardless of fare type"
   },
   "agency_exclusion_list": {
     "excluded_agencies": []
   },
   "endorsement_codes": {
-    "involuntary_refund_code": ["INV REF TC flt #/date-cx", "INV REF TC flt #/date-cxl"],
-    "involuntary_reissue_code": ["INV CHANGE", "INVOL CHANGE"],
+    "involuntary_refund_code": [
+      "INVOL REFUND"
+    ],
+    "involuntary_reissue_code": [
+      "INVOL CHANGE"
+    ],
     "medical_refund_code": []
   },
   "support_contacts": {
     "_note": "For internal use only. Do not include in autoresponse emails.",
     "arc_contact": "airtanzania.arc@apg-ga.us",
-    "general_contact": "info@airtanzania.co.tz",
+    "general_contact": "info@airtanzania.co.tz, tc.rm@airtanzania.co.tz",
     "group_desk": "groupdesk@airtanzania.co.tz",
     "refund_email": "refund@airtanzania.co.tz"
   },

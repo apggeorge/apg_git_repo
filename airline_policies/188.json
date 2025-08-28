@@ -4,23 +4,27 @@
   "plating_carrier": "188",
   "official_website": "http://www.cambodiaangkorair.com",
   "policies": {
-    "involuntary_refund": "Involuntary Refunds – If flight is canceled or rescheduled by 3 hours or more:\n• Full refund applies for unused tickets (must be processed within 72 hours after booking is affected)\n• For partially used tickets, refund on the unused segment applies (must be processed within 72 hours after booking is affected)",
-    "involuntary_reissue": "Involuntary reissue requests must follow the procedure below:\n• Email the full PNR history showing the major schedule change of 3 hours or more\n• Email the full PNR history showing the misconnection\n• Include the desired itinerary and RBD availability\n• Submit request to usa@apg-ga.us for approval",
-    "voluntary_refund": "• Refer to the fare rules associated to the ticket\n• The non-refundable rule also applies to taxes",
+    "involuntary_refund": "- Involuntary Refunds - If flight is canceled or rescheduled by 3 hours or more:\n- Full refund applies for unused tickets. Refund must be processed within 72 hours after booking is affected.\n- For partially used tickets, refund applies to the unused segment. Refund must be processed within 72 hours after booking is affected.",
+    "involuntary_reissue": "Involuntary reissue requests must follow the procedure below:\n- Email the full PNR history showing the major schedule change of 3 hours or more\n- Email the full PNR history showing the misconnection\n- Include the desired itinerary and RBD availability\n- Submit request to: usa@apg-ga.us for approval",
+    "voluntary_refund": "- Refer to the fare rules associated with the ticket\n- The non-refundable rule also applies to taxes.",
     "medical_refund": "Proceed as per fare rules associated with the ticket",
     "name_change": "Name change is not allowed.\nName correction: Send the request to usa@apg-ga.us and attach passport for verification",
-    "group_booking": "A group is considered when 10 passengers or more are traveling together.\n• Send your preferred itinerary to usa@apg-ga.us",
-    "infant_policy": "Infants under 14 days, premature or medically unfit infants not accepted.\n• 1 adult = 1 infant",
+    "group_booking": "A group is considered when 10 passengers or more are traveling together.\nSend your preferred itinerary to: usa@apg-ga.us",
+    "infant_policy": "Infants under 14 days, premature or medically unfit infants not accepted.\n- 1 adult = 1 infant",
     "baggage_policy": "Refer to the terms and conditions of the fare purchased",
-    "seat_request_policy": "Not specified",
-    "short_term_cancellation_policy": "For flights to or from the United States, Cambodia Angkor Air complies with the U.S. Department of Transportation 24-hour rule:\n• A full refund is available if the ticket is canceled within 24 hours of booking, provided the flight is at least 7 days away at the time of booking\n• After this 24-hour window, cancellation policies and any applicable fees depend on the specific fare rules of the ticket"
+    "seat_request_policy": "",
+    "short_term_cancellation_policy": "For flights to or from the United States, Cambodia Angkor Air complies with the U.S. Department of Transportation 24-hour rule:\n- A full refund is available if the ticket is canceled within 24 hours of booking, provided the flight is at least 7 days away at the time of booking.\n- After this 24-hour window, cancellation policies and any applicable fees will depend on the specific fare rules of the ticket."
   },
   "agency_exclusion_list": {
     "excluded_agencies": []
   },
   "endorsement_codes": {
-    "involuntary_refund_code": ["INVOL REF"],
-    "involuntary_reissue_code": ["INVOL CHANGE"],
+    "involuntary_refund_code": [
+      "INVOL REF"
+    ],
+    "involuntary_reissue_code": [
+      "INVOL CHANGE"
+    ],
     "medical_refund_code": []
   },
   "support_contacts": {
@@ -42,9 +46,9 @@
   },
   "policy_deadlines": {
     "group_booking": {
-      "group_deposit_deadline_before_departure": 90,
-      "group_names_deadline_before_departure": 14,
-      "group_final_payment_deadline_before_departure": 7
+      "group_deposit_deadline_before_departure_days": 90,
+      "group_names_deadline_before_departure_days": 14,
+      "group_final_payment_deadline_before_departure_days": 7
     }
   }
 }

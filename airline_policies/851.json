@@ -4,23 +4,27 @@
   "plating_carrier": "851",
   "official_website": "https://www.hongkongairlines.com/en_HK/hx/homepage",
   "policies": {
-    "involuntary_refund": "• Eligible if HX cancels flight or causes missed connection\n• 100% refund if unused; otherwise, refund based on unused portion\n• Must be requested within 60 days of disrupted flight\n• Send full PNR history and ticket display to usa@apg-ga.us (waiver code required)",
-    "involuntary_reissue": "• Rebooking due to flight irregularities must be processed within 10 days of affected flight\n• New flight must depart within 2 days before or 7 days after original date\n• Change must be to first available HX-operated flight\n• One-time waiver applies only; further changes subject to fare rules",
-    "voluntary_refund": "Voluntary Refunds:\n• Must follow fare rules associated with ticket",
-    "medical_refund": "• Provide medical certificate and invoice for expenses\n• Refund authorization subject to Hong Kong Airlines verification and approval",
-    "name_change": "Individual Bookings (FIT):\n• One-time free change allowed for:\n  → Title/gender correction\n  → Middle name correction\n  → Inverted name order\n  → ≤3-character spelling fix\n  → Legal changes (marriage, divorce, etc.) with documentation\n• Send request with passport copy to usa@apg-ga.us\n• All other changes: HKD 400 or equivalent applies",
-    "group_booking": "• Group tickets must be handled via local support channels\n• Name changes and reissues follow group fee matrix:\n  → HKD 500 (standard)\n  → HKD 800 (peak season)\n• Tour leader name changes waived for medical emergencies (proof required)\n• Group rebooking support handled offline\n• No B2C support offered by APG USA—must contact local station",
-    "infant_policy": "• Infants under 7 days old are not permitted\n• One infant per adult allowed\n• Infant ticket fare and baggage allowance vary by region",
-    "baggage_policy": "• Refer to the GDS",
-    "seat_request_policy": "• Seats cannot be pre-assigned on code-share flights; assignment done at airport on day of travel",
-    "short_term_cancellation_policy": "• Void allowed only on the same day of issuance"
+    "involuntary_refund": "- Eligible if HX cancels flight, causes missed connection\n- 100% refund if unused; otherwise, refund based on unused portion.\n- Must be requested within 60 days of disrupted flight.\n- Contact our team at usa@apg-ga.us with full PNR History and ticket display; waiver code is required.",
+    "involuntary_reissue": "- Rebooking due to flight irregularities must be processed within 10 days of the affected flight.\n- New flight must depart within 2 days before or 7 days after original date.\n- Change must be to first available HX-operated flight.\n- One-time waiver applies only; further changes subject to fare rules.",
+    "voluntary_refund": "Voluntary Refunds:\n- Must follow fare rules associated with tickets",
+    "medical_refund": "- Provide medical certificate along with invoice for expenses. Refund authorization is subject to Hong Kong Airlines verification and approval.",
+    "name_change": "Individual Bookings (FIT):\n- One-time free change allowed for:\n  → Title/gender correction\n  → Middle name correction\n  → Inverted name order\n  → ≤3-character spelling fix\n  → Legal changes (marriage, divorce, etc.) with documentation\n\nSend your request to usa@apg-ga.us along with a copy of passport.\n\n- All other changes: HKD 400 or equivalent applies",
+    "group_booking": "- Group tickets must be handled via local support channels.\n- Name changes and reissues follow group fee matrix:\n  → HKD 500 (standard)\n  → HKD 800 (peak season)\n- Tour leader name changes waived for medical emergencies (proof required)\n- Group rebooking support handled offline\n- No B2C support offered by APG USA—must contact local station",
+    "infant_policy": "- Infants under 7 days old are not permitted.\n- One infant per adult allowed.\n- Infant ticket fare and baggage allowance vary by region.",
+    "baggage_policy": "- Refer to the GDS",
+    "seat_request_policy": "- Seats cannot be pre-assigned on code-share flights. In this case, seats will be assigned at the airport the same day of travel.",
+    "short_term_cancellation_policy": "Void the same day of issuance."
   },
   "agency_exclusion_list": {
     "excluded_agencies": []
   },
   "endorsement_codes": {
-    "involuntary_refund_code": ["RM-170604-PT"],
-    "involuntary_reissue_code": ["RM-170604-PT"],
+    "involuntary_refund_code": [
+      "INV REF HX FLT#/DATE-CXL"
+    ],
+    "involuntary_reissue_code": [
+      "INVOL SKCHG"
+    ],
     "medical_refund_code": []
   },
   "support_contacts": {
