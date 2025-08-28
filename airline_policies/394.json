@@ -4,23 +4,28 @@
   "plating_carrier": "394",
   "official_website": "https://www.flyafricaworld.com/",
   "policies": {
-    "involuntary_refund": "Your request is eligible under Africa World Airlines' refund policy for involuntary schedule changes.\n\nIf your flight was canceled or rescheduled and you do not accept the new flight option:\n\u2022 A full refund is permitted.\n\u2022 Please ensure all flight segments are canceled to avoid a no-show.\n\u2022 When reissuing, include the following text in the ENDO BOX:\n  \u2192 INV REF NO FLT#/DATE-CXL\n\nNote: Refunds and rebooking are only applicable if the cancellation was not caused by extraordinary circumstances (e.g., weather or security disruptions).",
-    "involuntary_reissue": "Your request is eligible under Africa World Airlines' reissue policy for involuntary schedule changes.\n\nIf your flight was canceled or rescheduled and you accept the new flight option:\n\u2022 The ticket may be reissued without penalty.\n\u2022 No waiver code is required.\n\u2022 Enter the following text in the ENDO BOX:\n  \u2192 INVOL SKCHG\n\nIf the new flight option is declined:\n\u2022 You may protect the passenger on a preferred flight with the same route and inventory.\n\u2022 If no alternative is available, please escalate to Sales Support for further assistance.",
-    "voluntary_refund": "Africa World Airlines (AWA) will issue voluntary refunds based on the payment method used:\n• For tickets paid by cash or cheque: refund is processed within 3 business days from receipt of a complete refund request.\n• For tickets purchased by credit card: refund is processed within 7 to 14 business days from receipt of a complete refund request.\n\nConditions:\n• Refunds apply only to eligible domestic and international tickets.\n• Fees for optional services will also be refunded if unused due to oversale or cancellation.\n• Instant refund or rescheduling may apply in the case of oversale or flight cancellation.\n\n❗Important:\n• Tickets issued by travel or corporate agencies cannot be refunded at the airport.\n• Passengers with agency-issued tickets must request refunds directly from their issuing agency.\n\n💬 Refund requests:\n• May be submitted at any AWA ticketing office or via travel agency.\n• Online refund information is available at: www.flyafricaworld.com (see 'Applying for a Refund').\n• For refund questions or status updates, contact the AWA Call Centre at 024 243 8888 or 0800-200-200 between 4:00am–9:00pm GMT.",
-    "medical_refund": "Africa World Airlines does not require a waiver code for involuntary reissues or refunds. Reissues use ENDO BOX: \u201cINVOL SKCHG\u201d and refunds use \u201cINV REF NO FLT#/DATE-CXL\u201d. All other changes are subject to fare rules and applicable change fees unless otherwise approved in writing.",
-    "name_change": "Africa World Airlines does not support name corrections.\n\nIf the name on the ticket is incorrect:\n\u2022 The ticket must be refunded (penalty applies).\n\u2022 A new ticket must be issued with the correct name.",
-    "group_booking": "Group fares are available for parties of 10 or more passengers.\n\u2022 A 25% non-refundable deposit is required to secure the booking.\n\u2022 Final payment and passenger names are required by the deadline advised by AWA.\n\u2022 Group seats are non-refundable once finalized.\n\u2022 Changes to group size may impact pricing.",
-    "infant_policy": "Infants under 2 years of age are eligible for infant fares.\n\u2022 A birth certificate or photo ID must be presented at check-in.\n\u2022 Each infant may carry up to 10 kg of baggage.\n\u2022 No more than two infants are permitted per accompanying adult.\n\u2022 Sick infants require a doctor\u2019s certificate to fly.",
-    "baggage_policy": "Checked baggage allowance is defined by fare class and appears on your ticket. Delayed baggage will be tracked for 21 days. If not located, it is declared lost and compensated accordingly.\n\u2022 Claims require a damage report at the airport.\n\u2022 AWA does not accept liability for fragile items, electronics, or valuables unless declared.\n\u2022 Maximum compensation per international trip is 1,131 SDRs (Montreal Convention); for Ghana domestic flights, up to USD $1000.\n\u2022 Depreciation tables apply based on item type and age.\n\nTo report baggage issues, visit the AWA baggage desk or call 054 011 5196.",
-    "seat_request_policy": "Africa World Airlines offers assistance for passengers with reduced mobility (WCHR only).\n\u2022 CRT agents are available at the airport for support.\n\u2022 Wheelchairs are free of charge.\n\u2022 Special seat requests are assigned at check-in and may be adjusted for operational needs.\n\u2022 Emergency exit row seating is not available to passengers requiring special assistance.",
+    "involuntary_refund": "Your request is eligible under Africa World Airlines' refund policy for involuntary schedule changes.\n\nIf your flight was canceled or rescheduled and you do not accept the new flight option:\n- A full refund is permitted.\n- Please ensure all flight segments are canceled to avoid a no-show.\n- For involuntary refunds (such as flight cancellations or significant schedule changes), Africa World Airlines generally approves a full refund. No waiver code is required in these cases, but agents are often advised to add a note in the ENDO box for reference (e.g., \"INVOL RFND AW141/11AUG CNXL\").\n\nNote: Refunds and rebooking are only applicable if the cancellation was not caused by extraordinary circumstances (e.g., weather or security disruptions).",
+    "involuntary_reissue": "Your options for involuntary schedule changes under Africa World Airlines' reissue policy are: \n\nIf your passenger's flight was canceled or rescheduled and they accept the new flight options:\n- The ticket must be reissued without penalty, and maintain the same booking class. \n- No waiver code is required.\n- Enter the following text in the ENDO BOX:\n  → INVOL SKCHG DUE TO AW394 CNXL\n\nIf the new flight option is declined:\n- You may protect the passenger on a preferred flight with the same route and booking class.\n- If booking class is not available, please escalate the request to Sales Support for further assistance via email at ressupport@flyafricaworld.com\n- Once authorization is received you may proceed to reissue the ticket, no waiver code required.",
+    "voluntary_refund": "Africa World Airlines (AWA) voluntary refunds are based on the applicable fare rules. \n\nConditions:\n- Fees for optional services will also be refunded if unused due to oversale or cancellation.\n- Instant refund or rescheduling may apply in the case of oversale or flight cancellation.\n\n❗Important:\n- Tickets issued by travel or corporate agencies cannot be refunded at the airport.\n- Passengers with agency-issued tickets must request refunds directly from their issuing agency.\n\n💬 Refund requests:\n- May be submitted at any AWA ticketing office or via travel agency.\n- Online refund information is available at: www.flyafricaworld.com (see 'Applying for a Refund').\n- For refund questions or status updates, contact the AWA Call Centre at 024 243 8888 or 0800-200-200 between 4:00am–9:00pm GMT.\n- For travel agent refund questions contact AWA Res Support at ressupport@flyafricaworld.com and Jonathan.Appiah@flyafricaworld.com",
+    "medical_refund": "For voluntary refunds due to medical reasons, supporting documentation (such as medical certificates) must be provided. Once reviewed and approved by the airline, a full refund can be processed, no waiver code is required.\nSupporting medical documents must be submitted via email to the carrier directly at ressupport@flyafricaworld.com and jonathan.appiah@flyafricaworld.com.\nOnce the authorization has been provided by the carrier, the refund process should be completed in the GDS. No waiver code is required but a comment must be added in the ENDO box (e.g., 'Rfnd d/t medical rea aprvd by AW').",
+    "name_change": "Africa World Airlines does not support name corrections.\n\nIf the name on the ticket is incorrect:\n- Cancel original PNR to avoid duplicates or churning.\n- The ticket must be refunded (penalty applies as per fare rules).\n- A new PNR must be created and a new ticket issued with the correct name.\n- Do not rebook or issue the new ticket in the original PNR.",
+    "group_booking": "Group fares are available for parties of 10 or more passengers.\n- A 25% non-refundable deposit is required to secure the booking.\n- Final payment and passenger names are required by the deadline advised by AWA.\n- Group seats are non-refundable once finalized.\n- Changes to group size may impact pricing.",
+    "infant_policy": "Infants under 2 years of age are eligible for infant fares.\n- A birth certificate or photo ID must be presented at check-in.\n- Each infant may carry up to 10 kg of baggage.\n- No more than two infants are permitted per accompanying adult.\n- Infants under treatment for medical conditions will require a doctor’s certificate to fly.",
+    "baggage_policy": "Checked baggage allowance is defined by fare class and appears on your ticket. Delayed baggage will be tracked for 21 days. If not located, it is declared lost and compensated accordingly.\n- Claims require a damage report at the airport.\n- AWA does not accept liability for fragile items, electronics, or valuables unless declared.\n- Maximum compensation per international trip is 1,131 SDRs (Montreal Convention); for Ghana domestic flights, up to USD $1000.\n- Depreciation tables apply based on item type and age.\n\nTo report baggage issues, visit the AWA baggage desk or call 054 011 5196.",
+    "seat_request_policy": "Africa World Airlines offers assistance for passengers with reduced mobility (WCHR only).\n- CRT agents are available at the airport for support.\n- Wheelchairs are free of charge.\n- Special seat requests are assigned at check-in and may be adjusted for operational needs.\n- Emergency exit row seating is not available to passengers requiring special assistance.",
     "short_term_cancellation_policy": "Africa World Airlines does not explicitly offer a same-day void or 24-hour cancellation policy. All changes must comply with the fare rules and may be subject to penalties. Please contact AWA or your issuing agent immediately for any correction or cancellation needs."
   },
   "agency_exclusion_list": {
     "excluded_agencies": []
   },
   "endorsement_codes": {
-    "involuntary_refund_code": ["INV REF NO FLT#/DATE-CXL", "INV REF FLT#/DATE-CXL"],
-    "involuntary_reissue_code": ["INVOL SKCHG"],
+    "involuntary_refund_code": [
+      "INV REF NO FLT#/DATE-CXL",
+      "INV REF FLT#/DATE-CXL"
+    ],
+    "involuntary_reissue_code": [
+      "INVOL SKCHG"
+    ],
     "medical_refund_code": []
   },
   "support_contacts": {
@@ -30,14 +35,14 @@
     "arc_contact": "africaworld.arc@apg-ga.us"
   },
   "policy_deadlines": {
-  "voluntary_refund": {
-    "refund_processing_days_by_method": {
-      "cash_or_cheque": 3,
-      "credit_card": {
-        "min": 7,
-        "max": 14
+    "voluntary_refund": {
+      "refund_processing_days_by_method": {
+        "cash_or_cheque": 3,
+        "credit_card": {
+          "min": 7,
+          "max": 14
+        }
       }
     }
-  }
   }
 }
