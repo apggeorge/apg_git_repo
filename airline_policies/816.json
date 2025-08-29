@@ -4,23 +4,27 @@
   "plating_carrier": "816",
   "official_website": "https://www.batikair.com.my/",
   "policies": {
-    "involuntary_refund": "Involuntarycancellations (e.g., over 3h delay or route suspension): Full refund permitted.\n\u2022 Force majeure may allow for credit voucher with applicable fee.\n\u2022 Maximum refund amount will not exceed original fare minus applicable fees.",
-    "involuntary_reissue": "Reissue permitted per fare rules:\n\u2022 Flight changes within 12h of booking may waive change fee (fare difference applies).\n\u2022 Airline-initiated schedule changes (\u226530 min earlier or \u22652h delay): One free change allowed.\n\u2022 Delay >5h at airport: Refund or amenities (e.g., meals, hotel) may be offered.\n\u2022 Revalidation for schedule changes requires removing affected segments and rebooking same cabin.\n\u2022 Subject line: \u201cSchedule Change Revalidation\u201d to agent@batikair.com.my (Inside Sales only).\n\u2022 Voluntary changes: Subject to fare difference and applicable fees.",
-    "voluntary_refund": "Refund requests are governed by fare type and conditions:\n\u2022 Economy Super Saver: Non-refundable except for Taxes, Fees, and Charges (TFCs), excluding carrier-imposed charges.\n\u2022 Economy Value, Economy Flexi, Business Promo, Business Flexi: Refunds permitted with cancellation fee; most restrictive fare rules apply.\n\u2022 Refunds for deceased passengers: Full refund permitted with death certificate.\n\u2022 Medical refund requests: Require official certificate; approval at airline\u2019s discretion.\n\u2022 Refunds for duplicate bookings must be submitted with proof of full payment within 24h of original booking.\n\u2022 Once online or airport check-in is completed, cancellations or refunds are no longer permitted (except for airline-initiated cancellations).\n\u2022 All refunds processed to the original payment method within 30\u201360 days.\n\u2022 Refunds for group members or immediate family members are discretionary.\n\u2022 Refunds for travel agent bookings must be submitted through the issuing agent.\n\u2022",
-    "medical_refund": "\u2022 No public waiver code system.\n\u2022 Manual review required for exceptions (e.g., death, medical, force majeure).\n\u2022 Minor changes (gender correction, \u22643 character spelling fix) may be waived.\n\u2022 PWD (Persons with Disabilities) may request fee waivers with valid card.\n\u2022 Waiver of ancillary service fees is discretionary and varies by service.\n\u2022 Force majeure situations may grant credit voucher on non-refundable tickets.",
-    "name_change": "\u2022 Name changes (i.e., swapping passenger identity) are not permitted.\n\u2022 Create a new PNR and refund old ticket per refund policy.\n\u2022 Full surname/first/middle/alias additions or deletions require a new ticket.\n\u2022 Fare difference and fees may apply if amendment accepted.\n\u2022 Name must match government-issued ID or passport at check-in.",
-    "group_booking": "\u2022 Minimum group size: 10 pax.\n\u2022 Fare valid for 3 working days (re-quote valid for 1 day).\n\u2022 Name list: Submit 10 days before departure.\n\u2022 Ticketing: Complete 5 days before departure.\n\u2022 Baggage: Economy 20\u201335kg, Business 30\u201340kg (varies by country).\n\u2022 Meal: Included for international sectors >2h.\n\u2022 Name changes:\n  \u2192 Before ticketing: Permitted\n  \u2192 After ticketing:\n    - >48h: Two free name changes, then RM100 (domestic) / RM200 (international) per pax\n    - <48h: Not permitted\n\u2022 Date change:\n  \u2192 Before ticketing: Not permitted\n  \u2192 After ticketing: Reissue/revalidation with fee and fare difference\n\u2022 Cancellation:\n  \u2192 \u226530 days out: 20% allowed with deposit forfeited; beyond 20%, full payment forfeited\n  \u2192 <30 days: No cancellations; 100% materialization required\n\u2022 Deposit: 20% within 72h of quote; non-refundable\n\u2022 Full Payment: Due 30 days before departure\n\u2022 Payment Modes: Cash, EGHL, credit card, online banking (no checks <14 days)\n\u2022 Clause: Batik Air may impose stricter deadlines and deposits for peak dates or aircraft-dominating groups.",
-    "infant_policy": "\u2022 Age: 8 days to under 2 years.\n\u2022 Fare: 10% of adult fare + tax.\n\u2022 No baggage allowance unless otherwise specified.\n\u2022 One stroller or car seat may be checked for free.\n\u2022 Must carry government ID or birth certificate to validate age.",
-    "baggage_policy": "\u2022 Cabin: 7kg + 1 personal item.\n\u2022 Checked (OD Economy): 20kg\n\u2022 Checked (OD Business): 30kg\n\u2022 Varies by country (e.g. Bangladesh: 35\u201340kg; Nepal ex-KTM: 20kg)\n\u2022 Flights operated by Batik Air Indonesia (ID) or codeshare: 20kg Economy / 30kg Business\n\u2022 Excess baggage available post-booking up to 12h prior to departure.\n\u2022 Fragile or high-value items not covered under standard liability.",
-    "seat_request_policy": "\u2022 Seat selection subject to fare bundle and aircraft configuration.\n\u2022 Emergency exit restrictions: Must meet age/fitness requirements.\n\u2022 Seat fees may be refunded if reassigned for safety/operational reasons.\n\u2022 Extra legroom available for fee (group: first come, first served).\n\u2022 Group standard seating arranged after full ticketing.",
-    "short_term_cancellation_policy": "\u2022 Duplicate bookings may be eligible for void/refund if submitted with proof of payment within 24h.\n\u2022 Airline discretion applies.\n\u2022 No formal risk-free cancellation window stated.\n\u2022 Voluntary voids follow refund policy for fare type.\n\u2022 Once check-in is complete, void not permitted except for flight cancellation."
+    "involuntary_refund": "Involuntary cancellations (e.g., over 3h delay or route suspension): Full refund permitted.\n- Force majeure may allow for credit voucher with applicable fee.\n- Maximum refund amount will not exceed original fare minus applicable fees.",
+    "involuntary_reissue": "Reissue permitted per fare rules:\n- Flight changes within 12h of booking may waive change fee (fare difference applies).\n- Airline-initiated schedule changes (≥30 min earlier or ≥2h delay): One free change allowed.\n- Delay >5h at airport: Refund or amenities (e.g., meals, hotel) may be offered.\n- Revalidation for schedule changes requires removing affected segments and rebooking same cabin.\n- Voluntary changes: Subject to fare difference and applicable fees.",
+    "voluntary_refund": "Refund requests are governed by fare type and conditions:\n- Economy Super Saver: Non-refundable except for Taxes, Fees, and Charges (TFCs), excluding carrier-imposed charges.\n- Economy Value, Economy Flexi, Business Promo, Business Flexi: Refunds permitted with cancellation fee; most restrictive fare rules apply.\n- Refunds for deceased passengers: Full refund permitted with death certificate.\n- Medical refund requests: Require official certificate; approval at airline’s discretion.\n- Refunds for duplicate bookings must be submitted with proof of full payment within 24h of original booking.\n- Once online or airport check-in is completed, cancellations or refunds are no longer permitted (except for airline-initiated cancellations).\n- All refunds processed to the original payment method within 30–60 days.\n- Refunds for group members or immediate family members are discretionary.\n- Refunds for travel agent bookings must be submitted through the issuing agent. Upload the document to this portal.",
+    "medical_refund": "- No public waiver code system.\n- Manual review required for exceptions (e.g., death, medical, force majeure).\n- Minor changes (gender correction, ≤3 character spelling fix) may be waived.\n- PWD (Persons with Disabilities) may request fee waivers with valid card.\n- Waiver of ancillary service fees is discretionary and varies by service.\n- Force majeure situations may grant credit voucher on non-refundable tickets.",
+    "name_change": "- Name changes (i.e., swapping passenger identity) are not permitted.\n- Create a new PNR and refund old ticket per refund policy.\n- Full surname/first/middle/alias additions or deletions require a new ticket.\n- Fare difference and fees may apply if amendment accepted.\n- Name must match government-issued ID or passport at check-in.",
+    "group_booking": "- Minimum group size: 10 pax.\n- Fare valid for 3 working days (re-quote valid for 1 day).\n- Name list: Submit 10 days before departure.\n- Ticketing: Complete 5 days before departure.\n- Baggage: Economy 20–35kg, Business 30–40kg (varies by country).\n- Meal: Included for international sectors >2h.\n- Name changes:\n  → Before ticketing: Permitted\n  → After ticketing:\n    - >48h: Two free name changes, then RM100 (domestic) / RM200 (international) per pax\n    - <48h: Not permitted\n- Date change:\n  → Before ticketing: Not permitted\n  → After ticketing: Reissue/revalidation with fee and fare difference\n- Cancellation:\n  → ≥30 days out: 20% allowed with deposit forfeited; beyond 20%, full payment forfeited\n  → <30 days: No cancellations; 100% materialization required\n- Deposit: 20% within 72h of quote; non-refundable\n- Full Payment: Due 30 days before departure\n- Payment Modes: Cash, EGHL, credit card, online banking (no checks <14 days)\n- Clause: Batik Air may impose stricter deadlines and deposits for peak dates or aircraft-dominating groups.",
+    "infant_policy": "- Age: 8 days to under 2 years.\n- Fare: 10% of adult fare + tax.\n- No baggage allowance unless otherwise specified.\n- One stroller or car seat may be checked for free.\n- Must carry government ID or birth certificate to validate age.",
+    "baggage_policy": "- Cabin: 7kg + 1 personal item.\n- Checked (OD Economy): 20kg\n- Checked (OD Business): 30kg\n- Varies by country (e.g. Bangladesh: 35–40kg; Nepal ex-KTM: 20kg)\n- Flights operated by Batik Air Indonesia (ID) or codeshare: 20kg Economy / 30kg Business\n- Excess baggage available post-booking up to 12h prior to departure.\n- Fragile or high-value items not covered under standard liability.",
+    "seat_request_policy": "- Seat selection subject to fare bundle and aircraft configuration.\n- Emergency exit restrictions: Must meet age/fitness requirements.\n- Seat fees may be refunded if reassigned for safety/operational reasons.\n- Extra legroom available for fee (group: first come, first served).\n- Group standard seating arranged after full ticketing.",
+    "short_term_cancellation_policy": "- Duplicate bookings may be eligible for void/refund if submitted with proof of payment within 24h.\n- Airline discretion applies.\n- No formal risk-free cancellation window stated.\n- Voluntary voids follow refund policy for fare type.\n- Once check-in is complete, void not permitted except for flight cancellation."
   },
   "agency_exclusion_list": {
     "excluded_agencies": []
   },
   "endorsement_codes": {
-    "involuntary_refund_code": ["INVOL REF"],
-    "involuntary_reissue_code": ["INVOL CHANGE"],
+    "involuntary_refund_code": [
+      "INVOL REF"
+    ],
+    "involuntary_reissue_code": [
+      "INVOL CHANGE"
+    ],
     "medical_refund_code": []
   },
   "support_contacts": {
@@ -31,14 +35,14 @@
   },
   "policy_deadlines": {
     "involuntary_reissue": {
-      "involuntary_reissue_deadline_after_booking": 12
+      "involuntary_reissue_deadline_after_booking_hours": 12
     },
     "group_booking": {
-      "group_names_deadline_before_departure": 10,
-      "group_ticketing_deadline_before_departure": 5,
-      "group_cancellation_policy_deadline_before_departure": 30,
-      "group_deposit_deadline_after_quote": 3,
-      "group_final_payment_deadline_before_departure": 30
+      "group_names_deadline_before_departure_days": 10,
+      "group_ticketing_deadline_before_departure_days": 5,
+      "group_cancellation_deadline_before_departure_days": 30,
+      "group_deposit_deadline_after_quote_days": 3,
+      "group_final_payment_deadline_before_departure_days": 30
     }
   }
 }
