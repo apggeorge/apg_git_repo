@@ -1,32 +1,30 @@
 {
-    "airline_name": "Air Peace",
-    "iata_code": "P4",
-    "plating_carrier": "710",
-    "official_website": "", 
-    "policies": {
-      "involuntary_refund": "",
-      "involuntary_reissue": "",
-      "voluntary_refund": "",
-      "medical_refund": "",
-      "name_change": "",
-      "group_booking": "",
-      "infant_policy": "",
-      "baggage_policy": "",
-      "seat_request_policy": "",
-      "short_term_cancellation_policy": ""
-    },
-    "agency_exclusion_list": {
-      "excluded_agencies": []
-    },
-    "endorsement_codes": {
-      "involuntary_refund_code": [],
-      "involuntary_reissue_code": [],
-      "medical_refund_code": []
-    },
-    "support_contacts": {
-    "_note": "",
-    "sales_support_email": "",
-    "internal_contact": "",
-    "arc_contact": ""
-    }
+  "airline_name": "Air Peace",
+  "iata_code": "P4",
+  "plating_carrier": "710",
+  "official_website": "",
+  "policies": {
+    "involuntary_refund": "REASONS FOR REFUNDS VIA BSPLINK OR WITH WAIVER:\nInvoluntary refunds\n- Flight cancellation / schedule change more than 3 hours\n- Duplicate etkt / new etkt bought\n- Death of passenger\n- Authorised full refunds for APG Accredited Agents\n\nNote:\nFor any Refund Application (RA) through BSP Link, or request of waiver when BSPLink is not available, please attach all documents required to avoid any unnecessary rejections:\n\n**CANCELLATION / SCHEDULE CHANGE / STRIKE / WEATHER**\n- Copy of full PNR history with UN status.\n\n**DUPLICATE ETKT / NEW ETKT BOUGHT**\n- Copy of the ticket issued by mistake (same fare, routing, dates, name) + copy of the valid new ticket. Wrong ticket refunded with EUR 20 fee.\n\n**DEATH OF PASSENGER**\n- Copy of PNR history, death certificate, and proof of family ties.\n\n**EXCHANGED ETKT**\n- Fill last issued etkt in “document for refund”, first issued etkt in “original issue details”, and others in “reason for refund”. Uncollected change fees will be deducted.\n\n**BSP LINK RA BOXES**\n- “Reason for refund” must be filled in ENGLISH with all details.\n- “Document for refund” must include correct etkt details.\n- “Amount” must match etkt.\n- “Original issue details” only if exchange exists.\n- “Form of payment” must match original ticket.\n\nRefund applications must be filed before ticket validity ends.\nRA will be rejected if incomplete or incorrect.",
+    "involuntary_reissue": "",
+    "voluntary_refund": "Voluntary refunds:\n- Handle in GDS and submit Refund Application (RA) via BSP Link, or request waiver code where applicable.\n\nGENERAL:\n- Unused tickets: refundable if not older than 1 year from issue.\n- Partially used: refundable if not older than 1 year from first coupon.\n\nNotes:\n- APG Airlines refund service is free, but GDS automatic refunds of involuntary cases may be penalized as per ADM Policy.\n- For tickets with multiple carriers/fare bases, most restrictive applies.\n\nREASONS FOR REFUNDS VIA GDS:\n- Voluntary cancellations by passenger (operating airline fare rules apply).",
+    "medical_refund": "",
+    "name_change": "",
+    "group_booking": "",
+    "infant_policy": "",
+    "baggage_policy": "",
+    "seat_request_policy": "",
+    "short_term_cancellation_policy": ""
+  },
+  "agency_exclusion_list": {
+    "excluded_agencies": []
+  },
+  "endorsement_codes": {
+    "involuntary_refund_code": [],
+    "involuntary_reissue_code": [],
+    "medical_refund_code": []
+  },
+  "support_contacts": {
+    "_note": "For internal use only. Do not include in autoresponse emails."
+  },
+  "policy_deadlines": null
 }
